@@ -685,22 +685,22 @@ export default function DoctorPortal() {
           </div>
 
           {/* Large Navigation Tabs */}
-          <nav className="p-4 space-y-1.5">
+          <nav className="p-4 space-y-2">
             {/* Command Center */}
             <button
               onClick={() => setActiveTab('command')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-base transition-all ${
                 activeTab === 'command'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
+                  : 'text-slate-700 hover:bg-[#F3EFE6] hover:text-slate-950'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <Activity className={`w-5 h-5 ${activeTab === 'command' ? 'text-white' : 'text-slate-400'}`} />
+                <Activity className={`w-5 h-5 ${activeTab === 'command' ? 'text-white' : 'text-slate-500'}`} />
                 <span>Command Center</span>
               </div>
               {stats.pending_appointments > 0 && (
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                <span className={`text-xs sm:text-sm font-black px-2.5 py-0.5 rounded-full ${
                   activeTab === 'command' ? 'bg-white/20 text-white' : 'bg-amber-500 text-white'
                 }`}>
                   {stats.pending_appointments}
@@ -711,19 +711,19 @@ export default function DoctorPortal() {
             {/* Prescription */}
             <button
               onClick={() => setActiveTab('prescription')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-base transition-all ${
                 activeTab === 'prescription'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
+                  : 'text-slate-700 hover:bg-[#F3EFE6] hover:text-slate-950'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <Pill className={`w-5 h-5 ${activeTab === 'prescription' ? 'text-white' : 'text-slate-400'}`} />
+                <Pill className={`w-5 h-5 ${activeTab === 'prescription' ? 'text-white' : 'text-slate-500'}`} />
                 <span>Prescription Desk</span>
               </div>
               {selectedPatient && (
-                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full max-w-[90px] truncate ${
-                  activeTab === 'prescription' ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-700'
+                <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full max-w-[100px] truncate ${
+                  activeTab === 'prescription' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-800'
                 }`}>
                   {selectedPatient.name.split(' ')[0]}
                 </span>
@@ -733,18 +733,18 @@ export default function DoctorPortal() {
             {/* Enrolled Patients */}
             <button
               onClick={() => setActiveTab('patients')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-base transition-all ${
                 activeTab === 'patients'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
+                  : 'text-slate-700 hover:bg-[#F3EFE6] hover:text-slate-950'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-white' : 'text-slate-400'}`} />
+                <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-white' : 'text-slate-500'}`} />
                 <span>Enrolled Patients</span>
               </div>
-              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                activeTab === 'patients' ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-700'
+              <span className={`text-xs sm:text-sm font-black px-2.5 py-0.5 rounded-full ${
+                activeTab === 'patients' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-800'
               }`}>
                 {patients.length}
               </span>
@@ -755,10 +755,10 @@ export default function DoctorPortal() {
             {/* AI Telephony Architecture */}
             <button
               onClick={() => setActiveTab('architecture')}
-              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
+              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-bold text-base transition-all ${
                 activeTab === 'architecture'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
+                  : 'text-slate-700 hover:bg-[#F3EFE6] hover:text-slate-950'
               }`}
             >
               <Sparkles className={`w-5 h-5 ${activeTab === 'architecture' ? 'text-white' : 'text-blue-500'}`} />
@@ -768,10 +768,10 @@ export default function DoctorPortal() {
             {/* Supabase Settings */}
             <button
               onClick={() => setActiveTab('supabase')}
-              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
+              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-bold text-base transition-all ${
                 activeTab === 'supabase'
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
+                  : 'text-slate-700 hover:bg-[#F3EFE6] hover:text-slate-950'
               }`}
             >
               <Database className={`w-5 h-5 ${activeTab === 'supabase' ? 'text-white' : 'text-emerald-600'}`} />
@@ -781,23 +781,23 @@ export default function DoctorPortal() {
         </div>
 
         {/* Doctor Card in Sidebar (Photo-matching Dr. Reginald Leiw layout) */}
-        <div className="p-3.5 m-3 rounded-3xl bg-white border border-[#E8E2D5] shadow-xs">
+        <div className="p-4 m-3 rounded-3xl bg-white border border-[#E8E2D5] shadow-xs">
           <div className="flex items-center justify-between gap-2.5">
             <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
-              <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
                 {currentDoctor?.name
                   ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
                   : 'SS'}
               </div>
               <div className="overflow-hidden min-w-0">
-                <div className="font-bold text-slate-900 text-xs truncate leading-tight">
+                <div className="font-bold text-slate-900 text-sm truncate leading-tight">
                   {currentDoctor?.name || DOCTOR_PROFILE.name}
                 </div>
-                <div className="text-[10px] text-slate-400 font-medium truncate mt-0.5">
+                <div className="text-xs text-slate-500 font-medium truncate mt-0.5">
                   Consultant • Chronic Care
                 </div>
-                <div className="text-[10px] font-mono text-blue-600 font-bold truncate flex items-center gap-1 mt-0.5">
-                  <span className="bg-blue-50 px-1.5 py-0.2 rounded-full border border-blue-200">
+                <div className="text-xs font-mono text-blue-600 font-bold truncate flex items-center gap-1 mt-0.5">
+                  <span className="bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
                     {currentDoctor?.id || 'DOC84920'}
                   </span>
                 </div>
@@ -806,24 +806,24 @@ export default function DoctorPortal() {
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all active:scale-95 shadow-2xs"
+              className="w-9 h-9 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all active:scale-95 shadow-2xs"
               title="Doctor Profile / Switch"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
-          <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500 pt-2 border-t border-[#E8E2D5] mt-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-600 pt-2.5 border-t border-[#E8E2D5] mt-2.5">
             <span className="flex items-center gap-1.5">
-              <span className={`w-2 h-2 rounded-full ${stats.supabase.configured ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+              <span className={`w-2.5 h-2.5 rounded-full ${stats.supabase.configured ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
               {stats.supabase.configured ? 'Supabase Active' : 'Local Mock'}
             </span>
             <button
               type="button"
               onClick={handleSignOut}
-              className="text-slate-400 hover:text-red-600 flex items-center gap-1 transition-colors"
+              className="text-slate-500 hover:text-red-600 flex items-center gap-1 transition-colors font-bold"
               title="Sign Out"
             >
-              <LogOut className="w-3.5 h-3.5" />
+              <LogOut className="w-4 h-4" />
               <span>Exit</span>
             </button>
           </div>
@@ -1117,8 +1117,8 @@ export default function DoctorPortal() {
                   </button>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-500 hidden sm:inline">Active Practitioner:</span>
-                    <span className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-white border border-[#E8E2D5] text-blue-700 shadow-2xs">
+                    <span className="text-xs sm:text-sm font-bold text-slate-600 hidden sm:inline">Active Practitioner:</span>
+                    <span className="font-mono text-xs sm:text-sm font-bold px-3.5 py-1 rounded-full bg-white border border-[#E8E2D5] text-blue-700 shadow-2xs">
                       {currentDoctor?.id || 'DOC84920'}
                     </span>
                   </div>
@@ -1129,44 +1129,44 @@ export default function DoctorPortal() {
                     className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
                     title="Doctor Settings / Switch"
                   >
-                    <User className="w-4 h-4" />
+                    <User className="w-5 h-5" />
                   </button>
                 </div>
 
-                <div className="space-y-1">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-blue-600 tracking-tight leading-tight">
+                <div className="space-y-1.5">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-blue-600 tracking-tight leading-tight">
                     Book an Appointment
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                  <p className="text-sm sm:text-base text-slate-600 font-medium">
                     Clinical queue, consultation slots, and practitioner schedule
                   </p>
                 </div>
               </div>
 
               {/* Photo-Matching Doctor Card (Dr. Reginald Leiw Layout) */}
-              <div className="bg-white rounded-3xl border border-[#E8E2D5] p-4 sm:p-5 shadow-xs flex items-center justify-between gap-3 sm:gap-4 hover:border-blue-300 transition-all">
-                <div className="flex items-center gap-3.5 sm:gap-4 overflow-hidden min-w-0">
-                  <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-base sm:text-lg shadow-2xs shrink-0">
+              <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs flex items-center justify-between gap-4 hover:border-blue-300 transition-all">
+                <div className="flex items-center gap-4 overflow-hidden min-w-0">
+                  <div className="w-16 sm:w-18 h-16 sm:h-18 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-lg sm:text-xl shadow-2xs shrink-0">
                     {currentDoctor?.name
                       ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
                       : 'RL'}
                   </div>
                   <div className="overflow-hidden min-w-0">
-                    <h2 className="font-extrabold text-slate-900 text-base sm:text-lg truncate leading-tight">
+                    <h2 className="font-black text-slate-900 text-lg sm:text-xl truncate leading-tight">
                       {currentDoctor?.name || 'Dr. Reginald Leiw'}
                     </h2>
-                    <p className="text-xs text-slate-400 font-medium truncate mt-0.5">
+                    <p className="text-sm text-slate-600 font-medium truncate mt-0.5">
                       Consultant • Chronic Care &amp; Internal Medicine
                     </p>
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span className="text-xs font-bold text-slate-800">
+                    <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
+                      <span className="text-sm font-bold text-slate-900">
                         $120.00
                       </span>
-                      <span className="text-[10px] text-slate-400">•</span>
-                      <span className="text-[11px] font-mono text-blue-600 font-semibold">
+                      <span className="text-xs text-slate-400">•</span>
+                      <span className="text-xs sm:text-sm font-mono text-blue-600 font-bold">
                         {currentDoctor?.id || 'DOC84920'}
                       </span>
-                      <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         ✓ Verified
                       </span>
                     </div>
@@ -1176,23 +1176,23 @@ export default function DoctorPortal() {
                 <button
                   type="button"
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="w-9 sm:w-10 h-9 sm:h-10 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all hover:scale-105 active:scale-95 shadow-2xs"
+                  className="w-10 sm:w-11 h-10 sm:h-11 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all hover:scale-105 active:scale-95 shadow-2xs"
                   title="Switch Practitioner"
                 >
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               </div>
 
               {/* Segmented Control Toggle (Matching Screen 2's "Upcoming" vs "Past" Pill Bar) */}
               <div className="flex justify-center sm:justify-start">
-                <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1 shadow-2xs">
+                <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1.5 shadow-2xs">
                   <button
                     type="button"
                     onClick={() => setActivityTab('upcoming')}
-                    className={`px-5 sm:px-6 py-2 rounded-full text-xs font-bold transition-all ${
+                    className={`px-6 sm:px-8 py-2.5 rounded-full text-sm font-bold transition-all ${
                       activityTab === 'upcoming'
                         ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-slate-700 hover:text-slate-950'
                     }`}
                   >
                     Upcoming
@@ -1200,10 +1200,10 @@ export default function DoctorPortal() {
                   <button
                     type="button"
                     onClick={() => setActivityTab('past')}
-                    className={`px-5 sm:px-6 py-2 rounded-full text-xs font-bold transition-all ${
+                    className={`px-6 sm:px-8 py-2.5 rounded-full text-sm font-bold transition-all ${
                       activityTab === 'past'
                         ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                        : 'text-slate-600 hover:text-slate-900'
+                        : 'text-slate-700 hover:text-slate-950'
                     }`}
                   >
                     Past
@@ -1219,11 +1219,11 @@ export default function DoctorPortal() {
                     {/* Month Carousel */}
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-700">
                           Date &amp; Time
                         </span>
-                        <span className="text-xs text-blue-600 font-semibold flex items-center gap-1">
-                          <Calendar className="w-3.5 h-3.5" />
+                        <span className="text-xs sm:text-sm text-blue-600 font-bold flex items-center gap-1.5">
+                          <Calendar className="w-4 h-4" />
                           <span>{selectedMonth} 2026</span>
                         </span>
                       </div>
@@ -1234,10 +1234,10 @@ export default function DoctorPortal() {
                             key={m}
                             type="button"
                             onClick={() => setSelectedMonth(m)}
-                            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
+                            className={`px-4.5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all shrink-0 ${
                               selectedMonth === m
                                 ? 'bg-blue-600 text-white shadow-xs'
-                                : 'bg-[#FAF8F5] text-slate-600 hover:bg-slate-100 border border-[#E8E2D5]'
+                                : 'bg-[#FAF8F5] text-slate-700 hover:bg-slate-100 border border-[#E8E2D5]'
                             }`}
                           >
                             {m}
@@ -1265,17 +1265,17 @@ export default function DoctorPortal() {
                               key={item.day}
                               type="button"
                               onClick={() => setSelectedDay(item.day)}
-                              className={`flex flex-col items-center justify-center min-w-[56px] py-3 px-3 rounded-2xl transition-all shrink-0 ${
+                              className={`flex flex-col items-center justify-center min-w-[62px] py-3.5 px-3 rounded-2xl transition-all shrink-0 ${
                                 isSelected
                                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-600'
-                                  : 'bg-white text-slate-700 border border-[#E8E2D5] hover:bg-blue-50/50 shadow-2xs'
+                                  : 'bg-white text-slate-800 border border-[#E8E2D5] hover:bg-blue-50/50 shadow-2xs'
                               }`}
                             >
-                              <span className="text-base font-black leading-none mb-1">
+                              <span className="text-lg sm:text-xl font-black leading-none mb-1">
                                 {item.day}
                               </span>
-                              <span className={`text-[11px] font-semibold leading-none ${
-                                isSelected ? 'text-white/90' : 'text-slate-400'
+                              <span className={`text-xs font-bold leading-none ${
+                                isSelected ? 'text-white/95' : 'text-slate-500'
                               }`}>
                                 {item.name}
                               </span>
@@ -1303,16 +1303,16 @@ export default function DoctorPortal() {
                     {/* Time Slots ("Select a Time" Chips Grid) */}
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800">
                           Select a Time
                         </span>
-                        <span className="text-xs text-blue-600 font-semibold flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5" />
+                        <span className="text-xs sm:text-sm text-blue-600 font-bold flex items-center gap-1.5">
+                          <Clock className="w-4 h-4" />
                           <span>Select a Time</span>
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
                         {[
                           '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM',
                           '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
@@ -1324,7 +1324,7 @@ export default function DoctorPortal() {
                               key={slot}
                               type="button"
                               onClick={() => setSelectedTimeSlot(slot)}
-                              className={`py-2.5 px-3 rounded-2xl text-xs font-bold transition-all text-center border ${
+                              className={`py-3 px-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all text-center border ${
                                 isSelectedSlot
                                   ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25'
                                   : 'bg-blue-50/40 hover:bg-blue-100 text-blue-700 border-blue-200/80 shadow-2xs'
@@ -1349,9 +1349,9 @@ export default function DoctorPortal() {
                             setActiveTab('prescription');
                           }
                         }}
-                        className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 active:scale-98"
+                        className="w-full py-4.5 px-8 rounded-full font-black text-base sm:text-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2.5 active:scale-98"
                       >
-                        <Clock className="w-4 h-4" />
+                        <Clock className="w-5 h-5" />
                         <span>Book an Appointment ({selectedDay} {selectedMonth} at {selectedTimeSlot})</span>
                       </button>
                     </div>
@@ -1369,54 +1369,54 @@ export default function DoctorPortal() {
                           setActiveTab('prescription');
                         }
                       }}
-                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                      className="bg-white p-6 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600">
                           Pending Queue
                         </span>
-                        <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Clock className="w-5 h-5" />
+                        <div className="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                       </div>
-                      <div className="mt-3 flex items-baseline gap-2">
-                        <span className="text-3xl font-extrabold text-slate-900">
+                      <div className="mt-3 flex items-baseline gap-2.5">
+                        <span className="text-4xl sm:text-5xl font-black text-slate-900">
                           {pendingAppointments.length}
                         </span>
-                        <span className="text-xs font-semibold text-amber-600">
+                        <span className="text-xs sm:text-sm font-bold text-amber-600">
                           Awaiting Consultation
                         </span>
                       </div>
-                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                      <div className="mt-2 text-xs sm:text-sm text-slate-500 font-medium flex items-center gap-1">
                         <span>Click to start prescription</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
 
                     {/* Enrolled Patients Card */}
                     <div
                       onClick={() => setActiveTab('patients')}
-                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                      className="bg-white p-6 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600">
                           Enrolled Patients
                         </span>
-                        <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Users className="w-5 h-5" />
+                        <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Users className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                       </div>
-                      <div className="mt-3 flex items-baseline gap-2">
-                        <span className="text-3xl font-extrabold text-slate-900">
+                      <div className="mt-3 flex items-baseline gap-2.5">
+                        <span className="text-4xl sm:text-5xl font-black text-slate-900">
                           {patients.length}
                         </span>
-                        <span className="text-xs font-semibold text-blue-600">
+                        <span className="text-xs sm:text-sm font-bold text-blue-600">
                           Active In Care Program
                         </span>
                       </div>
-                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                      <div className="mt-2 text-xs sm:text-sm text-slate-500 font-medium flex items-center gap-1">
                         <span>Click to view directory</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
 
@@ -3301,19 +3301,19 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
       {/* FLOATING MOBILE BOTTOM NAVIGATION DOCK (PHOTO MATCHING) */}
       {/* ============================================================== */}
       <nav className="lg:hidden fixed bottom-4 inset-x-0 z-40 px-3 pointer-events-none flex justify-center">
-        <div className="max-w-md w-full bg-white/95 backdrop-blur-xl border border-[#E8E2D5] rounded-full p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.12)] flex items-center justify-around pointer-events-auto">
+        <div className="max-w-md w-full bg-white/95 backdrop-blur-xl border border-[#E8E2D5] rounded-full p-2 shadow-[0_12px_40px_rgba(0,0,0,0.12)] flex items-center justify-around pointer-events-auto">
           {/* Command */}
           <button
             type="button"
             onClick={() => setActiveTab('command')}
             className={`transition-all ${
               activeTab === 'command'
-                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
-                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs sm:text-sm'
+                : 'w-10 h-10 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#F6F2EA] flex items-center justify-center'
             }`}
             title="Command Center"
           >
-            <Activity className="w-4 h-4 shrink-0" />
+            <Activity className="w-4.5 h-4.5 shrink-0" />
             {activeTab === 'command' && <span>Command</span>}
           </button>
 
@@ -3323,12 +3323,12 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
             onClick={() => setActiveTab('prescription')}
             className={`transition-all ${
               activeTab === 'prescription'
-                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
-                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs sm:text-sm'
+                : 'w-10 h-10 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#F6F2EA] flex items-center justify-center'
             }`}
             title="Prescription Desk"
           >
-            <Pill className="w-4 h-4 shrink-0" />
+            <Pill className="w-4.5 h-4.5 shrink-0" />
             {activeTab === 'prescription' && <span>Rx Desk</span>}
           </button>
 
@@ -3338,12 +3338,12 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
             onClick={() => setActiveTab('patients')}
             className={`transition-all ${
               activeTab === 'patients'
-                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
-                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs sm:text-sm'
+                : 'w-10 h-10 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#F6F2EA] flex items-center justify-center'
             }`}
             title="Enrolled Patients"
           >
-            <Users className="w-4 h-4 shrink-0" />
+            <Users className="w-4.5 h-4.5 shrink-0" />
             {activeTab === 'patients' && <span>Patients</span>}
           </button>
 
@@ -3353,12 +3353,12 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
             onClick={() => setActiveTab('architecture')}
             className={`transition-all ${
               activeTab === 'architecture'
-                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
-                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs sm:text-sm'
+                : 'w-10 h-10 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#F6F2EA] flex items-center justify-center'
             }`}
             title="AI Telephony Architecture"
           >
-            <Sparkles className="w-4 h-4 shrink-0" />
+            <Sparkles className="w-4.5 h-4.5 shrink-0" />
             {activeTab === 'architecture' && <span>Calling</span>}
           </button>
 
@@ -3368,12 +3368,12 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
             onClick={() => setActiveTab('supabase')}
             className={`transition-all ${
               activeTab === 'supabase'
-                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
-                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs sm:text-sm'
+                : 'w-10 h-10 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#F6F2EA] flex items-center justify-center'
             }`}
             title="Supabase Sync"
           >
-            <Database className="w-4 h-4 shrink-0" />
+            <Database className="w-4.5 h-4.5 shrink-0" />
             {activeTab === 'supabase' && <span>Sync</span>}
           </button>
         </div>

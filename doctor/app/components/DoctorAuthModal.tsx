@@ -247,24 +247,24 @@ export default function DoctorAuthModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-tight">
                   CuraLink
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-200">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-200">
                   Doctor Portal
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
+              <p className="text-xs sm:text-sm text-slate-600 font-medium">
                 Professional Practitioner Clinical Gateway
               </p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 pt-2.5 border-t border-[#E8E2D5]/60 mt-2.5">
-            <span className="flex items-center gap-1 font-semibold text-blue-700">
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-600" /> 256-bit Encrypted Session
+          <div className="flex items-center justify-between text-xs sm:text-sm text-slate-600 pt-2.5 border-t border-[#E8E2D5]/60 mt-2.5 font-medium">
+            <span className="flex items-center gap-1.5 font-bold text-blue-700">
+              <ShieldCheck className="w-4 h-4 text-blue-600" /> 256-bit Encrypted Session
             </span>
-            <span className="text-slate-400 hidden xs:inline sm:inline">Connect • Care • Heal</span>
+            <span className="text-slate-500 hidden xs:inline sm:inline">Connect • Care • Heal</span>
           </div>
         </div>
 
@@ -282,22 +282,22 @@ export default function DoctorAuthModal({
             </div>
 
             <div>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
                 Registration Successful!
               </h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              <p className="text-sm text-slate-600 mt-1.5 max-w-sm mx-auto font-medium">
                 Your practitioner credentials have been verified and activated on CURALINK.
               </p>
             </div>
 
             {/* BIG DOCTOR ID BOX (MATCHING PHOTO AESTHETIC) */}
-            <div className="p-5 sm:p-6 rounded-3xl bg-white border-2 border-blue-500/80 shadow-md text-center space-y-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-extrabold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Official Practitioner ID
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border-2 border-blue-500/80 shadow-md text-center space-y-2.5">
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs sm:text-sm font-extrabold uppercase tracking-wider">
+                <Sparkles className="w-4 h-4 text-blue-600" /> Official Practitioner ID
               </div>
 
               {/* ID IN BIG PROMINENT TEXT */}
-              <div className="text-3xl sm:text-4xl md:text-5xl font-black font-mono tracking-wider sm:tracking-widest text-blue-600 py-1.5 sm:py-2 select-all">
+              <div className="text-4xl sm:text-5xl md:text-6xl font-black font-mono tracking-wider sm:tracking-widest text-blue-600 py-2 sm:py-3 select-all">
                 {registeredDoctor.id}
               </div>
 
@@ -305,53 +305,53 @@ export default function DoctorAuthModal({
                 <button
                   type="button"
                   onClick={() => handleCopyId(registeredDoctor.id)}
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-extrabold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all active:scale-95"
                 >
                   {copiedId ? (
                     <>
-                      <Check className="w-3.5 h-3.5" />
+                      <Check className="w-4 h-4" />
                       <span>Copied to Clipboard!</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy className="w-4 h-4" />
                       <span>Copy Doctor ID</span>
                     </>
                   )}
                 </button>
               </div>
 
-              <p className="text-[11px] text-blue-700/80 font-medium pt-1">
+              <p className="text-xs sm:text-sm text-blue-700/80 font-medium pt-1">
                 Please save your Doctor ID. You will use this ID to sign in to the CURALINK portal anytime.
               </p>
             </div>
 
-            {/* OTHER DETAILS IN SMALL FORMAT */}
-            <div className="bg-white rounded-2xl p-4 border border-[#E8E2D5] text-left text-xs space-y-2.5 shadow-2xs">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 pb-1 border-b border-[#E8E2D5]">
+            {/* OTHER DETAILS IN CLEAR FORMAT */}
+            <div className="bg-white rounded-2xl p-5 border border-[#E8E2D5] text-left text-sm space-y-3 shadow-2xs">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500 pb-1.5 border-b border-[#E8E2D5]">
                 Practitioner Profile Summary
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 text-[11px]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 text-xs sm:text-sm">
                 <div>
-                  <span className="text-slate-400 block font-medium">Doctor Name</span>
-                  <span className="font-bold text-slate-800">{registeredDoctor.name}</span>
+                  <span className="text-slate-500 block font-medium">Doctor Name</span>
+                  <span className="font-black text-slate-900 text-sm sm:text-base">{registeredDoctor.name}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-medium">Mobile Phone</span>
-                  <span className="font-semibold text-slate-700">{registeredDoctor.phone}</span>
+                  <span className="text-slate-500 block font-medium">Mobile Phone</span>
+                  <span className="font-mono font-bold text-slate-800">+91 {registeredDoctor.phone}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-medium">Email Address</span>
-                  <span className="font-semibold text-slate-700 truncate block">{registeredDoctor.email}</span>
+                  <span className="text-slate-500 block font-medium">Email Address</span>
+                  <span className="font-medium text-slate-800 truncate block">{registeredDoctor.email}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block font-medium">Age</span>
-                  <span className="font-semibold text-slate-700">{registeredDoctor.age} Years</span>
+                  <span className="text-slate-500 block font-medium">Age</span>
+                  <span className="font-bold text-slate-800">{registeredDoctor.age} Years</span>
                 </div>
-                <div className="sm:col-span-2 pt-1.5 border-t border-[#E8E2D5] flex items-center justify-between">
-                  <span className="text-slate-500 font-medium">Verification Status</span>
-                  <span className="font-bold text-emerald-600 inline-flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Email &amp; Mobile Verified
+                <div className="sm:col-span-2 pt-2 border-t border-[#E8E2D5] flex items-center justify-between">
+                  <span className="text-slate-600 font-medium">Verification Status</span>
+                  <span className="font-bold text-emerald-600 inline-flex items-center gap-1.5 text-sm">
+                    <CheckCircle2 className="w-4 h-4" /> Email &amp; Mobile Verified
                   </span>
                 </div>
               </div>
@@ -365,10 +365,10 @@ export default function DoctorAuthModal({
                   onLoginSuccess(registeredDoctor);
                   setRegisteredDoctor(null);
                 }}
-                className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
+                className="w-full py-4.5 px-6 rounded-full font-black text-base bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
               >
                 <span>Enter CURALINK Portal as {registeredDoctor.name}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-5 h-5" />
               </button>
 
               <button
@@ -378,7 +378,7 @@ export default function DoctorAuthModal({
                   setRegisteredDoctor(null);
                   setActiveTab('login');
                 }}
-                className="w-full py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors"
+                className="w-full py-3 text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors"
               >
                 Return to Login Screen
               </button>
@@ -396,7 +396,7 @@ export default function DoctorAuthModal({
                   setLoginError('');
                   setRegError('');
                 }}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
+                className={`flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold transition-all ${
                   activeTab === 'login'
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
                     : 'text-slate-600 hover:text-slate-900'
@@ -413,7 +413,7 @@ export default function DoctorAuthModal({
                   setLoginError('');
                   setRegError('');
                 }}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
+                className={`flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold transition-all ${
                   activeTab === 'register'
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
                     : 'text-slate-600 hover:text-slate-900'
@@ -428,7 +428,7 @@ export default function DoctorAuthModal({
             {activeTab === 'login' && (
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 {loginError && (
-                  <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5">
+                  <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-sm text-red-700 font-semibold flex items-start gap-2.5">
                     <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                     <span>{loginError}</span>
                   </div>
@@ -436,7 +436,7 @@ export default function DoctorAuthModal({
 
                 {/* Doctor ID Field */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Doctor ID (e.g. DOC84920)
                   </label>
                   <div className="relative">
@@ -445,7 +445,7 @@ export default function DoctorAuthModal({
                       value={loginId}
                       onChange={e => setLoginId(e.target.value.toUpperCase())}
                       placeholder="Enter DOC followed by 5 digits (e.g. DOC84920)"
-                      className="w-full text-sm font-mono font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 uppercase tracking-wider transition-all text-slate-900 shadow-2xs"
+                      className="w-full text-base font-mono font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 uppercase tracking-wider transition-all text-slate-900 shadow-2xs"
                       required
                     />
                   </div>
@@ -454,10 +454,10 @@ export default function DoctorAuthModal({
                 {/* 6-Digit PIN Field */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-slate-700">
                       6-Digit Security PIN
                     </label>
-                    <span className="text-[11px] text-slate-400">Numeric 6 digits</span>
+                    <span className="text-xs text-slate-500 font-medium">Numeric 6 digits</span>
                   </div>
                   <div className="relative">
                     <input
@@ -468,15 +468,15 @@ export default function DoctorAuthModal({
                       value={loginPin}
                       onChange={e => setLoginPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       placeholder="••••••"
-                      className="w-full text-base font-mono tracking-widest p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pr-12 text-slate-900 shadow-2xs"
+                      className="w-full text-lg font-mono tracking-widest p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pr-12 text-slate-900 shadow-2xs font-bold"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowLoginPin(prev => !prev)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5"
                     >
-                      {showLoginPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showLoginPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
@@ -486,13 +486,13 @@ export default function DoctorAuthModal({
                   <button
                     type="submit"
                     disabled={loginLoading}
-                    className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
+                    className="w-full py-4 px-6 rounded-full font-black text-base bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
                   >
                     {loginLoading ? (
                       <span>Verifying Credentials...</span>
                     ) : (
                       <>
-                        <LogIn className="w-4 h-4" />
+                        <LogIn className="w-5 h-5" />
                         <span>Sign In to CURALINK Portal</span>
                       </>
                     )}
@@ -503,8 +503,8 @@ export default function DoctorAuthModal({
                 <div className="mt-4 pt-4 border-t border-[#E8E2D5]">
                   <div className="p-4 rounded-3xl bg-white border border-[#E8E2D5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
                     <div className="text-left">
-                      <p className="text-xs font-bold text-slate-800">Demo Attending Doctor</p>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-sm font-bold text-slate-900">Demo Attending Doctor</p>
+                      <p className="text-xs text-slate-600 font-medium">
                         Dr. Suresh Sharma, MD • <span className="font-mono text-blue-700 font-bold">DOC84920</span> (PIN: 123456)
                       </p>
                     </div>
@@ -512,7 +512,7 @@ export default function DoctorAuthModal({
                       type="button"
                       onClick={handleQuickDemoLogin}
                       disabled={loginLoading}
-                      className="w-full sm:w-auto px-4 py-2 rounded-full text-xs font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors text-center shrink-0"
+                      className="w-full sm:w-auto px-4.5 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors text-center shrink-0"
                     >
                       Auto Fill &amp; Login
                     </button>
@@ -533,7 +533,7 @@ export default function DoctorAuthModal({
 
                 {/* Doctor Name */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                  <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                     Doctor Full Name
                   </label>
                   <div className="relative">
@@ -542,18 +542,18 @@ export default function DoctorAuthModal({
                       value={regName}
                       onChange={e => setRegName(e.target.value)}
                       placeholder="e.g. Dr. Anita Desai"
-                      className="w-full text-sm p-3 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-9 text-slate-900 shadow-2xs"
+                      className="w-full text-base font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-10 text-slate-900 shadow-2xs"
                       required
                     />
-                    <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <User className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   </div>
                 </div>
 
                 {/* Phone & Email Row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {/* Phone Number */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Phone Number
                     </label>
                     <div className="relative">
@@ -562,16 +562,16 @@ export default function DoctorAuthModal({
                         value={regPhone}
                         onChange={e => setRegPhone(e.target.value)}
                         placeholder="+91 98765 43210"
-                        className="w-full text-sm p-3 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-9 text-slate-900 shadow-2xs"
+                        className="w-full text-base font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-10 text-slate-900 shadow-2xs font-mono"
                         required
                       />
-                      <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Phone className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     </div>
                   </div>
 
                   {/* Email Address */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Email Address
                     </label>
                     <div className="relative">
@@ -580,19 +580,19 @@ export default function DoctorAuthModal({
                         value={regEmail}
                         onChange={e => setRegEmail(e.target.value)}
                         placeholder="doctor@hospital.org"
-                        className="w-full text-sm p-3 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-9 text-slate-900 shadow-2xs"
+                        className="w-full text-base font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-10 text-slate-900 shadow-2xs"
                         required
                       />
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Mail className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     </div>
                   </div>
                 </div>
 
                 {/* Age & Verification Row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-end">
                   {/* Age */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       Age (Years)
                     </label>
                     <div className="relative">
@@ -603,21 +603,21 @@ export default function DoctorAuthModal({
                         value={regAge}
                         onChange={e => setRegAge(e.target.value)}
                         placeholder="e.g. 38"
-                        className="w-full text-sm p-3 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-9 text-slate-900 shadow-2xs"
+                        className="w-full text-base font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pl-10 text-slate-900 shadow-2xs"
                         required
                       />
-                      <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Calendar className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     </div>
                   </div>
 
                   {/* OTP Verification */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                       OTP Verification
                     </label>
                     {isVerified ? (
-                      <div className="flex items-center gap-1.5 p-2.5 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <div className="flex items-center gap-2 p-3.5 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-bold">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                         <span>Email &amp; Mobile Verified</span>
                       </div>
                     ) : (
@@ -625,13 +625,13 @@ export default function DoctorAuthModal({
                         type="button"
                         onClick={handleVerify}
                         disabled={verifying}
-                        className="w-full p-2.5 rounded-2xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                        className="w-full p-3.5 rounded-2xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm font-bold flex items-center justify-center gap-2 transition-colors"
                       >
                         {verifying ? (
                           <span>Verifying OTP...</span>
                         ) : (
                           <>
-                            <ShieldCheck className="w-4 h-4 text-blue-600" />
+                            <ShieldCheck className="w-5 h-5 text-blue-600" />
                             <span>Verify Email &amp; Mobile</span>
                           </>
                         )}
@@ -641,11 +641,11 @@ export default function DoctorAuthModal({
                 </div>
 
                 {/* 6-Digit PIN & Confirm PIN */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                   {/* Ask 6 Digit PIN */}
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-sm font-bold uppercase tracking-wider text-slate-700">
                         6-Digit Security PIN
                       </label>
                     </div>
@@ -658,23 +658,23 @@ export default function DoctorAuthModal({
                         value={regPin}
                         onChange={e => setRegPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         placeholder="••••••"
-                        className="w-full text-sm font-mono tracking-widest p-3 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pr-10 text-slate-900 shadow-2xs"
+                        className="w-full text-base font-mono tracking-widest p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pr-12 text-slate-900 shadow-2xs font-bold"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegPin(prev => !prev)}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1.5"
                       >
-                        {showRegPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        {showRegPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>
 
                   {/* Confirm 6 Digit PIN */}
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-sm font-bold uppercase tracking-wider text-slate-700">
                         Confirm 6-Digit PIN
                       </label>
                     </div>
@@ -687,7 +687,7 @@ export default function DoctorAuthModal({
                         value={regConfirmPin}
                         onChange={e => setRegConfirmPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                         placeholder="••••••"
-                        className="w-full text-sm font-mono tracking-widest p-3 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pr-10 text-slate-900 shadow-2xs"
+                        className="w-full text-base font-mono tracking-widest p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all pr-12 text-slate-900 shadow-2xs font-bold"
                         required
                       />
                     </div>
@@ -696,14 +696,14 @@ export default function DoctorAuthModal({
 
                 {/* PIN Match status hint */}
                 {regPin.length === 6 && regConfirmPin.length === 6 && (
-                  <div className="text-[11px] font-semibold">
+                  <div className="text-xs font-semibold">
                     {regPin === regConfirmPin ? (
-                      <span className="text-emerald-600 flex items-center gap-1">
-                        <Check className="w-3.5 h-3.5" /> 6-Digit PINs match
+                      <span className="text-emerald-600 flex items-center gap-1.5">
+                        <Check className="w-4 h-4" /> 6-Digit PINs match
                       </span>
                     ) : (
-                      <span className="text-red-600 flex items-center gap-1">
-                        <X className="w-3.5 h-3.5" /> PINs do not match
+                      <span className="text-red-600 flex items-center gap-1.5">
+                        <X className="w-4 h-4" /> PINs do not match
                       </span>
                     )}
                   </div>
@@ -714,13 +714,13 @@ export default function DoctorAuthModal({
                   <button
                     type="submit"
                     disabled={regLoading}
-                    className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
+                    className="w-full py-4.5 px-6 rounded-full font-black text-base bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
                   >
                     {regLoading ? (
                       <span>Generating Doctor ID &amp; Profile...</span>
                     ) : (
                       <>
-                        <UserPlus className="w-4 h-4" />
+                        <UserPlus className="w-5 h-5" />
                         <span>Register &amp; Generate Doctor ID</span>
                       </>
                     )}
