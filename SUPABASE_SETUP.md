@@ -71,41 +71,58 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 PORT=3000
 ```
 
-### 2. Care Team Portal (`careteam/.env.local`)
-Create file `/careteam/.env.local`:
+### 1. Unified Gateway Portal (`portal/.env.local`)
+Create file `/portal/.env.local`:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+PORT=3000
+```
+
+### 2. Doctor Portal (`doctor/.env.local`)
+Create file `/doctor/.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 PORT=3001
 ```
 
-### 3. Pharmacy Portal (`pharmacy/.env.local`)
+### 3. Care Team Portal (`careteam/.env.local`)
+Create file `/careteam/.env.local`:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+PORT=3002
+```
+
+### 4. Pharmacy Portal (`pharmacy/.env.local`)
 Create file `/pharmacy/.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 DATA_PROVIDER=supabase
-PORT=3002
+PORT=3003
 ```
 
 ---
 
-## 📌 Step 6: Start All 3 Next.js Portals
+## 📌 Step 6: Start All Next.js Portals
 
 From the repository root:
 
 ```bash
-# Terminal 1: Doctor Portal
-npm run dev:doctor
-# -> http://localhost:3000
+# Terminal 1: Unified Gateway (Port 3000) — Login / Register for all roles!
+npm run dev
+# Or: npm run dev:portal -> http://localhost:3000
 
-# Terminal 2: Care Team Portal
-npm run dev:careteam
-# -> http://localhost:3001
+# Terminal 2: Doctor Portal (Port 3001)
+npm run dev:doctor -> http://localhost:3001
 
-# Terminal 3: Pharmacy Portal
-npm run dev:pharmacy
-# -> http://localhost:3002
+# Terminal 3: Care Team Portal (Port 3002)
+npm run dev:careteam -> http://localhost:3002
+
+# Terminal 4: Pharmacy Portal (Port 3003)
+npm run dev:pharmacy -> http://localhost:3003
 ```
 
 ---
@@ -114,15 +131,19 @@ npm run dev:pharmacy
 
 | Step | Action | Portal / URL | Credentials / Inputs |
 |---|---|---|---|
-| **1. Care Team** | Sign in as fieldworker | `http://localhost:3001` | Use `CRT10001` / PIN `123456` (or register new worker). |
+| **0. Unified Gateway** | Unified Sign In & Role Routing | `http://localhost:3000` | Select role or use **1-Click Demo Login** for Doctor, Care Team, or Pharmacy $\rightarrow$ auto-routes to that portal! |
+| **1. Care Team** | Sign in as fieldworker | `http://localhost:3002` | Use `CRT10001` / PIN `123456` (or register new worker). |
 | | Register a new patient | "Register Patient" tab | Enter Name: `Sunil Rao`, Age: `55`, Literacy: `No` (Illiterate), Phone: `9845111222`, PIN: `123456`. Verify with OTP: `123456`. |
 | | **Patient ID Generated** | Modal appears | An ID like `PAT54321` is generated. The system automatically queues a **Pending Appointment** in Supabase! |
-| **2. Doctor Desk** | Sign in as doctor | `http://localhost:3000` | ID `DOC84920` / PIN `123456`. |
+| **2. Doctor Desk** | Sign in as doctor | `http://localhost:3001` | ID `DOC84920` / PIN `123456`. |
 | | Check Pending Appointments | "Appointments" Queue | You will immediately see `Sunil Rao` (`PAT54321`) with Token Number! |
 | | Prescribe Medication | Click "Prescribe" | Select medicines (e.g. `Metformin 500mg`, frequency `1-0-1`, meal `After Food`). |
 | | Sign & Submit Prescription | Click "Sign & Submit" | Prescription commits to Supabase. Appointment automatically marks `COMPLETED`. |
-| **3. Pharmacy** | Sign in as pharmacist | `http://localhost:3002` | `rajiv.pharmacy@curalink.health` / `pharmacy123` (or click Quick Login). |
+| **3. Pharmacy** | Sign in as pharmacist | `http://localhost:3003` | `rajiv.pharmacy@curalink.health` / `pharmacy123` (or click Quick Login). |
 | | Patient Lookup | Search Bar / Scanner | Enter patient UHID: `PAT54321` (or scan barcode). |
+| | Visual Sticker Guide | Active Prescription Screen | Illiterate patient warning triggers: **"Requires Visual Sticker Guidance"**. Morning (Yellow) and Night (Blue) sticker tags are displayed! |
+| | Confirm Stickers & Dispense | Dispensing Desk | Click "Confirm Sticker" on each medicine line, check batch stock, and click **"Dispense All Medicines"**. |
+| | Dispense Receipt & Labels | Confirmation Screen | Receipt `RCP-YYYYMMDD-XXXX` is generated, inventory decremented, and sticker labels ready for printing! |
 | | Visual Sticker Guide | Active Prescription Screen | Illiterate patient warning triggers: **"Requires Visual Sticker Guidance"**. Morning (Yellow) and Night (Blue) sticker tags are displayed! |
 | | Confirm Stickers & Dispense | Dispensing Desk | Click "Confirm Sticker" on each medicine line, check batch stock, and click **"Dispense All Medicines"**. |
 | | Dispense Receipt & Labels | Confirmation Screen | Receipt `RCP-YYYYMMDD-XXXX` is generated, inventory decremented, and sticker labels ready for printing! |
