@@ -1,17 +1,16 @@
-# curalink
+# CuraLink
 
-A new Flutter project.
+A modern healthcare management and clinical adherence platform.
 
-## Getting Started
+## Modules & Workspaces
+- **[patient_portal/](./patient_portal)**: Cross-platform Flutter mobile & web patient portal for prescriptions, diagnostic scans, daily medication schedules, and care alerts.
+- **[doctor/](./doctor)**: Clinical portal for doctors to review patient history and issue prescriptions.
+- **[careteam/](./careteam)**: Care coordination dashboard for monitoring patient adherence and alerts.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Getting Started with Patient Portal
+Navigate to the `patient_portal` directory:
+```bash
+cd patient_portal
+flutter pub get
+flutter run
+```
