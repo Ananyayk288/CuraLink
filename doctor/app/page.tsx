@@ -95,7 +95,7 @@ export default function DoctorPortal() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(true);
 
   // Navigation State
-  const [activeTab, setActiveTab] = useState<'command' | 'prescription' | 'patients' | 'architecture' | 'supabase'>('command');
+  const [activeTab, setActiveTab] = useState<'command' | 'prescription' | 'architecture' | 'supabase'>('command');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Photo-matching Date & Time Selector state (Reference UI)
@@ -116,7 +116,7 @@ export default function DoctorPortal() {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
 
   // Prescription Workspace State
-  const [rxSubTab, setRxSubTab] = useState<'new' | 'rxHistory' | 'medHistory'>('new');
+  const [rxSubTab, setRxSubTab] = useState<'directory' | 'new' | 'rxHistory' | 'medHistory'>('new');
   const [isPrescriptionDraftActive, setIsPrescriptionDraftActive] = useState(false);
   const [rxMode, setRxMode] = useState<'NORMAL' | 'SCAN_TEST'>('NORMAL');
   const [symptomsNotes, setSymptomsNotes] = useState('');
@@ -730,26 +730,6 @@ export default function DoctorPortal() {
               )}
             </button>
 
-            {/* Enrolled Patients */}
-            <button
-              onClick={() => setActiveTab('patients')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-base transition-all ${
-                activeTab === 'patients'
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                  : 'text-slate-700 hover:bg-[#F3EFE6] hover:text-slate-950'
-              }`}
-            >
-              <div className="flex items-center gap-3.5">
-                <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-white' : 'text-slate-500'}`} />
-                <span>Enrolled Patients</span>
-              </div>
-              <span className={`text-xs sm:text-sm font-black px-2.5 py-0.5 rounded-full ${
-                activeTab === 'patients' ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-800'
-              }`}>
-                {patients.length}
-              </span>
-            </button>
-
             <div className="pt-2 pb-1 border-t border-[#E8E2D5]/70"></div>
 
             {/* AI Telephony Architecture */}
@@ -920,28 +900,6 @@ export default function DoctorPortal() {
                       {selectedPatient.name.split(' ')[0]}
                     </span>
                   )}
-                </button>
-
-                <button
-                  onClick={() => {
-                    setActiveTab('patients');
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
-                    activeTab === 'patients'
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                      : 'text-slate-600 hover:bg-[#F3EFE6]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-white' : 'text-slate-400'}`} />
-                    <span>Enrolled Patients</span>
-                  </div>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                    activeTab === 'patients' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
-                  }`}>
-                    {patients.length}
-                  </span>
                 </button>
 
                 <div className="pt-2 pb-1 border-t border-[#E8E2D5]" />
@@ -1194,7 +1152,10 @@ export default function DoctorPortal() {
 
                     {/* Enrolled Patients Card */}
                     <div
-                      onClick={() => setActiveTab('patients')}
+                      onClick={() => {
+                        setActiveTab('prescription');
+                        setRxSubTab('directory');
+                      }}
                       className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
@@ -1714,33 +1675,66 @@ export default function DoctorPortal() {
                     </div>
                   </div>
 
-                  {/* Switch Patient Quick Dropdown */}
+                  {/* Switch Patient Quick Dropdown & Browse Directory */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
-                    <span className="text-xs font-bold text-slate-500">Switch Patient:</span>
-                    <select
-                      value={selectedPatient?.id || ''}
-                      onChange={e => {
-                        const pt = patients.find(p => p.id === e.target.value);
-                        if (pt) {
-                          setSelectedPatient(pt);
-                          setSelectedAppointmentId(null);
-                        }
-                      }}
-                      className="text-xs font-semibold px-3.5 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 w-full sm:w-auto"
+                    <button
+                      type="button"
+                      onClick={() => setRxSubTab('directory')}
+                      className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-2xl border text-xs font-bold transition-all shadow-2xs ${
+                        rxSubTab === 'directory'
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-blue-500/25'
+                          : 'border-[#E8E2D5] bg-[#FAF8F5] hover:bg-[#F3EFE6] text-slate-700'
+                      }`}
                     >
-                      {patients.map(p => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ({p.uhid} - {p.language})
-                        </option>
-                      ))}
-                    </select>
+                      <Users className="w-3.5 h-3.5" />
+                      <span>Browse Directory</span>
+                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-slate-500 hidden md:inline">Quick Switch:</span>
+                      <select
+                        value={selectedPatient?.id || ''}
+                        onChange={e => {
+                          const pt = patients.find(p => p.id === e.target.value);
+                          if (pt) {
+                            setSelectedPatient(pt);
+                            setSelectedAppointmentId(null);
+                          }
+                        }}
+                        className="text-xs font-semibold px-3.5 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 w-full sm:w-auto"
+                      >
+                        {patients.map(p => (
+                          <option key={p.id} value={p.id}>
+                            {p.name} ({p.uhid} - {p.language})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* 3 TABS SEGMENTED PILL CONTROL (MATCHING SCREENSHOT AESTHETIC) */}
+              {/* 4 TABS SEGMENTED PILL CONTROL (MATCHING SCREENSHOT AESTHETIC) */}
               <div className="flex overflow-x-auto pb-1 scrollbar-none">
                 <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1 shadow-2xs">
+                  {/* Tab: Patient Directory */}
+                  <button
+                    onClick={() => setRxSubTab('directory')}
+                    className={`px-5 py-2 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+                      rxSubTab === 'directory'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <Users className="w-3.5 h-3.5" />
+                    <span>Patient Directory</span>
+                    <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                      rxSubTab === 'directory' ? 'bg-white/20 text-white' : 'bg-[#DDD5C7] text-slate-700'
+                    }`}>
+                      {filteredPatients.length}
+                    </span>
+                  </button>
+
+                  {/* Tab: New Prescription */}
                   <button
                     onClick={() => {
                       setRxSubTab('new');
@@ -1755,6 +1749,8 @@ export default function DoctorPortal() {
                     <Plus className="w-3.5 h-3.5" />
                     <span>New Prescription</span>
                   </button>
+
+                  {/* Tab: Prescription History */}
                   <button
                     onClick={() => setRxSubTab('rxHistory')}
                     className={`px-5 py-2 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
@@ -1771,6 +1767,8 @@ export default function DoctorPortal() {
                       {rxHistory.length}
                     </span>
                   </button>
+
+                  {/* Tab: Medication History */}
                   <button
                     onClick={() => setRxSubTab('medHistory')}
                     className={`px-5 py-2 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
@@ -1790,6 +1788,122 @@ export default function DoctorPortal() {
                 </div>
               </div>
 
+              {/* TAB 0: PATIENT DIRECTORY */}
+              {rxSubTab === 'directory' && (
+                <div className="space-y-6">
+                  {/* Search & Language Filters */}
+                  <div className="bg-white p-4 rounded-3xl border border-[#E8E2D5] flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-center justify-between shadow-xs">
+                    <div className="relative w-full md:w-80">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                      <input
+                        type="text"
+                        value={patientSearch}
+                        onChange={e => setPatientSearch(e.target.value)}
+                        placeholder="Search by name, UHID, phone, or condition..."
+                        className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 w-full md:w-auto scrollbar-none">
+                      {['ALL', 'KANNADA', 'HINDI', 'TELUGU', 'TAMIL', 'MARATHI', 'ENGLISH'].map(lang => (
+                        <button
+                          key={lang}
+                          onClick={() => setPatientLangFilter(lang)}
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
+                            patientLangFilter === lang
+                              ? 'bg-blue-600 text-white shadow-xs'
+                              : 'bg-white text-slate-600 hover:bg-[#F3EFE6] border border-[#E8E2D5]'
+                          }`}
+                        >
+                          {lang}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Patients Grid with photo-matching rounded-3xl white cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {filteredPatients.map(pt => {
+                      const isSelected = selectedPatient?.id === pt.id;
+                      return (
+                        <div
+                          key={pt.id}
+                          className={`bg-white rounded-3xl border p-5 space-y-4 hover:shadow-md transition-all flex flex-col justify-between shadow-xs ${
+                            isSelected
+                              ? 'border-blue-500 ring-2 ring-blue-500/20'
+                              : 'border-[#E8E2D5] hover:border-blue-300'
+                          }`}
+                        >
+                          <div>
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
+                                  {pt.name.charAt(0)}
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-1.5">
+                                    <h3 className="font-extrabold text-base text-slate-900 leading-tight">
+                                      {pt.name}
+                                    </h3>
+                                    {isSelected && (
+                                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-600 text-white">
+                                        Current
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className="font-mono text-[11px] font-bold text-slate-500">
+                                      {pt.uhid}
+                                    </span>
+                                    <span>•</span>
+                                    <span className="text-xs text-slate-500">
+                                      {pt.age}y / {pt.gender}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
+                                {pt.language}
+                              </span>
+                            </div>
+
+                            <div className="mt-3.5 space-y-1.5 text-xs text-slate-600">
+                              <div>
+                                <strong className="text-slate-700">Phone:</strong> {pt.phone}
+                              </div>
+                              <div>
+                                <strong className="text-slate-700">Conditions:</strong>{' '}
+                                <span className="text-blue-700 font-semibold">
+                                  {pt.chronicConditions.join(', ')}
+                                </span>
+                              </div>
+                              {pt.guardianName && (
+                                <div>
+                                  <strong className="text-slate-700">Caregiver:</strong> {pt.guardianName}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="pt-3 border-t border-[#E8E2D5] flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-slate-400">
+                              Device: {pt.deviceType}
+                            </span>
+                            <button
+                              onClick={() => handleStartPrescription(pt)}
+                              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/25 transition-all active:scale-95"
+                            >
+                              <Pill className="w-3.5 h-3.5" />
+                              <span>Select & Prescribe</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* TAB 1: NEW PRESCRIPTION */}
               {rxSubTab === 'new' && (
                 !isPrescriptionDraftActive ? (
@@ -1806,7 +1920,7 @@ export default function DoctorPortal() {
                         Click below to begin drafting a new prescription, enter medication dosing, order scans/tests, and set automated adherence triggers.
                       </p>
                     </div>
-                    <div className="pt-2">
+                    <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
                       <button
                         type="button"
                         onClick={() => setIsPrescriptionDraftActive(true)}
@@ -1814,6 +1928,14 @@ export default function DoctorPortal() {
                       >
                         <Plus className="w-5 h-5" />
                         <span>New Prescription</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setRxSubTab('directory')}
+                        className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full font-extrabold text-sm bg-[#EDE7DC] hover:bg-[#E8E2D5] text-slate-800 transition-all active:scale-95"
+                      >
+                        <Users className="w-4 h-4 text-blue-600" />
+                        <span>Browse Patient Directory</span>
                       </button>
                     </div>
                   </div>
@@ -2846,122 +2968,6 @@ export default function DoctorPortal() {
           )}
 
           {/* ========================================================== */}
-          {/* VIEW: ENROLLED PATIENTS (8 DEMO PATIENTS) */}
-          {/* ========================================================== */}
-          {activeTab === 'patients' && (
-            <div className="space-y-6">
-              {/* Headline with NO tagline */}
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-                  Enrolled Patients
-                </h2>
-                <span className="text-xs font-bold text-slate-500">
-                  {filteredPatients.length} Patients Enrolled
-                </span>
-              </div>
-
-              {/* Search & Language Filters */}
-              <div className="bg-white p-4 rounded-3xl border border-[#E8E2D5] flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-center justify-between shadow-xs">
-                <div className="relative w-full md:w-80">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                  <input
-                    type="text"
-                    value={patientSearch}
-                    onChange={e => setPatientSearch(e.target.value)}
-                    placeholder="Search by name, UHID, phone, or condition..."
-                    className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 w-full md:w-auto scrollbar-none">
-                  {['ALL', 'KANNADA', 'HINDI', 'TELUGU', 'TAMIL', 'MARATHI', 'ENGLISH'].map(lang => (
-                    <button
-                      key={lang}
-                      onClick={() => setPatientLangFilter(lang)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
-                        patientLangFilter === lang
-                          ? 'bg-blue-600 text-white shadow-xs'
-                          : 'bg-white text-slate-600 hover:bg-[#F3EFE6] border border-[#E8E2D5]'
-                      }`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Patients Grid with photo-matching rounded-3xl white cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {filteredPatients.map(pt => (
-                  <div
-                    key={pt.id}
-                    className="bg-white rounded-3xl border border-[#E8E2D5] p-5 space-y-4 hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between shadow-xs"
-                  >
-                    <div>
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
-                            {pt.name.charAt(0)}
-                          </div>
-                          <div>
-                            <h3 className="font-extrabold text-base text-slate-900 leading-tight">
-                              {pt.name}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="font-mono text-[11px] font-bold text-slate-500">
-                                {pt.uhid}
-                              </span>
-                              <span>•</span>
-                              <span className="text-xs text-slate-500">
-                                {pt.age}y / {pt.gender}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
-                          {pt.language}
-                        </span>
-                      </div>
-
-                      <div className="mt-3.5 space-y-1.5 text-xs text-slate-600">
-                        <div>
-                          <strong className="text-slate-700">Phone:</strong> {pt.phone}
-                        </div>
-                        <div>
-                          <strong className="text-slate-700">Conditions:</strong>{' '}
-                          <span className="text-blue-700 font-semibold">
-                            {pt.chronicConditions.join(', ')}
-                          </span>
-                        </div>
-                        {pt.guardianName && (
-                          <div>
-                            <strong className="text-slate-700">Caregiver:</strong> {pt.guardianName}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-[#E8E2D5] flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-slate-400">
-                        Device: {pt.deviceType}
-                      </span>
-                      <button
-                        onClick={() => handleStartPrescription(pt)}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/25 transition-all active:scale-95"
-                      >
-                        <Pill className="w-3.5 h-3.5" />
-                        <span>Prescribe</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-
-
-          {/* ========================================================== */}
           {/* VIEW: AI TELEPHONY ARCHITECTURE (FRIEND'S SPECIFICATION) */}
           {/* ========================================================== */}
           {activeTab === 'architecture' && (
@@ -3352,21 +3358,6 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
           >
             <Pill className="w-4.5 h-4.5 shrink-0" />
             {activeTab === 'prescription' && <span>Rx Desk</span>}
-          </button>
-
-          {/* Patients */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('patients')}
-            className={`transition-all ${
-              activeTab === 'patients'
-                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs sm:text-sm'
-                : 'w-10 h-10 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#F6F2EA] flex items-center justify-center'
-            }`}
-            title="Enrolled Patients"
-          >
-            <Users className="w-4.5 h-4.5 shrink-0" />
-            {activeTab === 'patients' && <span>Patients</span>}
           </button>
 
           {/* Architecture */}
