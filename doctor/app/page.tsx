@@ -1104,261 +1104,60 @@ export default function DoctorPortal() {
           {/* ========================================================== */}
           {activeTab === 'command' && (
             <div className="space-y-6">
-              {/* Sky-Blue Gradient Header Wash & Title */}
+              {/* TOP HEADER: Clinical Station Banner (Optimized for both Desktop & Mobile) */}
               <div className="rounded-3xl bg-gradient-to-b from-[#C8E0FD]/85 via-[#EBF3FD]/55 to-white border border-[#E8E2D5] p-5 sm:p-7 shadow-xs">
-                <div className="flex items-center justify-between mb-4">
-                  <button
-                    type="button"
-                    onClick={loadInitialData}
-                    className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-                    title="Refresh Schedule"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                  </button>
-
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs sm:text-sm font-bold text-slate-600 hidden sm:inline">Active Practitioner:</span>
-                    <span className="font-mono text-xs sm:text-sm font-bold px-3.5 py-1 rounded-full bg-white border border-[#E8E2D5] text-blue-700 shadow-2xs">
-                      {currentDoctor?.id || 'DOC84920'}
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsAuthModalOpen(true)}
-                    className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-                    title="Doctor Settings / Switch"
-                  >
-                    <User className="w-5 h-5" />
-                  </button>
-                </div>
-
-                <div className="space-y-1.5">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-blue-600 tracking-tight leading-tight">
-                    Book an Appointment
-                  </h1>
-                  <p className="text-sm sm:text-base text-slate-600 font-medium">
-                    Clinical queue, consultation slots, and practitioner schedule
-                  </p>
-                </div>
-              </div>
-
-              {/* Photo-Matching Doctor Card (Dr. Reginald Leiw Layout) */}
-              <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs flex items-center justify-between gap-4 hover:border-blue-300 transition-all">
-                <div className="flex items-center gap-4 overflow-hidden min-w-0">
-                  <div className="w-16 sm:w-18 h-16 sm:h-18 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-lg sm:text-xl shadow-2xs shrink-0">
-                    {currentDoctor?.name
-                      ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
-                      : 'RL'}
-                  </div>
-                  <div className="overflow-hidden min-w-0">
-                    <h2 className="font-black text-slate-900 text-lg sm:text-xl truncate leading-tight">
-                      {currentDoctor?.name || 'Dr. Reginald Leiw'}
-                    </h2>
-                    <p className="text-sm text-slate-600 font-medium truncate mt-0.5">
-                      Consultant • Chronic Care &amp; Internal Medicine
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-200">
+                        OPD Consultation Station
+                      </span>
+                      <span className="text-xs text-slate-500 font-semibold">• Room 302 • Clinical Shift Active</span>
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                      {currentDoctor?.name || 'Dr. Suresh Sharma, MD'}
+                    </h1>
+                    <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                      Consultant in Chronic Disease Care &amp; General Medicine • Live OPD Queue Management
                     </p>
-                    <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
-                      <span className="text-sm font-bold text-slate-900">
-                        $120.00
-                      </span>
-                      <span className="text-xs text-slate-400">•</span>
-                      <span className="text-xs sm:text-sm font-mono text-blue-600 font-bold">
-                        {currentDoctor?.id || 'DOC84920'}
-                      </span>
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        ✓ Verified
-                      </span>
-                    </div>
                   </div>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="w-10 sm:w-11 h-10 sm:h-11 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all hover:scale-105 active:scale-95 shadow-2xs"
-                  title="Switch Practitioner"
-                >
-                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-                </button>
-              </div>
+                  <div className="flex items-center gap-2.5 self-start sm:self-center flex-wrap">
+                    <button
+                      type="button"
+                      onClick={loadInitialData}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white border border-[#E8E2D5] text-slate-700 text-xs font-bold shadow-2xs hover:bg-[#F3EFE6] transition-all active:scale-95"
+                      title="Refresh Queue & Schedule"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Refresh</span>
+                    </button>
 
-              {/* Segmented Control Toggle (Matching Screen 2's "Upcoming" vs "Past" Pill Bar) */}
-              <div className="flex justify-center sm:justify-start">
-                <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1.5 shadow-2xs">
-                  <button
-                    type="button"
-                    onClick={() => setActivityTab('upcoming')}
-                    className={`px-6 sm:px-8 py-2.5 rounded-full text-sm font-bold transition-all ${
-                      activityTab === 'upcoming'
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                        : 'text-slate-700 hover:text-slate-950'
-                    }`}
-                  >
-                    Upcoming
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActivityTab('past')}
-                    className={`px-6 sm:px-8 py-2.5 rounded-full text-sm font-bold transition-all ${
-                      activityTab === 'past'
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
-                        : 'text-slate-700 hover:text-slate-950'
-                    }`}
-                  >
-                    Past
-                  </button>
+                    <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white border border-[#E8E2D5] text-blue-700 text-xs font-bold shadow-2xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="font-mono">{currentDoctor?.id || 'DOC84920'}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsAuthModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-500/25 transition-all active:scale-95"
+                    >
+                      <User className="w-3.5 h-3.5" />
+                      <span>Switch Doctor</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {/* UPCOMING VIEW (DATE & TIME CAROUSEL + QUEUE) */}
-              {activityTab === 'upcoming' && (
-                <div className="space-y-6">
-                  {/* DATE & TIME SECTION (EXACT REPLICA FROM REFERENCE PHOTO) */}
-                  <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs space-y-5">
-                    {/* Month Carousel */}
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-700">
-                          Date &amp; Time
-                        </span>
-                        <span className="text-xs sm:text-sm text-blue-600 font-bold flex items-center gap-1.5">
-                          <Calendar className="w-4 h-4" />
-                          <span>{selectedMonth} 2026</span>
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none">
-                        {['April', 'May', 'June', 'July', 'August', 'September'].map(m => (
-                          <button
-                            key={m}
-                            type="button"
-                            onClick={() => setSelectedMonth(m)}
-                            className={`px-4.5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                              selectedMonth === m
-                                ? 'bg-blue-600 text-white shadow-xs'
-                                : 'bg-[#FAF8F5] text-slate-700 hover:bg-slate-100 border border-[#E8E2D5]'
-                            }`}
-                          >
-                            {m}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Day Carousel */}
-                    <div>
-                      <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
-                        {[
-                          { day: 15, name: 'Tue', dots: ['#F59E0B'] },
-                          { day: 16, name: 'Wed', dots: ['#F59E0B', '#3B82F6'] },
-                          { day: 17, name: 'Thu', dots: ['#F59E0B', '#F97316', '#3B82F6', '#4338CA'] },
-                          { day: 18, name: 'Fri', dots: ['#3B82F6'] },
-                          { day: 19, name: 'Sat', dots: ['#10B981'] },
-                          { day: 20, name: 'Sun', dots: [] },
-                          { day: 21, name: 'Mon', dots: ['#F59E0B', '#3B82F6'] },
-                          { day: 22, name: 'Tue', dots: ['#3B82F6'] },
-                        ].map(item => {
-                          const isSelected = selectedDay === item.day;
-                          return (
-                            <button
-                              key={item.day}
-                              type="button"
-                              onClick={() => setSelectedDay(item.day)}
-                              className={`flex flex-col items-center justify-center min-w-[62px] py-3.5 px-3 rounded-2xl transition-all shrink-0 ${
-                                isSelected
-                                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-600'
-                                  : 'bg-white text-slate-800 border border-[#E8E2D5] hover:bg-blue-50/50 shadow-2xs'
-                              }`}
-                            >
-                              <span className="text-lg sm:text-xl font-black leading-none mb-1">
-                                {item.day}
-                              </span>
-                              <span className={`text-xs font-bold leading-none ${
-                                isSelected ? 'text-white/95' : 'text-slate-500'
-                              }`}>
-                                {item.name}
-                              </span>
-
-                              {/* Tiny indicator dots below the date */}
-                              <div className="flex items-center gap-1 mt-2 h-1.5">
-                                {item.dots.length > 0 ? (
-                                  item.dots.map((dotColor, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="w-1.5 h-1.5 rounded-full"
-                                      style={{ backgroundColor: isSelected ? '#FFFFFF' : dotColor }}
-                                    />
-                                  ))
-                                ) : (
-                                  <span className="w-1.5 h-1.5 opacity-0" />
-                                )}
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Time Slots ("Select a Time" Chips Grid) */}
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800">
-                          Select a Time
-                        </span>
-                        <span className="text-xs sm:text-sm text-blue-600 font-bold flex items-center gap-1.5">
-                          <Clock className="w-4 h-4" />
-                          <span>Select a Time</span>
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
-                        {[
-                          '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM',
-                          '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
-                          '1:00 PM', '1:30 PM'
-                        ].map(slot => {
-                          const isSelectedSlot = selectedTimeSlot === slot;
-                          return (
-                            <button
-                              key={slot}
-                              type="button"
-                              onClick={() => setSelectedTimeSlot(slot)}
-                              className={`py-3 px-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all text-center border ${
-                                isSelectedSlot
-                                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25'
-                                  : 'bg-blue-50/40 hover:bg-blue-100 text-blue-700 border-blue-200/80 shadow-2xs'
-                              }`}
-                            >
-                              {slot}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Big Electric Blue Pill CTA Button */}
-                    <div className="pt-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const firstPending = pendingAppointments[0];
-                          if (firstPending && firstPending.patient) {
-                            handleStartPrescription(firstPending.patient, firstPending.id);
-                          } else {
-                            setActiveTab('prescription');
-                          }
-                        }}
-                        className="w-full py-4.5 px-8 rounded-full font-black text-base sm:text-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2.5 active:scale-98"
-                      >
-                        <Clock className="w-5 h-5" />
-                        <span>Book an Appointment ({selectedDay} {selectedMonth} at {selectedTimeSlot})</span>
-                      </button>
-                    </div>
-                  </div>
-
+              {/* DUAL WORKSTATION GRID: Left Column = Live Queue & Tools; Right Column = Doctor & Scheduler Widget */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* ======================================================== */}
+                {/* MAIN COLUMN (LEFT ON DESKTOP, ORDER 2 ON MOBILE) */}
+                {/* ======================================================== */}
+                <div className="lg:col-span-7 xl:col-span-8 space-y-6 order-2 lg:order-1">
                   {/* Quick Metric KPI Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* Pending Appointments Card */}
                     <div
                       onClick={() => {
@@ -1369,54 +1168,54 @@ export default function DoctorPortal() {
                           setActiveTab('prescription');
                         }
                       }}
-                      className="bg-white p-6 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                           Pending Queue
                         </span>
-                        <div className="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
+                        <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Clock className="w-5 h-5" />
                         </div>
                       </div>
-                      <div className="mt-3 flex items-baseline gap-2.5">
-                        <span className="text-4xl sm:text-5xl font-black text-slate-900">
+                      <div className="mt-3 flex items-baseline gap-2">
+                        <span className="text-3xl font-extrabold text-slate-900">
                           {pendingAppointments.length}
                         </span>
-                        <span className="text-xs sm:text-sm font-bold text-amber-600">
-                          Awaiting Consultation
+                        <span className="text-xs font-semibold text-amber-600">
+                          In Line
                         </span>
                       </div>
-                      <div className="mt-2 text-xs sm:text-sm text-slate-500 font-medium flex items-center gap-1">
-                        <span>Click to start prescription</span>
-                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <span>Click to prescribe</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
 
                     {/* Enrolled Patients Card */}
                     <div
                       onClick={() => setActiveTab('patients')}
-                      className="bg-white p-6 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                           Enrolled Patients
                         </span>
-                        <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Users className="w-5 h-5 sm:w-6 sm:h-6" />
+                        <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Users className="w-5 h-5" />
                         </div>
                       </div>
-                      <div className="mt-3 flex items-baseline gap-2.5">
-                        <span className="text-4xl sm:text-5xl font-black text-slate-900">
+                      <div className="mt-3 flex items-baseline gap-2">
+                        <span className="text-3xl font-extrabold text-slate-900">
                           {patients.length}
                         </span>
-                        <span className="text-xs sm:text-sm font-bold text-blue-600">
-                          Active In Care Program
+                        <span className="text-xs font-semibold text-blue-600">
+                          Active Roster
                         </span>
                       </div>
-                      <div className="mt-2 text-xs sm:text-sm text-slate-500 font-medium flex items-center gap-1">
-                        <span>Click to view directory</span>
-                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <span>View directory</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
 
@@ -1442,40 +1241,48 @@ export default function DoctorPortal() {
                           Rx
                         </span>
                         <span className="text-xs font-semibold text-purple-600">
-                          Draft &amp; Order Desk
+                          Ready
                         </span>
                       </div>
                       <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
-                        <span>Click to open prescription</span>
+                        <span>New order</span>
                         <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
                   </div>
 
-                  {/* Today's Pending Appointments Queue Table */}
+                  {/* Today's Live Consultation Queue (Front and Center on Laptop) */}
                   <div className="bg-white rounded-3xl border border-[#E8E2D5] shadow-xs overflow-hidden">
-                    <div className="px-6 py-4 border-b border-[#E8E2D5] flex items-center justify-between bg-[#FAF8F5]">
+                    <div className="px-6 py-4.5 border-b border-[#E8E2D5] flex flex-col sm:flex-row sm:items-center justify-between bg-[#FAF8F5] gap-2">
                       <div className="flex items-center gap-3">
-                        <h3 className="font-bold text-base text-slate-900">
-                          Today&apos;s Consultation Queue
-                        </h3>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                          {pendingAppointments.length} Pending
+                        <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center">
+                          <Activity className="w-4.5 h-4.5" />
+                        </div>
+                        <div>
+                          <h3 className="font-extrabold text-base text-slate-900">
+                            Today&apos;s Live Consultation Queue
+                          </h3>
+                          <p className="text-xs text-slate-400 font-medium">
+                            Attending outpatient consultation order • Auto-synced
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                          {pendingAppointments.length} Patients In Queue
                         </span>
                       </div>
-                      <span className="text-xs text-slate-400 font-medium">
-                        Live attending consultations
-                      </span>
                     </div>
 
                     {pendingAppointments.length === 0 ? (
                       <div className="p-12 text-center text-slate-500">
                         <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
                         <p className="font-bold text-slate-800">All appointments completed for today!</p>
+                        <p className="text-xs text-slate-400 mt-1">Check back later or view enrolled patients.</p>
                       </div>
                     ) : (
                       <>
-                        {/* Mobile Appointments Card List */}
+                        {/* Mobile Appointments Card List (< md screens) */}
                         <div className="block md:hidden divide-y divide-[#E8E2D5]">
                           {pendingAppointments.map(apt => (
                             <div key={apt.id} className="p-4 space-y-3">
@@ -1527,7 +1334,7 @@ export default function DoctorPortal() {
                           ))}
                         </div>
 
-                        {/* Desktop Appointments Table */}
+                        {/* Desktop Appointments Table (md: and up screens) */}
                         <div className="hidden md:block overflow-x-auto">
                           <table className="w-full text-left text-sm">
                             <thead className="bg-[#FAF8F5] text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-[#E8E2D5]">
@@ -1598,55 +1405,270 @@ export default function DoctorPortal() {
                     )}
                   </div>
                 </div>
-              )}
 
-              {/* PAST VIEW (EXACT REPLICA OF REFERENCE PHOTO SCREEN 2: "ACTIVITY") */}
-              {activityTab === 'past' && (
-                <div className="space-y-6">
-                  {/* Hero Doctor Card Replica */}
-                  <div className="bg-white rounded-3xl border border-[#E8E2D5] p-6 sm:p-10 shadow-xs text-center space-y-6 max-w-xl mx-auto">
-                    {/* Big Squircle Portrait Container */}
-                    <div className="w-48 sm:w-60 h-48 sm:h-60 rounded-[32px] bg-[#EDE6D8] border-2 border-[#E8E2D5] overflow-hidden mx-auto flex items-center justify-center shadow-inner relative">
-                      <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-t from-slate-900/10 to-transparent">
-                        <div className="w-20 h-20 rounded-full bg-white/90 border border-blue-200 flex items-center justify-center text-blue-600 shadow-md">
-                          <Stethoscope className="w-10 h-10" />
+                {/* ======================================================== */}
+                {/* COMPANION COLUMN (RIGHT ON DESKTOP, ORDER 1 ON MOBILE) */}
+                {/* ======================================================== */}
+                <div className="lg:col-span-5 xl:col-span-4 space-y-6 order-1 lg:order-2">
+                  {/* Photo-Matching Doctor Card (Dr. Reginald Leiw Layout) */}
+                  <div className="bg-white rounded-3xl border border-[#E8E2D5] p-4 sm:p-5 shadow-xs flex items-center justify-between gap-3 sm:gap-4 hover:border-blue-300 transition-all">
+                    <div className="flex items-center gap-3.5 sm:gap-4 overflow-hidden min-w-0">
+                      <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-base sm:text-lg shadow-2xs shrink-0">
+                        {currentDoctor?.name
+                          ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
+                          : 'RL'}
+                      </div>
+                      <div className="overflow-hidden min-w-0">
+                        <h2 className="font-extrabold text-slate-900 text-base sm:text-lg truncate leading-tight">
+                          {currentDoctor?.name || 'Dr. Reginald Leiw'}
+                        </h2>
+                        <p className="text-xs text-slate-400 font-medium truncate mt-0.5">
+                          Consultant • Chronic Care &amp; Internal Medicine
+                        </p>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <span className="text-xs font-bold text-slate-800">
+                            $120.00
+                          </span>
+                          <span className="text-[10px] text-slate-400">•</span>
+                          <span className="text-[11px] font-mono text-blue-600 font-semibold">
+                            {currentDoctor?.id || 'DOC84920'}
+                          </span>
+                          <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            ✓ Verified
+                          </span>
                         </div>
-                        <span className="font-extrabold text-sm text-slate-800 mt-3">
-                          {currentDoctor?.name || 'Dr. Suresh Sharma, MD'}
-                        </span>
-                        <span className="text-[11px] text-slate-500 font-medium">
-                          Attending Clinical Consultant
-                        </span>
                       </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                      <h3 className="text-xl sm:text-2xl font-black text-slate-900">
-                        No Past Activity
-                      </h3>
-                      <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                        Ready to explore DA offering? Discover our Products &amp; Services
-                      </p>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsAuthModalOpen(true)}
+                      className="w-9 sm:w-10 h-9 sm:h-10 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all hover:scale-105 active:scale-95 shadow-2xs"
+                      title="Switch Practitioner"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
 
-                    <div className="pt-2">
+                  {/* Segmented Control Toggle (Matching Screen 2's "Upcoming" vs "Past" Pill Bar) */}
+                  <div className="flex justify-center sm:justify-start">
+                    <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1 shadow-2xs w-full sm:w-auto">
                       <button
                         type="button"
-                        onClick={() => {
-                          setActivityTab('upcoming');
-                          const firstPending = pendingAppointments[0];
-                          if (firstPending && firstPending.patient) {
-                            handleStartPrescription(firstPending.patient, firstPending.id);
-                          }
-                        }}
-                        className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 active:scale-98"
+                        onClick={() => setActivityTab('upcoming')}
+                        className={`flex-1 sm:flex-initial px-6 py-2 rounded-full text-xs font-bold transition-all text-center ${
+                          activityTab === 'upcoming'
+                            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
                       >
-                        <span>Book an Appointment</span>
+                        Upcoming
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActivityTab('past')}
+                        className={`flex-1 sm:flex-initial px-6 py-2 rounded-full text-xs font-bold transition-all text-center ${
+                          activityTab === 'past'
+                            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Past
                       </button>
                     </div>
                   </div>
+
+                  {/* UPCOMING VIEW (DATE & TIME CAROUSEL + TIME SLOTS CHIPS) */}
+                  {activityTab === 'upcoming' && (
+                    <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs space-y-5">
+                      {/* Month Carousel */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Date &amp; Time
+                          </span>
+                          <span className="text-xs text-blue-600 font-semibold flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5" />
+                            <span>{selectedMonth} 2026</span>
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none">
+                          {['April', 'May', 'June', 'July', 'August', 'September'].map(m => (
+                            <button
+                              key={m}
+                              type="button"
+                              onClick={() => setSelectedMonth(m)}
+                              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
+                                selectedMonth === m
+                                  ? 'bg-blue-600 text-white shadow-xs'
+                                  : 'bg-[#FAF8F5] text-slate-600 hover:bg-slate-100 border border-[#E8E2D5]'
+                              }`}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Day Carousel with vertical pill & dots */}
+                      <div>
+                        <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
+                          {[
+                            { day: 15, name: 'Tue', dots: ['#F59E0B'] },
+                            { day: 16, name: 'Wed', dots: ['#F59E0B', '#3B82F6'] },
+                            { day: 17, name: 'Thu', dots: ['#F59E0B', '#F97316', '#3B82F6', '#4338CA'] },
+                            { day: 18, name: 'Fri', dots: ['#3B82F6'] },
+                            { day: 19, name: 'Sat', dots: ['#10B981'] },
+                            { day: 20, name: 'Sun', dots: [] },
+                            { day: 21, name: 'Mon', dots: ['#F59E0B', '#3B82F6'] },
+                            { day: 22, name: 'Tue', dots: ['#3B82F6'] },
+                          ].map(item => {
+                            const isSelected = selectedDay === item.day;
+                            return (
+                              <button
+                                key={item.day}
+                                type="button"
+                                onClick={() => setSelectedDay(item.day)}
+                                className={`flex flex-col items-center justify-center min-w-[56px] py-3 px-3 rounded-2xl transition-all shrink-0 ${
+                                  isSelected
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-600'
+                                    : 'bg-white text-slate-700 border border-[#E8E2D5] hover:bg-blue-50/50 shadow-2xs'
+                                }`}
+                              >
+                                <span className="text-base font-black leading-none mb-1">
+                                  {item.day}
+                                </span>
+                                <span className={`text-[11px] font-semibold leading-none ${
+                                  isSelected ? 'text-white/90' : 'text-slate-400'
+                                }`}>
+                                  {item.name}
+                                </span>
+
+                                {/* Tiny indicator dots below the date */}
+                                <div className="flex items-center gap-1 mt-2 h-1.5">
+                                  {item.dots.length > 0 ? (
+                                    item.dots.map((dotColor, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="w-1.5 h-1.5 rounded-full"
+                                        style={{ backgroundColor: isSelected ? '#FFFFFF' : dotColor }}
+                                      />
+                                    ))
+                                  ) : (
+                                    <span className="w-1.5 h-1.5 opacity-0" />
+                                  )}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Time Slots ("Select a Time" Chips Grid) */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                            Select a Time
+                          </span>
+                          <span className="text-xs text-blue-600 font-semibold flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" />
+                            <span>Select a Time</span>
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          {[
+                            '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM',
+                            '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
+                            '1:00 PM', '1:30 PM'
+                          ].map(slot => {
+                            const isSelectedSlot = selectedTimeSlot === slot;
+                            return (
+                              <button
+                                key={slot}
+                                type="button"
+                                onClick={() => setSelectedTimeSlot(slot)}
+                                className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all text-center border ${
+                                  isSelectedSlot
+                                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25'
+                                    : 'bg-blue-50/40 hover:bg-blue-100 text-blue-700 border-blue-200/80 shadow-2xs'
+                                }`}
+                              >
+                                {slot}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Big Electric Blue Pill CTA Button */}
+                      <div className="pt-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const firstPending = pendingAppointments[0];
+                            if (firstPending && firstPending.patient) {
+                              handleStartPrescription(firstPending.patient, firstPending.id);
+                            } else {
+                              setActiveTab('prescription');
+                            }
+                          }}
+                          className="w-full py-3.5 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 active:scale-98"
+                        >
+                          <Clock className="w-4 h-4" />
+                          <span>Book an Appointment ({selectedDay} {selectedMonth} at {selectedTimeSlot})</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PAST VIEW (EXACT REPLICA OF REFERENCE PHOTO SCREEN 2: "ACTIVITY") */}
+                  {activityTab === 'past' && (
+                    <div className="bg-white rounded-3xl border border-[#E8E2D5] p-6 shadow-xs text-center space-y-5">
+                      {/* Big Squircle Portrait Container */}
+                      <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-[28px] bg-[#EDE6D8] border-2 border-[#E8E2D5] overflow-hidden mx-auto flex items-center justify-center shadow-inner relative">
+                        <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-t from-slate-900/10 to-transparent">
+                          <div className="w-16 h-16 rounded-full bg-white/90 border border-blue-200 flex items-center justify-center text-blue-600 shadow-md">
+                            <Stethoscope className="w-8 h-8" />
+                          </div>
+                          <span className="font-extrabold text-xs sm:text-sm text-slate-800 mt-2.5">
+                            {currentDoctor?.name || 'Dr. Suresh Sharma, MD'}
+                          </span>
+                          <span className="text-[10px] text-slate-500 font-medium">
+                            Attending Clinical Consultant
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <h3 className="text-lg sm:text-xl font-black text-slate-900">
+                          No Past Activity
+                        </h3>
+                        <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                          Ready to explore DA offering? Discover our Products &amp; Services
+                        </p>
+                      </div>
+
+                      <div className="pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActivityTab('upcoming');
+                            const firstPending = pendingAppointments[0];
+                            if (firstPending && firstPending.patient) {
+                              handleStartPrescription(firstPending.patient, firstPending.id);
+                            }
+                          }}
+                          className="w-full py-3.5 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 active:scale-98"
+                        >
+                          <span>Book an Appointment</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           )}
 
