@@ -1,0 +1,16 @@
+AROGYAVANI_Complete_Hackathon_Project_Report.docx
+idea.txt
+.~lock.*
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite
+.env
+.env.local
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
