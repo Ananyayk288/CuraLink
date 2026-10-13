@@ -62,7 +62,7 @@ export interface CareTeamUser {
   age: number;
   phone: string;
   email: string;
-  pin: string; // 6-digit PIN
+  pin?: string; // 6-digit PIN
   role?: string;
   createdAt?: string;
 }

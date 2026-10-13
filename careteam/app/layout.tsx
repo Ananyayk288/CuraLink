@@ -4,6 +4,10 @@ import type { Metadata, Viewport } from 'next';
 export const metadata: Metadata = {
   title: 'CURALINK — Care Team Portal (Field & Triage)',
   description: 'Role-specific healthcare portal for patient enrollment, guardian management, and issue escalation',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export const viewport: Viewport = {

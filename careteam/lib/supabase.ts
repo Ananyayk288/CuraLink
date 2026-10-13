@@ -66,7 +66,13 @@ export async function testSupabaseConnection(overrideUrl?: string, overrideKey?:
 
   try {
     const { error } = await client.from('patients').select('id').limit(1);
-    if (error && error.code !== '42P01') {
+    if (error) {
+      if (error.code === '42P01') {
+        return {
+          connected: true,
+          message: 'Connected to Supabase! (Tables pending — run the SQL migration script from Settings to initialize).',
+        };
+      }
       return {
         connected: false,
         message: `Supabase error: ${error.message} (${error.code})`,
@@ -116,7 +122,10 @@ export async function savePatientToSupabase(patient: PatientData): Promise<{
       registered_by: 'Care Team Portal',
     };
 
-    const { data, error } = await client.from('patients').insert([payload]).select();
+    const { data, error } = await client
+      .from('patients')
+      .upsert([payload], { onConflict: 'uhid' })
+      .select();
 
     if (error) {
       console.error('Supabase patient insert error:', error);
@@ -388,7 +397,10 @@ export async function saveCareTeamUserToSupabase(user: CareTeamUser): Promise<{
       role: user.role || 'Care Team Fieldworker',
     };
 
-    const { data, error } = await client.from('care_team_users').insert([payload]).select();
+    const { data, error } = await client
+      .from('care_team_users')
+      .upsert([payload], { onConflict: 'crt_id' })
+      .select();
 
     if (error) {
       console.error('Supabase care team user insert error:', error);
@@ -446,6 +458,261 @@ export async function authenticateCareTeamUserFromSupabase(
     };
   } catch (err: any) {
     return { success: false, error: err.message };
+  }
+}
+
+// Retrieve single patient by phone number directly from Supabase
+export async function getPatientByPhoneFromSupabase(phone: string): Promise<PatientData | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const cleanPhone = phone.replace(/\D/g, '');
+    const { data, error } = await client
+      .from('patients')
+      .select('*')
+      .ilike('phone', `%${cleanPhone.slice(-10)}%`)
+      .limit(1);
+
+    if (error || !data || data.length === 0) return null;
+
+    const row = data[0];
+    return {
+      id: row.id,
+      uhid: row.uhid,
+      name: row.name,
+      age: row.age,
+      phone: row.phone,
+      literacy: row.literacy,
+      address: row.address,
+      gender: row.gender,
+      language: row.language,
+      pin: row.pin,
+      hasGuardian: !!row.guardian_name,
+      guardianName: row.guardian_name,
+      guardianAge: row.guardian_age,
+      guardianPhone: row.guardian_phone,
+      guardianLiteracy: row.guardian_literacy,
+      guardianAddress: row.guardian_address,
+      guardianRelationship: row.guardian_relationship,
+      otpVerified: row.otp_verified,
+      createdAt: row.created_at,
+    };
+  } catch {
+    return null;
+  }
+}
+
+// Search patients in Supabase by name, UHID, or phone
+export async function searchPatientsInSupabase(queryText: string): Promise<PatientData[] | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const q = queryText.trim();
+    const { data, error } = await client
+      .from('patients')
+      .select('*')
+      .or(`name.ilike.%${q}%,uhid.ilike.%${q}%,phone.ilike.%${q}%`)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error || !data) return null;
+
+    return data.map((row: any) => ({
+      id: row.id,
+      uhid: row.uhid,
+      name: row.name,
+      age: row.age,
+      phone: row.phone,
+      literacy: row.literacy,
+      address: row.address,
+      gender: row.gender,
+      language: row.language,
+      pin: row.pin,
+      hasGuardian: !!row.guardian_name,
+      guardianName: row.guardian_name,
+      guardianAge: row.guardian_age,
+      guardianPhone: row.guardian_phone,
+      guardianLiteracy: row.guardian_literacy,
+      guardianAddress: row.guardian_address,
+      guardianRelationship: row.guardian_relationship,
+      otpVerified: row.otp_verified,
+      createdAt: row.created_at,
+    }));
+  } catch {
+    return null;
+  }
+}
+
+// Retrieve escalations for a specific patient
+export async function getEscalationsByPatientIdFromSupabase(
+  patientIdOrUhid: string
+): Promise<EscalationData[] | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('escalations')
+      .select('*')
+      .or(`patient_id.eq.${patientIdOrUhid},patient_name.ilike.%${patientIdOrUhid}%`)
+      .order('created_at', { ascending: false });
+
+    if (error || !data) return null;
+
+    return data.map((row: any) => ({
+      id: row.id,
+      patientId: row.patient_id,
+      patientName: row.patient_name,
+      patientPhone: row.patient_phone,
+      category: row.category,
+      priority: row.priority,
+      target: row.target,
+      notes: row.notes,
+      status: row.status,
+      escalatedBy: row.escalated_by,
+      createdAt: row.created_at,
+    }));
+  } catch {
+    return null;
+  }
+}
+
+// Retrieve all Care Team users from Supabase
+export async function getCareTeamUsersFromSupabase(): Promise<CareTeamUser[] | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('care_team_users')
+      .select('id, crt_id, name, age, phone, email, role, created_at')
+      .order('created_at', { ascending: false });
+
+    if (error || !data) return null;
+
+    return data.map((row: any) => ({
+      id: row.id,
+      crtId: row.crt_id,
+      name: row.name,
+      age: row.age,
+      phone: row.phone,
+      email: row.email,
+      role: row.role,
+      createdAt: row.created_at,
+    }));
+  } catch {
+    return null;
+  }
+}
+
+// Delete patient from Supabase (Administrative)
+export async function deletePatientFromSupabase(
+  idOrUhid: string
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return { success: false, error: 'Supabase client not configured' };
+  }
+
+  try {
+    const query = client.from('patients').delete();
+    const { error } = idOrUhid.startsWith('PAT')
+      ? await query.eq('uhid', idOrUhid)
+      : await query.eq('id', idOrUhid);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+// Delete escalation from Supabase
+export async function deleteEscalationFromSupabase(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return { success: false, error: 'Supabase client not configured' };
+  }
+
+  try {
+    const { error } = await client.from('escalations').delete().eq('id', id);
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+// -------------------------------------------------------------
+// Realtime Subscriptions via Supabase Channels
+// -------------------------------------------------------------
+export function subscribeToEscalations(
+  onChange: (payload: { eventType: string; new: any; old: any }) => void
+): (() => void) | null {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const channel = client
+      .channel('realtime_escalations_feed')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'escalations' },
+        (payload) => {
+          onChange({
+            eventType: payload.eventType,
+            new: payload.new,
+            old: payload.old,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      client.removeChannel(channel);
+    };
+  } catch (err) {
+    console.error('Failed to subscribe to escalations realtime channel:', err);
+    return null;
+  }
+}
+
+export function subscribeToPatients(
+  onChange: (payload: { eventType: string; new: any; old: any }) => void
+): (() => void) | null {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const channel = client
+      .channel('realtime_patients_feed')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'patients' },
+        (payload) => {
+          onChange({
+            eventType: payload.eventType,
+            new: payload.new,
+            old: payload.old,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      client.removeChannel(channel);
+    };
+  } catch (err) {
+    console.error('Failed to subscribe to patients realtime channel:', err);
+    return null;
   }
 }
 

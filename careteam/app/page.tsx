@@ -39,7 +39,12 @@ import {
 } from 'lucide-react';
 import { PatientData, EscalationData, EscalationPriority, EscalationCategory, CareTeamUser } from '@/lib/types';
 import { careTeamStore, HARDCODED_OTP } from '@/lib/store';
-import { testSupabaseConnection, getSupabaseConfig } from '@/lib/supabase';
+import {
+  testSupabaseConnection,
+  getSupabaseConfig,
+  subscribeToEscalations,
+  subscribeToPatients,
+} from '@/lib/supabase';
 
 export default function CareTeamPortal() {
   // Navigation Tabs: 'register' | 'escalate'
@@ -196,6 +201,28 @@ export default function CareTeamPortal() {
     reloadData();
     checkConnection();
   }, []);
+
+  // Supabase Realtime Channel Subscription: auto-syncs live updates from other devices/doctors
+  useEffect(() => {
+    if (!supabaseConnected) return;
+
+    const unsubEscalations = subscribeToEscalations(() => {
+      careTeamStore.syncFromSupabase().then(() => {
+        reloadData();
+      });
+    });
+
+    const unsubPatients = subscribeToPatients(() => {
+      careTeamStore.syncFromSupabase().then(() => {
+        reloadData();
+      });
+    });
+
+    return () => {
+      if (unsubEscalations) unsubEscalations();
+      if (unsubPatients) unsubPatients();
+    };
+  }, [supabaseConnected]);
 
   // -------------------------------------------------------------
   // CARE TEAM AUTHENTICATION HANDLERS
@@ -608,7 +635,33 @@ DROP POLICY IF EXISTS "Allow anon all guardians" ON guardians;
 CREATE POLICY "Allow anon all guardians" ON guardians FOR ALL USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Allow anon all escalations" ON escalations;
-CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) WITH CHECK (true);`;
+CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) WITH CHECK (true);
+
+-- 6. Automatic Timestamp Maintenance Triggers
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+   NEW.updated_at = NOW();
+   RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+DROP TRIGGER IF EXISTS trg_patients_updated_at ON patients;
+CREATE TRIGGER trg_patients_updated_at BEFORE UPDATE ON patients FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS trg_escalations_updated_at ON escalations;
+CREATE TRIGGER trg_escalations_updated_at BEFORE UPDATE ON escalations FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS trg_care_team_users_updated_at ON care_team_users;
+CREATE TRIGGER trg_care_team_users_updated_at BEFORE UPDATE ON care_team_users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- 7. Enable Realtime Broadcasting
+DO $$
+BEGIN
+  BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE patients; EXCEPTION WHEN duplicate_object THEN END;
+  BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE escalations; EXCEPTION WHEN duplicate_object THEN END;
+  BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE care_team_users; EXCEPTION WHEN duplicate_object THEN END;
+END $$;`;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-16 overflow-x-hidden">
@@ -620,8 +673,8 @@ CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) W
           <div className="flex items-center justify-between min-h-[3.75rem] py-2 gap-2">
             {/* Logo & Portal Identity */}
             <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 flex-shrink-0">
-                <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white shadow-md shadow-emerald-500/10 flex items-center justify-center p-0.5 border border-slate-200/80 flex-shrink-0 overflow-hidden">
+                <img src="/logo.png" alt="CuraLink Logo" className="w-full h-full object-contain" />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center space-x-1.5 sm:space-x-2">
@@ -736,9 +789,9 @@ CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) W
           <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-xl overflow-hidden">
             {/* Header banner */}
             <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 p-5 sm:p-8 text-white relative">
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold flex-shrink-0">
-                  <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+              <div className="flex items-center space-x-3.5 mb-2">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white p-1 shadow-lg shadow-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <img src="/logo.png" alt="CuraLink Logo" className="w-full h-full object-contain" />
                 </div>
                 <div className="min-w-0">
                   <h1 className="text-lg sm:text-2xl font-black tracking-tight leading-tight">CURALINK Access Gateway</h1>
@@ -1866,8 +1919,8 @@ CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) W
               <X className="w-5 h-5" />
             </button>
 
-            <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center mb-3">
-              <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7" />
+            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-white p-1 shadow-md border border-slate-100 flex items-center justify-center mb-3 overflow-hidden">
+              <img src="/logo.png" alt="CuraLink" className="w-full h-full object-contain" />
             </div>
 
             <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">Verify Care Team Identity</h3>
@@ -1952,9 +2005,9 @@ CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) W
               <X className="w-5 h-5" />
             </button>
 
-            {/* Success icon */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3 shadow-inner">
-              <CheckCircle2 className="w-8 h-8 sm:w-9 sm:h-9" />
+            {/* CuraLink Logo Badge */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-3xl bg-white p-1.5 shadow-md border border-slate-100 flex items-center justify-center mb-3 overflow-hidden">
+              <img src="/logo.png" alt="CuraLink" className="w-full h-full object-contain" />
             </div>
 
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
@@ -2188,9 +2241,9 @@ CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) W
               <X className="w-5 h-5" />
             </button>
 
-            {/* Checkmark Icon */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3 shadow-inner">
-              <CheckCircle2 className="w-8 h-8 sm:w-9 sm:h-9" />
+            {/* CuraLink Logo Badge */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-3xl bg-white p-1.5 shadow-md border border-slate-100 flex items-center justify-center mb-3 overflow-hidden">
+              <img src="/logo.png" alt="CuraLink" className="w-full h-full object-contain" />
             </div>
 
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
