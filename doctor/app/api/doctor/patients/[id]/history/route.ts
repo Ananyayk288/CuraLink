@@ -17,7 +17,7 @@ export async function GET(
   // Retrieve patient from Supabase directly with fallback
   let patient = await getPatientByIdFromSupabase(patientId);
   if (!patient) {
-    patient = db.patients.find(p => p.id === patientId) || null;
+    patient = db.patients.find(p => p.id === patientId || p.uhid === patientId) || null;
   }
 
   if (!patient) {

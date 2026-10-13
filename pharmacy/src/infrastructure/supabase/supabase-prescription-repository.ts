@@ -20,7 +20,7 @@ export class SupabasePrescriptionRepository
     const { data, error } = await client
       .from("pharmacy_active_prescriptions")
       .select("*")
-      .or(`patient_id.eq.${patientId},uhid.eq.${patientId}`)
+      .or(`patient_id.eq.${patientId},uhid.eq.${patientId},patient_id.ilike.${patientId},uhid.ilike.${patientId}`)
       .eq("status", "COMMITTED")
       .order("revision", { ascending: false })
       .limit(1)

@@ -94,6 +94,8 @@ export async function testSupabaseConnection(overrideUrl?: string, overrideKey?:
 export async function savePatientToSupabase(patient: PatientData): Promise<{
   success: boolean;
   supabaseId?: string;
+  appointmentId?: string;
+  tokenNumber?: string;
   error?: string;
 }> {
   const client = getSupabaseClient();
@@ -154,9 +156,9 @@ export async function savePatientToSupabase(patient: PatientData): Promise<{
     }
 
     // Also insert into appointments table so doctor desk sees the pending appointment
+    const aptId = `apt-${patient.uhid}`;
+    const tokenNum = `TOKEN-${String(patient.uhid).replace(/\D/g, '').slice(-2) || '01'}`;
     try {
-      const aptId = `apt-${patient.uhid}`;
-      const tokenNum = `TOKEN-${String(patient.uhid).replace(/\D/g, '').slice(-2) || '01'}`;
       await client.from('appointments').upsert([
         {
           id: aptId,
@@ -174,7 +176,7 @@ export async function savePatientToSupabase(patient: PatientData): Promise<{
       console.warn('Auto-appointment creation notice:', aptErr);
     }
 
-    return { success: true, supabaseId: patientId };
+    return { success: true, supabaseId: patientId, appointmentId: aptId, tokenNumber: tokenNum };
   } catch (err: any) {
     return { success: false, error: err.message };
   }

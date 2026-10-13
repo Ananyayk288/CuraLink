@@ -71,10 +71,15 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       patient: patientData,
+      appointment: supabaseResult.appointmentId ? {
+        id: supabaseResult.appointmentId,
+        tokenNumber: supabaseResult.tokenNumber,
+        status: 'PENDING',
+      } : null,
       supabaseSynced: supabaseResult.success,
       supabaseError: supabaseResult.error,
       message: supabaseResult.success
-        ? 'Patient successfully registered and committed to Supabase!'
+        ? 'Patient successfully registered and auto-queued for Doctor Consultation!'
         : 'Patient registered in local store (Supabase credentials pending).',
     });
   } catch (error: any) {

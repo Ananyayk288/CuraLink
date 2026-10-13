@@ -8,23 +8,29 @@ export async function GET() {
   const supabaseConfig = getSupabaseConfig();
   const supaStats = await getStatsFromSupabase();
 
-  const hasSupaData = supaStats && (supaStats.enrolled_patients > 0 || supaStats.pending_appointments > 0 || supaStats.total_prescriptions > 0);
-
-  const pendingAppointments = hasSupaData
-    ? supaStats!.pending_appointments
-    : db.appointments.filter(a => a.status === 'PENDING').length;
-
-  const enrolledPatients = hasSupaData
-    ? supaStats!.enrolled_patients
-    : db.patients.length;
+  if (supaStats !== null) {
+    return NextResponse.json({
+      success: true,
+      source: 'supabase',
+      data: {
+        pending_appointments: supaStats.pending_appointments,
+        enrolled_patients: supaStats.enrolled_patients,
+        total_prescriptions: supaStats.total_prescriptions,
+        supabase: {
+          configured: Boolean(supabaseConfig.url && supabaseConfig.anonKey),
+          project_id: supabaseConfig.projectId,
+        },
+      },
+    });
+  }
 
   return NextResponse.json({
     success: true,
-    source: supaStats ? 'supabase' : 'local',
+    source: 'local',
     data: {
-      pending_appointments: pendingAppointments,
-      enrolled_patients: enrolledPatients,
-      total_prescriptions: supaStats?.total_prescriptions ?? db.prescriptions.length,
+      pending_appointments: db.appointments.filter(a => a.status === 'PENDING').length,
+      enrolled_patients: db.patients.length,
+      total_prescriptions: db.prescriptions.length,
       supabase: {
         configured: Boolean(supabaseConfig.url && supabaseConfig.anonKey),
         project_id: supabaseConfig.projectId,

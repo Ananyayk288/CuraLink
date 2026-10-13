@@ -8,7 +8,7 @@ export async function GET() {
   // Retrieve pending appointments from Supabase directly
   const supaApts = await getPendingAppointmentsFromSupabase();
 
-  if (supaApts && supaApts.length > 0) {
+  if (supaApts !== null) {
     return NextResponse.json({
       success: true,
       source: 'supabase',

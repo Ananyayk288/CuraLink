@@ -224,7 +224,12 @@ export async function getPatientsFromSupabase(): Promise<Patient[] | null> {
       .select('*')
       .order('name', { ascending: true });
 
-    if (error || !data || data.length === 0) return null;
+    if (error) {
+      console.error('getPatientsFromSupabase error:', error);
+      return null;
+    }
+
+    if (!data) return [];
 
     return data.map((p: any) => ({
       id: p.id,
@@ -254,7 +259,7 @@ export async function getPatientByIdFromSupabase(id: string): Promise<Patient | 
     const { data, error } = await client
       .from('patients')
       .select('*')
-      .eq('id', id)
+      .or(`id.eq.${id},uhid.eq.${id}`)
       .maybeSingle();
 
     if (error || !data) return null;
@@ -340,7 +345,12 @@ export async function getPendingAppointmentsFromSupabase(): Promise<Appointment[
       .eq('status', 'PENDING')
       .order('created_at', { ascending: true });
 
-    if (error || !data) return null;
+    if (error) {
+      console.error('getPendingAppointmentsFromSupabase error:', error);
+      return null;
+    }
+
+    if (!data) return [];
 
     return data.map((apt: any) => ({
       id: apt.id,

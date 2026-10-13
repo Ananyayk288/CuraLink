@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import { db, Prescription, PrescriptionMedicine, PrescriptionDiagnostic } from '@/lib/db';
 import { DOCTOR_PROFILE } from '@/lib/constants';
-import { syncPrescriptionToSupabase, updateAppointmentStatusInSupabase } from '@/lib/supabase';
+import {
+  syncPrescriptionToSupabase,
+  updateAppointmentStatusInSupabase,
+  getPatientByIdFromSupabase,
+} from '@/lib/supabase';
 
 export async function POST(request: Request) {
   try {
@@ -24,9 +28,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Patient ID is required' }, { status: 400 });
     }
 
-    const patient = db.patients.find(p => p.id === patient_id);
+    let patient: any = db.patients.find(p => p.id === patient_id || p.uhid === patient_id);
     if (!patient) {
-      return NextResponse.json({ success: false, error: 'Patient not found' }, { status: 404 });
+      patient = await getPatientByIdFromSupabase(patient_id);
+    }
+    if (!patient) {
+      patient = {
+        id: patient_id,
+        uhid: patient_id,
+        name: body.patient_name || `Patient (${patient_id})`,
+        phone: body.patient_phone || '',
+        language: 'Kannada',
+      };
     }
 
     const rxId = `rx-${Date.now()}-${Math.floor(Math.random() * 1000)}`;

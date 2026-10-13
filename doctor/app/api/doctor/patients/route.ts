@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
   // Retrieve patients from Supabase directly
   const supaPatients = await getPatientsFromSupabase();
-  let list = (supaPatients && supaPatients.length > 0) ? supaPatients : db.patients;
+  let list = (supaPatients !== null) ? supaPatients : db.patients;
 
   if (lang && lang !== 'ALL') {
     list = list.filter(p => p.language.toUpperCase() === lang);
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     success: true,
-    source: (supaPatients && supaPatients.length > 0) ? 'supabase' : 'local',
+    source: (supaPatients !== null) ? 'supabase' : 'local',
     data: list,
   });
 }
