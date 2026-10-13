@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     "Integrated Healthcare Coordination & Sticker Adherence Platform. Safe Physical-to-Digital Dispensing Portal.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
+    icon: "/curalink-symbol.png",
+    apple: "/curalink-symbol.png",
   },
   appleWebApp: {
     capable: true,
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/curalink-symbol.png" type="image/png" />
         <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body className="min-h-dvh bg-slate-50 text-slate-900 flex flex-col antialiased">

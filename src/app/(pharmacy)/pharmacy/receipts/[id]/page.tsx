@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   ShieldCheck,
   CheckCircle2,
-  Pill,
   RefreshCw,
 } from "lucide-react";
 import { PrintableReceiptData } from "@/modules/pharmacy/application/get-receipt.use-case";
@@ -91,8 +90,8 @@ export default function ReceiptPrintPage({
       <div className="receipt-container bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-xl space-y-6">
         {/* Header */}
         <div className="text-center pb-6 border-b border-slate-200">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-blue-600 text-white flex items-center justify-center mb-3">
-            <Pill className="w-6 h-6" />
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-white border border-slate-200 p-1.5 flex items-center justify-center mb-3 shadow-xs">
+            <img src="/curalink-symbol.png" alt="CuraLink Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">CuraLink</h1>
           <p className="text-xs font-bold text-blue-700 uppercase tracking-widest mt-0.5">

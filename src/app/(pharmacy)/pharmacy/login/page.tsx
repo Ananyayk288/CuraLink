@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Pill, ShieldCheck, Lock, AlertCircle, ArrowRight, UserCheck } from "lucide-react";
+import { ShieldCheck, Lock, AlertCircle, ArrowRight, UserCheck } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -49,8 +49,8 @@ export default function LoginPage() {
       <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-br from-blue-700 via-indigo-700 to-slate-900 p-8 text-white text-center">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white mb-4 shadow-lg">
-            <Pill className="w-8 h-8 text-blue-200" />
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-white p-2 flex items-center justify-center mb-4 shadow-lg shadow-black/10">
+            <img src="/curalink-symbol.png" alt="CuraLink Logo" className="w-full h-full object-contain" />
           </div>
           <h2 className="text-2xl font-bold tracking-tight">CuraLink</h2>
           <p className="text-xs text-blue-200 uppercase font-semibold tracking-wider mt-1">
