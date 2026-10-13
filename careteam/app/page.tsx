@@ -66,7 +66,7 @@ export default function CareTeamPortal() {
   // CARE TEAM AUTHENTICATION STATE
   // -------------------------------------------------------------
   const [currentUser, setCurrentUser] = useState<CareTeamUser | null>(null);
-  const [authMode, setAuthMode] = useState<'register' | 'login'>('register');
+  const [authMode, setAuthMode] = useState<'register' | 'login'>('login');
 
   // Care Team Registration Form
   const [crtName, setCrtName] = useState<string>('');
@@ -194,10 +194,8 @@ export default function CareTeamPortal() {
   };
 
   useEffect(() => {
-    const active = careTeamStore.getCurrentUser();
-    if (active) {
-      setCurrentUser(active);
-    }
+    // Terminal always starts logged out to accept credentials explicitly
+    setCurrentUser(null);
     reloadData();
     checkConnection();
   }, []);
@@ -290,7 +288,10 @@ export default function CareTeamPortal() {
       setShowCrtVerifyModal(false);
       setCrtSuccessUser(res.user);
       setShowCrtSuccessModal(true);
-      setCurrentUser(res.user);
+      // Pre-fill login credentials so staff can enter their PIN and sign in
+      setLoginIdentifier(res.user.crtId);
+      setLoginPin('');
+      setLoginError(null);
       reloadData();
 
       // Clear registration form
@@ -336,6 +337,7 @@ export default function CareTeamPortal() {
   };
 
   const handleQuickDemoLogin = () => {
+    setAuthMode('login');
     setLoginIdentifier('CRT10001');
     setLoginPin('123456');
     setLoginError(null);
@@ -864,7 +866,7 @@ END $$;`;
                   className="w-full py-2.5 bg-[#1D64F2] hover:bg-[#1554D6] text-white font-bold text-xs rounded-full transition shadow-xs flex items-center justify-center space-x-1.5"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Auto-Fill &amp; Enter Portal (1-Click)</span>
+                  <span>⚡ 1-Click Auto-Fill Demo Credentials</span>
                 </button>
               </div>
             </div>
@@ -2098,9 +2100,16 @@ END $$;`;
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#EAE4D9] text-center relative max-h-[92dvh] overflow-y-auto">
             {/* Close button in top-right */}
             <button
-              onClick={() => setShowCrtSuccessModal(false)}
+              onClick={() => {
+                setShowCrtSuccessModal(false);
+                setAuthMode('login');
+                if (crtSuccessUser) {
+                  setLoginIdentifier(crtSuccessUser.crtId);
+                  setLoginPin('');
+                }
+              }}
               className="absolute top-4 sm:top-5 right-4 sm:right-5 text-slate-400 hover:text-slate-700 bg-[#FAF8F5] hover:bg-slate-200 p-2 rounded-full transition"
-              title="Close and Enter Portal"
+              title="Proceed to Terminal Sign In"
             >
               <X className="w-5 h-5" />
             </button>
@@ -2114,7 +2123,7 @@ END $$;`;
               Registration Successful!
             </h2>
             <p className="text-sm text-slate-600 mt-1.5 font-medium">
-              Care Team member verified and recorded in CURALINK registry
+              Care Team member registered. Please use your generated CRT ID and 6-digit PIN to sign in.
             </p>
 
             {/* BIG ID DISPLAY */}
@@ -2172,14 +2181,21 @@ END $$;`;
               </div>
             </div>
 
-            {/* Enter Portal Action */}
+            {/* Proceed to Login Action */}
             <div className="mt-6">
               <button
                 type="button"
-                onClick={() => setShowCrtSuccessModal(false)}
+                onClick={() => {
+                  setShowCrtSuccessModal(false);
+                  setAuthMode('login');
+                  if (crtSuccessUser) {
+                    setLoginIdentifier(crtSuccessUser.crtId);
+                    setLoginPin('');
+                  }
+                }}
                 className="w-full py-4 px-6 rounded-2xl sm:rounded-full bg-[#1D64F2] hover:bg-[#1554D6] text-white font-black text-base shadow-lg shadow-blue-500/25 transition flex items-center justify-center space-x-2 active:scale-[0.99]"
               >
-                <span>Enter CURALINK Portal</span>
+                <span>Proceed to Terminal Sign In ({crtSuccessUser.crtId})</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

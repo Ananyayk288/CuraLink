@@ -144,10 +144,10 @@ class CareTeamStore {
       if (savedUsers) {
         this.users = JSON.parse(savedUsers);
       }
-      const savedCurrent = localStorage.getItem('curalink_current_user') || localStorage.getItem('careteam_current_user');
-      if (savedCurrent) {
-        this.currentUser = JSON.parse(savedCurrent);
-      }
+      // Do not auto-login on startup: require explicit credentials sign-in
+      this.currentUser = null;
+      localStorage.removeItem('curalink_current_user');
+      localStorage.removeItem('careteam_current_user');
     } catch {
       // Fallback
     }
@@ -209,7 +209,7 @@ class CareTeamStore {
     };
 
     this.users.unshift(newUser);
-    this.currentUser = newUser;
+    // User must sign in explicitly with their generated CRT ID and 6-digit PIN
     this.saveToStorage();
 
     // Sync to Supabase
@@ -238,6 +238,10 @@ class CareTeamStore {
       }
       this.saveToStorage();
       return { success: true, user: remoteAuth.user };
+    }
+
+    if (!remoteAuth.success && remoteAuth.error === 'Incorrect 6-digit PIN') {
+      return { success: false, message: 'Incorrect 6-digit PIN.' };
     }
 
     // 2. Fallback to local user store
