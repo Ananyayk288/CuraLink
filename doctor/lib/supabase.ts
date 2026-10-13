@@ -58,6 +58,11 @@ export function getSupabaseClient(overrideUrl?: string, overrideKey?: string): S
   }
 }
 
+export function clearSupabaseCache(): void {
+  cachedClient = null;
+  cachedConfigKey = '';
+}
+
 export async function testSupabaseConnection(overrideUrl?: string, overrideKey?: string): Promise<{
   success: boolean;
   configured: boolean;
@@ -120,13 +125,22 @@ export async function getDoctorFromSupabase(loginId: string): Promise<DoctorUser
 
   try {
     const term = loginId.trim();
-    // Search by ID, Email, or Phone
-    const { data, error } = await client
-      .from('doctors')
-      .select('*')
-      .or(`id.ilike.${term},email.ilike.${term},phone.ilike.%${term.replace(/\D/g, '')}%`)
-      .limit(1)
-      .maybeSingle();
+    let query = client.from('doctors').select('*');
+
+    if (term.toUpperCase().startsWith('DOC')) {
+      query = query.eq('id', term.toUpperCase());
+    } else if (term.includes('@')) {
+      query = query.ilike('email', term);
+    } else {
+      const digits = term.replace(/\D/g, '');
+      if (digits.length >= 6) {
+        query = query.or(`phone.ilike.%${digits}%,id.ilike.${term},email.ilike.${term}`);
+      } else {
+        query = query.or(`id.ilike.${term},email.ilike.${term}`);
+      }
+    }
+
+    const { data, error } = await query.limit(1).maybeSingle();
 
     if (error || !data) return null;
 
@@ -259,6 +273,52 @@ export async function getPatientByIdFromSupabase(id: string): Promise<Patient | 
   }
 }
 
+export async function createPatientInSupabase(patient: Patient): Promise<Patient | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const row = {
+      id: patient.id,
+      uhid: patient.uhid,
+      name: patient.name,
+      age: patient.age,
+      gender: patient.gender,
+      phone: patient.phone,
+      language: patient.language,
+      device_type: patient.deviceType,
+      chronic_conditions: patient.chronicConditions || [],
+      guardian_name: patient.guardianName || null,
+      guardian_phone: patient.guardianPhone || null,
+      guardian_consent: patient.guardianConsent || false,
+    };
+
+    const { data, error } = await client.from('patients').upsert(row).select().single();
+    if (error) {
+      console.error('createPatientInSupabase error:', error);
+      return null;
+    }
+
+    return {
+      id: data.id,
+      uhid: data.uhid,
+      name: data.name,
+      age: data.age,
+      gender: data.gender,
+      phone: data.phone,
+      language: data.language,
+      deviceType: data.device_type,
+      chronicConditions: data.chronic_conditions || [],
+      guardianName: data.guardian_name,
+      guardianPhone: data.guardian_phone,
+      guardianConsent: data.guardian_consent,
+    };
+  } catch (err) {
+    console.error('createPatientInSupabase exception:', err);
+    return null;
+  }
+}
+
 // =========================================================================
 // 3. APPOINTMENTS RETRIEVAL & UPDATION (SUPABASE DIRECT)
 // =========================================================================
@@ -303,6 +363,33 @@ export async function getPendingAppointmentsFromSupabase(): Promise<Appointment[
   } catch (err) {
     console.error('getPendingAppointmentsFromSupabase exception:', err);
     return null;
+  }
+}
+
+export async function createAppointmentInSupabase(appointment: Appointment): Promise<boolean> {
+  const client = getSupabaseClient();
+  if (!client) return false;
+
+  try {
+    const row = {
+      id: appointment.id,
+      patient_id: appointment.patientId,
+      token_number: appointment.tokenNumber,
+      reason_for_visit: appointment.reasonForVisit,
+      appointment_time: appointment.appointmentTime,
+      booking_channel: appointment.bookingChannel || 'CLINIC_DESK',
+      status: appointment.status || 'PENDING',
+    };
+
+    const { error } = await client.from('appointments').upsert(row);
+    if (error) {
+      console.error('createAppointmentInSupabase error:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('createAppointmentInSupabase exception:', err);
+    return false;
   }
 }
 
@@ -435,29 +522,50 @@ export async function getPatientMedicationHistoryFromSupabase(patientId: string)
   if (!client) return null;
 
   try {
+    // 1. Try direct join on prescription_medicines
     const { data, error } = await client
       .from('prescription_medicines')
       .select('*, prescriptions!inner(patient_id, doctor_id, doctor_name, created_at, prescription_type)')
       .eq('prescriptions.patient_id', patientId)
       .order('created_at', { ascending: false });
 
-    if (error || !data) return null;
+    if (!error && data && data.length > 0) {
+      return data.map((item: any) => ({
+        id: item.id,
+        prescriptionId: item.prescription_id,
+        medicineName: item.medicine_name,
+        dosage: item.dosage,
+        frequency: item.frequency,
+        noOfDays: item.no_of_days,
+        mealRelation: item.meal_relation,
+        instructions: item.instructions,
+        dispenseStatus: item.dispense_status,
+        doctorId: item.prescriptions?.doctor_id,
+        doctorName: item.prescriptions?.doctor_name,
+        prescribedDate: item.prescriptions?.created_at,
+        prescriptionType: item.prescriptions?.prescription_type,
+      }));
+    }
 
-    return data.map((item: any) => ({
-      id: item.id,
-      prescriptionId: item.prescription_id,
-      medicineName: item.medicine_name,
-      dosage: item.dosage,
-      frequency: item.frequency,
-      noOfDays: item.no_of_days,
-      mealRelation: item.meal_relation,
-      instructions: item.instructions,
-      dispenseStatus: item.dispense_status,
-      doctorId: item.prescriptions?.doctor_id,
-      doctorName: item.prescriptions?.doctor_name,
-      prescribedDate: item.prescriptions?.created_at,
-      prescriptionType: item.prescriptions?.prescription_type,
-    }));
+    // 2. Resilient fallback: extract medicines from prescriptions
+    const prescriptions = await getPatientPrescriptionsFromSupabase(patientId);
+    if (prescriptions && prescriptions.length > 0) {
+      const extracted: any[] = [];
+      prescriptions.forEach((rx: any) => {
+        (rx.medicines || []).forEach((m: any) => {
+          extracted.push({
+            ...m,
+            doctorId: rx.doctorId,
+            doctorName: rx.doctorName,
+            prescribedDate: rx.createdAt,
+            prescriptionType: rx.prescriptionType,
+          });
+        });
+      });
+      return extracted;
+    }
+
+    return null;
   } catch (err) {
     console.error('getPatientMedicationHistoryFromSupabase exception:', err);
     return null;
@@ -465,7 +573,50 @@ export async function getPatientMedicationHistoryFromSupabase(patientId: string)
 }
 
 // =========================================================================
-// 5. STATS RETRIEVAL (SUPABASE DIRECT)
+// 5. ESCALATIONS (FIELD TRIAGE TO DOCTOR)
+// =========================================================================
+
+export async function getEscalationsFromSupabase(): Promise<any[] | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('escalations')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error || !data) return null;
+    return data;
+  } catch (err) {
+    console.error('getEscalationsFromSupabase exception:', err);
+    return null;
+  }
+}
+
+export async function updateEscalationStatusInSupabase(
+  id: string,
+  status: 'PENDING' | 'ACKNOWLEDGED' | 'RESOLVED',
+  doctorNotes?: string
+): Promise<boolean> {
+  const client = getSupabaseClient();
+  if (!client) return false;
+
+  try {
+    const payload: any = { status, updated_at: new Date().toISOString() };
+    if (doctorNotes) payload.doctor_notes = doctorNotes;
+    if (status === 'RESOLVED') payload.resolved_at = new Date().toISOString();
+
+    const { error } = await client.from('escalations').update(payload).eq('id', id);
+    return !error;
+  } catch (err) {
+    console.error('updateEscalationStatusInSupabase exception:', err);
+    return false;
+  }
+}
+
+// =========================================================================
+// 6. STATS RETRIEVAL (SUPABASE DIRECT)
 // =========================================================================
 
 export async function getStatsFromSupabase(): Promise<{

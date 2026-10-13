@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseConfig } from '@/lib/supabase';
+import { getSupabaseConfig, clearSupabaseCache } from '@/lib/supabase';
 import fs from 'fs';
 import path from 'path';
 
@@ -31,15 +31,30 @@ export async function POST(request: Request) {
     }
 
     // Set process.env
-    if (targetProject) process.env.SUPABASE_PROJECT_ID = targetProject;
-    if (targetKey) process.env.SUPABASE_ANON_KEY = targetKey;
-    if (targetUrl) process.env.SUPABASE_URL = targetUrl;
+    if (targetProject) {
+      process.env.SUPABASE_PROJECT_ID = targetProject;
+      process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID = targetProject;
+    }
+    if (targetKey) {
+      process.env.SUPABASE_ANON_KEY = targetKey;
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = targetKey;
+    }
+    if (targetUrl) {
+      process.env.SUPABASE_URL = targetUrl;
+      process.env.NEXT_PUBLIC_SUPABASE_URL = targetUrl;
+    }
+
+    // Reset client cache
+    clearSupabaseCache();
 
     // Persist to .env and .env.local
     const envLines = [
       `SUPABASE_PROJECT_ID=${targetProject}`,
       `SUPABASE_ANON_KEY=${targetKey}`,
       `SUPABASE_URL=${targetUrl}`,
+      `NEXT_PUBLIC_SUPABASE_PROJECT_ID=${targetProject}`,
+      `NEXT_PUBLIC_SUPABASE_ANON_KEY=${targetKey}`,
+      `NEXT_PUBLIC_SUPABASE_URL=${targetUrl}`,
     ].join('\n');
 
     try {

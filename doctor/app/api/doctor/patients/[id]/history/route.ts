@@ -44,6 +44,19 @@ export async function GET(
         });
       });
     });
+  } else if (!medicationHistory || medicationHistory.length === 0) {
+    medicationHistory = [];
+    prescriptions.forEach(rx => {
+      (rx.medicines || []).forEach((med: any) => {
+        medicationHistory!.push({
+          ...med,
+          doctorId: rx.doctorId,
+          doctorName: rx.doctorName,
+          prescribedDate: rx.createdAt,
+          prescriptionType: rx.prescriptionType,
+        });
+      });
+    });
   }
 
   return NextResponse.json({

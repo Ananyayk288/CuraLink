@@ -2826,10 +2826,10 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                     <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                       <div>
                         <h3 className="font-bold text-base text-slate-900">PostgreSQL Cloud Tables</h3>
-                        <p className="text-xs text-slate-500">All data retrieval and updation syncs with these 7 tables</p>
+                        <p className="text-xs text-slate-500">All data retrieval and updation syncs across these 10 tables</p>
                       </div>
                       <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-teal-50 text-teal-700 border border-teal-200">
-                        7 Tables Active
+                        10 Tables Active
                       </span>
                     </div>
 
@@ -2847,7 +2847,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                       <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">patients</span>
-                          <p className="text-[10px] text-slate-500">Demographics, UHID, chronic conditions, phone, languages</p>
+                          <p className="text-[10px] text-slate-500">Demographics, UHID, chronic conditions, phone, literacy</p>
                         </div>
                         <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
                           Directory
@@ -2867,7 +2867,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                       <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">prescriptions</span>
-                          <p className="text-[10px] text-slate-500">Doctor sign-offs, clinical notes, follow-up dates, statuses</p>
+                          <p className="text-[10px] text-slate-500">Doctor sign-offs, clinical notes, follow-ups (SQL immutable)</p>
                         </div>
                         <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
                           Clinical Orders
@@ -2901,6 +2901,26 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                         </div>
                         <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
                           AI Telephony
+                        </span>
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                          <span className="font-mono font-bold text-slate-800">escalations</span>
+                          <p className="text-[10px] text-slate-500">Field triage alerts escalated from ASHA care coordinators</p>
+                        </div>
+                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                          Field Triage
+                        </span>
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                          <span className="font-mono font-bold text-slate-800">care_team_users</span>
+                          <p className="text-[10px] text-slate-500">CRT ID fieldworker credentials &amp; frontline logins</p>
+                        </div>
+                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                          Care Team Auth
                         </span>
                       </div>
                     </div>

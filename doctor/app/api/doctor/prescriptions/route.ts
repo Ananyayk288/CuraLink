@@ -103,9 +103,10 @@ export async function POST(request: Request) {
         voice_call_status: 'QUEUED',
         sms_status: 'QUEUED',
         payload: {
-          doctor_name: DOCTOR_PROFILE.name,
+          doctor_name: newPrescription.doctorName,
           medicines: newMedicines.map(m => ({
             name: m.medicineName,
+            dosage: m.dosage,
             days: m.noOfDays,
             frequency: m.frequency,
             meal: m.mealRelation,
@@ -141,6 +142,7 @@ export async function POST(request: Request) {
         id: m.id,
         prescription_id: m.prescriptionId,
         medicine_name: m.medicineName,
+        dosage: m.dosage || '',
         frequency: m.frequency,
         no_of_days: m.noOfDays,
         meal_relation: m.mealRelation,
@@ -153,6 +155,7 @@ export async function POST(request: Request) {
         test_type: d.testType,
         test_name: d.testName,
         instructions: d.instructions,
+        urgency: d.urgency || 'ROUTINE',
         status: d.status,
       })),
       telephonyTrigger: triggerRecord,
