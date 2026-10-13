@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm --prefix doctor run dev",
-    "build": "npm --prefix doctor run build",
-    "start": "npm --prefix doctor run start"
+    "dev": "cd doctor && npx next dev -p 3000",
+    "build": "cd doctor && npx next build",
+    "start": "cd doctor && npx next start -p 3000"
   }
 }
