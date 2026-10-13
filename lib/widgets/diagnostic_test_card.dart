@@ -133,7 +133,7 @@ class DiagnosticTestCard extends StatelessWidget {
                   Expanded(
                     child: _buildMeta(
                       Icons.event_rounded,
-                      test.isCompleted ? 'Completed Date' : 'Target Date',
+                      test.isCompleted ? 'Date' : 'Target',
                       test.completedDate != null
                           ? dateFormat.format(test.completedDate!)
                           : test.scheduledDate != null
@@ -150,7 +150,7 @@ class DiagnosticTestCard extends StatelessWidget {
                   Expanded(
                     child: _buildMeta(
                       Icons.location_on_outlined,
-                      'Diagnostic Facility',
+                      'Facility',
                       test.diagnosticCenter,
                     ),
                   ),
@@ -225,8 +225,8 @@ class DiagnosticTestCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           test.status == TestStatus.scheduled
-                              ? 'Scheduled investigation · Report pending conduction'
-                              : 'Specimen collected · Laboratory processing in progress',
+                              ? 'Scheduled'
+                              : 'Processing',
                           style: GoogleFonts.outfit(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w600,
@@ -247,7 +247,7 @@ class DiagnosticTestCard extends StatelessWidget {
                   if (test.hasReport) ...[
                     TextButton.icon(
                       icon: const Icon(Icons.visibility_outlined, size: 15),
-                      label: const Text('View Full Report'),
+                      label: const Text('View Report'),
                       style: TextButton.styleFrom(
                         foregroundColor: AppTheme.primaryBlue,
                         padding: const EdgeInsets.symmetric(
@@ -264,7 +264,7 @@ class DiagnosticTestCard extends StatelessWidget {
                   ] else ...[
                     TextButton.icon(
                       icon: const Icon(Icons.info_outline_rounded, size: 15),
-                      label: const Text('View Investigation Status'),
+                      label: const Text('Status'),
                       style: TextButton.styleFrom(
                         foregroundColor: AppTheme.warningAmber,
                         padding: const EdgeInsets.symmetric(

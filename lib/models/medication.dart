@@ -37,13 +37,13 @@ class Medication {
   String get mealInstructionDisplay {
     switch (mealInstruction) {
       case MealInstruction.afterFood:
-        return 'After Food / Meals';
+        return 'After Meals';
       case MealInstruction.beforeFood:
-        return 'Before Food (Empty Stomach)';
+        return 'Before Meals';
       case MealInstruction.withFood:
-        return 'With Food / Meals';
+        return 'With Food';
       case MealInstruction.asNeeded:
-        return 'Take as needed (SOS)';
+        return 'As Needed';
     }
   }
 

@@ -59,7 +59,7 @@ class ReportPreviewDialog extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Clinical Diagnostic Report',
+                          'Diagnostic Report',
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
@@ -375,7 +375,7 @@ class ReportPreviewDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Report Status: In Progress',
+                'Status: In Progress',
                 style: GoogleFonts.outfit(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -384,7 +384,7 @@ class ReportPreviewDialog extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'This diagnostic test was ordered on ${DateFormat('dd MMM yyyy').format(test.orderedDate)} by ${test.orderingDoctor} at ${test.diagnosticCenter}.',
+                'Ordered on ${DateFormat('dd MMM yyyy').format(test.orderedDate)} by ${test.orderingDoctor} at ${test.diagnosticCenter}.',
                 style: GoogleFonts.outfit(
                   fontSize: 12,
                   color: AppTheme.textSecondary,
@@ -393,7 +393,7 @@ class ReportPreviewDialog extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Clinical reports typically take 24–48 hours following specimen collection or imaging procedure completion.',
+                'Reports usually take 24–48 hours after scan or test.',
                 style: GoogleFonts.outfit(
                   fontSize: 11,
                   color: AppTheme.textMuted,

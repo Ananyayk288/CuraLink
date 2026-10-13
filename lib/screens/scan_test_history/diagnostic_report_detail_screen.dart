@@ -174,7 +174,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
               ),
               Text(
                 isCompleted && test.completedDate != null
-                    ? 'Conducted: ${dateFormat.format(test.completedDate!)}'
+                    ? 'Done: ${dateFormat.format(test.completedDate!)}'
                     : 'Target: ${dateFormat.format(test.targetDate)}',
                 style: GoogleFonts.outfit(
                   fontSize: 12,
@@ -244,7 +244,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
           _buildInfoRow(
             icon: Icons.receipt_long_outlined,
             label: 'Rx Ref',
-            value: 'Linked Clinical Order',
+            value: 'Linked Rx',
           ),
         ],
       ),
@@ -455,7 +455,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Clinical Report',
+                  'Report',
                   style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
                 ),
               ],
@@ -547,7 +547,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Consult your doctor for clinical interpretation.',
+              'Consult your doctor for advice.',
               style: GoogleFonts.outfit(
                 fontSize: 11,
                 color: AppTheme.textMuted,

@@ -46,24 +46,24 @@ class DiagnosticTest {
   String get categoryDisplay {
     switch (category) {
       case TestCategory.diagnosticScan:
-        return 'Diagnostic Scan';
+        return 'Scan';
       case TestCategory.labTest:
-        return 'Laboratory Test';
+        return 'Lab Test';
       case TestCategory.cardiac:
-        return 'Cardiology Investigation';
+        return 'Heart Test';
     }
   }
 
   String get statusDisplay {
     switch (status) {
       case TestStatus.completed:
-        return 'Report Available';
+        return 'Ready';
       case TestStatus.scheduled:
-        return 'Upcoming / Scheduled';
+        return 'Scheduled';
       case TestStatus.sampleCollected:
-        return 'Sample Processing';
+        return 'Processing';
       case TestStatus.pendingResults:
-        return 'Results Pending';
+        return 'Pending';
     }
   }
 }

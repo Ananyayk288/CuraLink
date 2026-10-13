@@ -139,7 +139,7 @@ class MedicationCard extends StatelessWidget {
                   Expanded(
                     child: _buildInfoItem(
                       icon: Icons.restaurant_rounded,
-                      label: 'Instruction',
+                      label: 'Take',
                       value: med.mealInstructionDisplay,
                     ),
                   ),
