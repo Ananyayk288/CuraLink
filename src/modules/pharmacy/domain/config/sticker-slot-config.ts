@@ -44,8 +44,8 @@ export interface MiniStickerConfig {
 }
 
 export const MINI_BEFORE_FOOD_CONFIG: MiniStickerConfig = {
-  label: "Mini",
-  text: "Take BEFORE food",
+  label: "Before Food",
+  text: "Before Food",
   description: "Take 30 minutes before meal",
   badgeClasses: "bg-slate-900 text-white border-slate-700 text-[10px] font-bold tracking-tight px-2 py-0.5 rounded-full shadow-2xs",
 };
@@ -58,7 +58,7 @@ export function formatDoseSlotName(slot: DoseSlot): string {
 export interface PhysicalStickerItem {
   id: string;
   type: "SLOT" | "MINI";
-  colorName: string; // "Red", "Yellow", "Blue", or "Mini"
+  colorName: string; // "Red", "Yellow", "Blue", or "Before Food"
   hex?: string;
   label: string;
   text: string;
@@ -70,7 +70,7 @@ export interface PhysicalStickerItem {
  * Returns all physical stickers that must be attached to a single medicine packet.
  * A single medicine packet can receive MULTIPLE physical stickers:
  * - One per assigned dose slot (e.g. Red for Morning + Blue for Night)
- * - Plus one Mini badge if before_food is true (e.g. Mini "Take BEFORE food").
+ * - Plus one Mini badge if before_food is true (e.g. "Before Food").
  */
 export function getPhysicalStickersForMedicine(
   slots: DoseSlot[] = [],
@@ -100,7 +100,7 @@ export function getPhysicalStickersForMedicine(
       type: "MINI",
       colorName: MINI_BEFORE_FOOD_CONFIG.label,
       label: MINI_BEFORE_FOOD_CONFIG.label,
-      text: `Mini (${MINI_BEFORE_FOOD_CONFIG.text})`,
+      text: MINI_BEFORE_FOOD_CONFIG.text,
       badgeClasses: MINI_BEFORE_FOOD_CONFIG.badgeClasses,
     });
   }
@@ -111,7 +111,7 @@ export function getPhysicalStickersForMedicine(
 /**
  * formatMedicineStickersSummary
  * Renders a human-readable list of all physical stickers attached to a single medicine packet.
- * Example: "Red (Morning) + Blue (Night) + Mini (Take BEFORE food)"
+ * Example: "Red (Morning) + Blue (Night) + Before Food"
  */
 export function formatMedicineStickersSummary(
   slots: DoseSlot[] = [],

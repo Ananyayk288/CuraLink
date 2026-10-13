@@ -17,7 +17,7 @@ The **CuraLink Pharmacy Portal** is the physical-to-digital bridge for chronic i
   - 🔴 **Red** = Day (Morning dose)
   - 🟡 **Yellow** = Afternoon dose
   - 🔵 **Blue** = Night dose
-  - ⚠️ **Mini** = Take BEFORE food
+  - ⚠️ **Before Food** = Mini sticker (Take before food)
   - Multiple medicines can share Red; no duplicate slots per medicine.
   - Frequency parser suggests slots (e.g. `1-0-1`, `twice daily`) without auto-saving.
   - "Stickers to attach" checklist provides consolidated drawer-pull counts per color.

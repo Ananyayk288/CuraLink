@@ -61,7 +61,7 @@ export function StickerBadge({ slots = [], beforeFood = false, size = "md" }: St
           }`}
           title={MINI_BEFORE_FOOD_CONFIG.description}
         >
-          <span>Mini: {MINI_BEFORE_FOOD_CONFIG.text}</span>
+          <span>{MINI_BEFORE_FOOD_CONFIG.text}</span>
         </span>
       )}
     </div>

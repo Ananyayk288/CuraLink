@@ -21,8 +21,8 @@ describe("Sticker Slot Config", () => {
   });
 
   it("should define before-food mini badge config", () => {
-    expect(MINI_BEFORE_FOOD_CONFIG.label).toBe("Mini");
-    expect(MINI_BEFORE_FOOD_CONFIG.text).toBe("Take BEFORE food");
+    expect(MINI_BEFORE_FOOD_CONFIG.label).toBe("Before Food");
+    expect(MINI_BEFORE_FOOD_CONFIG.text).toBe("Before Food");
   });
 
   it("should format dose slot names clearly", () => {
@@ -41,7 +41,7 @@ describe("Sticker Slot Config", () => {
       "Red (Morning) + Blue (Night)"
     );
 
-    // Scenario 2: Medicine taken Morning + Night before food -> 3 physical stickers (Red, Blue, Mini)
+    // Scenario 2: Medicine taken Morning + Night before food -> 3 physical stickers (Red, Blue, Before Food)
     const stickersWithMini = getPhysicalStickersForMedicine(
       [DoseSlot.MORNING, DoseSlot.NIGHT],
       true
@@ -49,24 +49,24 @@ describe("Sticker Slot Config", () => {
     expect(stickersWithMini).toHaveLength(3);
     expect(stickersWithMini[0].colorName).toBe("Red");
     expect(stickersWithMini[1].colorName).toBe("Blue");
-    expect(stickersWithMini[2].colorName).toBe("Mini");
-    expect(stickersWithMini[2].text).toBe("Mini (Take BEFORE food)");
+    expect(stickersWithMini[2].colorName).toBe("Before Food");
+    expect(stickersWithMini[2].text).toBe("Before Food");
     expect(formatMedicineStickersSummary([DoseSlot.MORNING, DoseSlot.NIGHT], true)).toBe(
-      "Red (Morning) + Blue (Night) + Mini (Take BEFORE food)"
+      "Red (Morning) + Blue (Night) + Before Food"
     );
 
-    // Scenario 3: Medicine taken Three times daily before food -> 4 physical stickers (Red, Yellow, Blue, Mini)
+    // Scenario 3: Medicine taken Three times daily before food -> 4 physical stickers (Red, Yellow, Blue, Before Food)
     const stickersTds = getPhysicalStickersForMedicine(
       [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT],
       true
     );
     expect(stickersTds).toHaveLength(4);
-    expect(stickersTds.map((s) => s.colorName)).toEqual(["Red", "Yellow", "Blue", "Mini"]);
+    expect(stickersTds.map((s) => s.colorName)).toEqual(["Red", "Yellow", "Blue", "Before Food"]);
     expect(
       formatMedicineStickersSummary(
         [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT],
         true
       )
-    ).toBe("Red (Morning) + Yellow (Afternoon) + Blue (Night) + Mini (Take BEFORE food)");
+    ).toBe("Red (Morning) + Yellow (Afternoon) + Blue (Night) + Before Food");
   });
 });
