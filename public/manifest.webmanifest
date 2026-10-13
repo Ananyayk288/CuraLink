@@ -1,0 +1,18 @@
+{
+  "name": "CuraLink Pharmacy Portal",
+  "short_name": "CuraLink",
+  "description": "CuraLink Pharmacy Dispensing & Sticker Coordination Portal",
+  "start_url": "/pharmacy/dashboard",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
