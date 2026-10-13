@@ -34,7 +34,6 @@ import {
   LogOut,
   Mail,
   UserCheck,
-  ShieldCheck,
   User,
 } from 'lucide-react';
 import { PatientData, EscalationData, EscalationPriority, EscalationCategory, CareTeamUser } from '@/lib/types';
@@ -794,95 +793,17 @@ END $$;`;
       {/* MAIN CONTENT AREA */}
       {/* ------------------------------------------------------------- */}
       {!currentUser ? (
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8 mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Desktop Left Column: Enterprise CuraLink Terminal Briefing (Laptop/Desktop View) */}
-            <div className="hidden lg:flex lg:col-span-5 flex-col space-y-6">
-              {/* Brand & Portal Hero Card */}
-              <div className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white p-7 sm:p-8 rounded-3xl shadow-xl border border-blue-900/40 relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-44 h-44 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-                <div className="flex items-center space-x-3.5 mb-4">
-                  <div className="w-16 h-16 rounded-2xl bg-white p-1.5 shadow-md border border-white/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    <img src="/logo.png" alt="CuraLink" className="w-full h-full object-contain" />
-                  </div>
-                  <div>
-                    <span className="text-xs uppercase tracking-widest text-blue-300 font-black">Frontline System</span>
-                    <h2 className="text-2xl font-black text-white leading-tight">CURALINK Terminal</h2>
-                  </div>
+        <main className="max-w-xl mx-auto px-4 sm:px-6 mt-4 sm:mt-10 mb-12">
+          {/* Card */}
+          <div className="bg-white rounded-3xl border border-[#EAE4D9] shadow-xl overflow-hidden">
+            {/* Header banner */}
+            <div className="bg-gradient-to-r from-[#1D64F2] via-blue-600 to-indigo-600 p-6 sm:p-8 text-white relative">
+              <div className="flex items-center space-x-3.5 mb-2">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white p-1.5 shadow-lg shadow-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <img src="/logo.png" alt="CuraLink Logo" className="w-full h-full object-contain" />
                 </div>
-
-                <p className="text-sm text-slate-300 leading-relaxed font-medium">
-                  Autonomous field healthcare orchestration portal connecting Accredited Social Health Activists (ASHA), community nurses, and primary health centres with clinical specialist teams.
-                </p>
-
-                <div className="mt-6 pt-5 border-t border-white/10 grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-white/5 rounded-2xl border border-white/10">
-                    <span className="text-blue-300 block font-bold">UHID Generator</span>
-                    <span className="text-slate-200 font-semibold">Instant PAT IDs</span>
-                  </div>
-                  <div className="p-3 bg-white/5 rounded-2xl border border-white/10">
-                    <span className="text-blue-300 block font-bold">Dual Vernacular</span>
-                    <span className="text-slate-200 font-semibold">English &amp; ಕನ್ನಡ</span>
-                  </div>
-                  <div className="p-3 bg-white/5 rounded-2xl border border-white/10">
-                    <span className="text-blue-300 block font-bold">Offline &amp; Cloud</span>
-                    <span className="text-slate-200 font-semibold">Supabase PostgreSQL</span>
-                  </div>
-                  <div className="p-3 bg-white/5 rounded-2xl border border-white/10">
-                    <span className="text-blue-300 block font-bold">Triage Escalation</span>
-                    <span className="text-slate-200 font-semibold">Immediate Clinical Alert</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Evaluator Helper Box */}
-              <div className="bg-white p-6 rounded-3xl border border-[#EAE4D9] shadow-sm space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center space-x-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#1D64F2]" />
-                    <span>Evaluator Test Account</span>
-                  </span>
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                    Pre-Configured
-                  </span>
-                </div>
-                <div className="p-3.5 bg-[#FAF8F5] rounded-2xl border border-[#E5DFD4] font-mono text-xs space-y-1 text-slate-800">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500 font-sans">Staff ID:</span>
-                    <span className="font-bold text-[#1D64F2]">CRT10001</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500 font-sans">Default PIN:</span>
-                    <span className="font-bold">123456</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500 font-sans">Coordinator:</span>
-                    <span className="font-sans font-medium text-slate-700">Meenakshi Gowda</span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleQuickDemoLogin}
-                  className="w-full py-2.5 bg-[#1D64F2] hover:bg-[#1554D6] text-white font-bold text-xs rounded-full transition shadow-xs flex items-center justify-center space-x-1.5"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>⚡ 1-Click Auto-Fill Demo Credentials</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Right Column: Staff Registration & Terminal Sign In Form */}
-            <div className="w-full lg:col-span-7">
-              {/* Card */}
-              <div className="bg-white rounded-3xl border border-[#EAE4D9] shadow-xl overflow-hidden">
-                {/* Header banner */}
-                <div className="bg-gradient-to-r from-[#1D64F2] via-blue-600 to-indigo-600 p-6 sm:p-8 text-white relative">
-                  <div className="flex items-center space-x-3.5 mb-2">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white p-1.5 shadow-lg shadow-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden lg:hidden">
-                      <img src="/logo.png" alt="CuraLink Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <div className="min-w-0">
-                      <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight leading-tight">
+                <div className="min-w-0">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight leading-tight">
                         CURALINK Access Gateway
                       </h1>
                       <p className="text-xs sm:text-sm text-blue-100 font-semibold">Frontline Healthcare Worker &amp; Triage Terminal</p>
@@ -1202,8 +1123,6 @@ END $$;`;
               </form>
             )}
               </div>
-            </div>
-          </div>
         </main>
       ) : (
         <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 sm:mt-6 pb-28 lg:pb-12">
