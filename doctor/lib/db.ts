@@ -119,16 +119,47 @@ class ClinicalDatabase {
       license: "KMC-84920/MD",
       createdAt: "2026-01-01T00:00:00.000Z",
     },
+    {
+      id: "DOC10001",
+      name: "Dr. Ananya K., MD",
+      phone: "+91 98451 00001",
+      email: "dr.ananya@curalink.health",
+      age: 36,
+      pin: "123456",
+      isVerified: true,
+      department: "Cardiology & Chronic Care",
+      license: "KMC-10001/MD",
+      createdAt: "2026-01-01T00:00:00.000Z",
+    },
+    {
+      id: "DOC20002",
+      name: "Dr. Rajesh Kumar, MD",
+      phone: "+91 98452 00002",
+      email: "dr.rajesh@curalink.health",
+      age: 42,
+      pin: "123456",
+      isVerified: true,
+      department: "Endocrinology & Diabetology",
+      license: "KMC-20002/MD",
+      createdAt: "2026-01-01T00:00:00.000Z",
+    },
   ];
 
   findDoctor(idOrEmailOrPhone: string): DoctorUser | undefined {
     const term = (idOrEmailOrPhone || "").trim().toLowerCase();
+    const cleanTerm = term.replace(/[^a-z0-9]/g, "");
     const numericTerm = term.replace(/\D/g, "");
+
     return this.doctors.find(d => {
-      if (d.id.toLowerCase() === term) return true;
+      const dCleanId = d.id.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (d.id.toLowerCase() === term || dCleanId === cleanTerm) return true;
       if (term === "doc-1" && d.id === "DOC84920") return true;
       if (d.email.toLowerCase() === term) return true;
       if (numericTerm.length >= 6 && d.phone.replace(/\D/g, "").includes(numericTerm)) return true;
+      // Name partial match
+      const dNameClean = d.name.toLowerCase().replace(/dr\.?/g, "").trim();
+      const termClean = term.replace(/dr\.?/g, "").trim();
+      if (termClean.length >= 3 && dNameClean.includes(termClean)) return true;
       return false;
     });
   }

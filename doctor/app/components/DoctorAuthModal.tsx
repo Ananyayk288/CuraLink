@@ -183,32 +183,11 @@ export default function DoctorAuthModal({
     }
   };
 
-  // Quick Demo Login Handler
-  const handleQuickDemoLogin = async () => {
-    setLoginId('DOC84920');
-    setLoginPin('123456');
+  // Quick Demo Credentials Fill Handler (Loads credentials into inputs for review & manual submit)
+  const handleFillDemoCredentials = (id = 'DOC84920', pin = '123456') => {
+    setLoginId(id);
+    setLoginPin(pin);
     setLoginError('');
-    setLoginLoading(true);
-    try {
-      const res = await fetch('/api/doctor/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          loginId: 'DOC84920',
-          pin: '123456',
-        }),
-      }).then(r => r.json());
-
-      if (res.success && res.data?.doctor) {
-        onLoginSuccess(res.data.doctor);
-      } else {
-        setLoginError(res.error || 'Demo login failed.');
-      }
-    } catch (err: any) {
-      setLoginError(err.message || 'Network error during demo login.');
-    } finally {
-      setLoginLoading(false);
-    }
   };
 
   // Copy Doctor ID helper
@@ -362,19 +341,21 @@ export default function DoctorAuthModal({
               <button
                 type="button"
                 onClick={() => {
-                  onLoginSuccess(registeredDoctor);
+                  setLoginId(registeredDoctor.id);
+                  setLoginPin('');
                   setRegisteredDoctor(null);
+                  setActiveTab('login');
+                  setLoginError('');
                 }}
                 className="w-full py-4.5 px-6 rounded-full font-black text-base bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 active:scale-98"
               >
-                <span>Enter CURALINK Portal as {registeredDoctor.name}</span>
+                <span>Proceed to Sign In with {registeredDoctor.id}</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
 
               <button
                 type="button"
                 onClick={() => {
-                  setLoginId(registeredDoctor.id);
                   setRegisteredDoctor(null);
                   setActiveTab('login');
                 }}
@@ -437,15 +418,15 @@ export default function DoctorAuthModal({
                 {/* Doctor ID Field */}
                 <div>
                   <label className="block text-sm font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                    Doctor ID (e.g. DOC84920)
+                    Doctor ID, Email, or Phone
                   </label>
                   <div className="relative">
                     <input
                       type="text"
                       value={loginId}
-                      onChange={e => setLoginId(e.target.value.toUpperCase())}
-                      placeholder="Enter DOC followed by 5 digits (e.g. DOC84920)"
-                      className="w-full text-base font-mono font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 uppercase tracking-wider transition-all text-slate-900 shadow-2xs"
+                      onChange={e => setLoginId(e.target.value)}
+                      placeholder="e.g. DOC84920, Email, or Mobile Phone"
+                      className="w-full text-base font-mono font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 tracking-wider transition-all text-slate-900 shadow-2xs"
                       required
                     />
                   </div>
@@ -499,23 +480,38 @@ export default function DoctorAuthModal({
                   </button>
                 </div>
 
-                {/* Quick Demo Login Option */}
+                {/* Demo Clinical Credentials Fill Chips */}
                 <div className="mt-4 pt-4 border-t border-[#E8E2D5]">
-                  <div className="p-4 rounded-3xl bg-white border border-[#E8E2D5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
-                    <div className="text-left">
-                      <p className="text-sm font-bold text-slate-900">Demo Attending Doctor</p>
-                      <p className="text-xs text-slate-600 font-medium">
-                        Dr. Suresh Sharma, MD • <span className="font-mono text-blue-700 font-bold">DOC84920</span> (PIN: 123456)
-                      </p>
+                  <div className="p-4 rounded-3xl bg-white border border-[#E8E2D5] space-y-2.5 shadow-2xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        Demo Doctor Accounts
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-400">
+                        Click to prefill
+                      </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleQuickDemoLogin}
-                      disabled={loginLoading}
-                      className="w-full sm:w-auto px-4.5 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors text-center shrink-0"
-                    >
-                      Auto Fill &amp; Login
-                    </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleFillDemoCredentials('DOC84920', '123456')}
+                        className="p-3 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] hover:bg-blue-50 hover:border-blue-300 text-left transition-all group"
+                      >
+                        <div className="font-bold text-xs text-slate-900 group-hover:text-blue-700">Dr. Suresh Sharma</div>
+                        <div className="text-[11px] font-mono text-slate-500">ID: DOC84920 • PIN: 123456</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleFillDemoCredentials('DOC10001', '123456')}
+                        className="p-3 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] hover:bg-blue-50 hover:border-blue-300 text-left transition-all group"
+                      >
+                        <div className="font-bold text-xs text-slate-900 group-hover:text-blue-700">Dr. Ananya K.</div>
+                        <div className="text-[11px] font-mono text-slate-500">ID: DOC10001 • PIN: 123456</div>
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-slate-500 text-center pt-0.5">
+                      Enter credentials above and click <strong>Sign In</strong> to authenticate.
+                    </p>
                   </div>
                 </div>
               </form>

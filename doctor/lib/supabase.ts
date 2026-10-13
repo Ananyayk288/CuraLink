@@ -37,7 +37,13 @@ export function getSupabaseClient(overrideUrl?: string, overrideKey?: string): S
   const targetUrl = overrideUrl || config.url;
   const targetKey = overrideKey || config.anonKey;
 
-  if (!targetUrl || !targetKey || targetKey.length < 10) {
+  if (
+    !targetUrl ||
+    !targetKey ||
+    targetKey.length < 10 ||
+    targetKey.includes('dummy') ||
+    targetUrl.includes('test-arogyavani-proj')
+  ) {
     return null;
   }
 

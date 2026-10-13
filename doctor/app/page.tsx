@@ -222,18 +222,13 @@ export default function DoctorPortal() {
 
   useEffect(() => {
     loadInitialData();
-    // Load persisted doctor session if available
+    // Clinical session security: require credential verification on initial load
+    setCurrentDoctor(null);
+    setIsAuthModalOpen(true);
     try {
-      const stored = localStorage.getItem('curalink_doctor_session');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed && parsed.id) {
-          setCurrentDoctor(parsed);
-          setIsAuthModalOpen(false);
-        }
-      }
+      localStorage.removeItem('curalink_doctor_session');
     } catch (e) {
-      console.error('Error loading doctor session:', e);
+      // ignore
     }
   }, []);
 
@@ -3394,8 +3389,12 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
 
       {/* Professional Doctor Authentication Window */}
       <DoctorAuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+        isOpen={isAuthModalOpen || !currentDoctor}
+        onClose={() => {
+          if (currentDoctor) {
+            setIsAuthModalOpen(false);
+          }
+        }}
         onLoginSuccess={handleLoginSuccess}
         currentDoctor={currentDoctor}
         canDismiss={Boolean(currentDoctor)}
