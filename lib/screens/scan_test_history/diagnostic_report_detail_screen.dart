@@ -213,7 +213,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Clinical Order & Facility Information',
+                'Facility & Order',
                 style: GoogleFonts.outfit(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
@@ -225,25 +225,25 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
           const SizedBox(height: 14),
           _buildInfoRow(
             icon: Icons.person_outline_rounded,
-            label: 'Ordering Physician',
+            label: 'Doctor',
             value: test.orderingDoctor,
           ),
           const SizedBox(height: 10),
           _buildInfoRow(
             icon: Icons.local_hospital_outlined,
-            label: 'Diagnostic Facility',
+            label: 'Facility',
             value: test.diagnosticCenter,
           ),
           const SizedBox(height: 10),
           _buildInfoRow(
             icon: Icons.calendar_today_outlined,
-            label: 'Order Date',
+            label: 'Date',
             value: dateFormat.format(test.orderedDate),
           ),
           const SizedBox(height: 10),
           _buildInfoRow(
             icon: Icons.receipt_long_outlined,
-            label: 'Prescription Reference',
+            label: 'Rx Ref',
             value: 'Linked Clinical Order',
           ),
         ],
@@ -311,7 +311,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Key Clinical Lab Findings',
+                'Findings',
                 style: GoogleFonts.outfit(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
@@ -392,7 +392,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Physician Diagnostic Impression',
+                'Impression',
                 style: GoogleFonts.outfit(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w800,
@@ -455,7 +455,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Signed Clinical Diagnostic Document',
+                  'Clinical Report',
                   style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
                 ),
               ],
@@ -505,7 +505,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Investigation Pending Conduction',
+                  'Scheduled',
                   style: GoogleFonts.outfit(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
@@ -514,8 +514,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  'This diagnostic order is scheduled for ${dateFormat.format(test.targetDate)} at ${test.diagnosticCenter}. '
-                  'Clinical findings and laboratory report will appear once conducted and verified by the attending physician.',
+                  'Scheduled for ${dateFormat.format(test.targetDate)} at ${test.diagnosticCenter}.',
                   style: GoogleFonts.outfit(
                     fontSize: 11.5,
                     color: AppTheme.textSecondary,
@@ -548,7 +547,7 @@ class DiagnosticReportDetailScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Diagnostic records are retrieved for patient viewing. For clinical interpretations, consult your attending doctor.',
+              'Consult your doctor for clinical interpretation.',
               style: GoogleFonts.outfit(
                 fontSize: 11,
                 color: AppTheme.textMuted,

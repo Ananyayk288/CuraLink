@@ -347,8 +347,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            subtitle:
-                'Hospital appointments, allergy notices, and test updates',
+            subtitle: 'Appointments & updates',
             onTap: () {
               Navigator.push(
                 context,
@@ -363,8 +362,7 @@ class ProfileScreen extends StatelessWidget {
             color: AppTheme.primaryBlue,
             bg: AppTheme.primaryBlueSurface,
             title: 'About CuraLink Healthcare',
-            subtitle:
-                'Architecture, medication packaging guide, and transparency',
+            subtitle: 'Architecture & guides',
             onTap: () {
               Navigator.push(
                 context,
@@ -511,7 +509,7 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'All clinical health data, diagnostic records, and personal health details are securely encrypted and protected in accordance with digital healthcare privacy standards.',
+              'Health records are securely encrypted and protected.',
               style: GoogleFonts.outfit(
                 fontSize: 11,
                 color: AppTheme.textMuted,

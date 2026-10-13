@@ -19,21 +19,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   final List<Map<String, dynamic>> _allNotifications = [
     {
-      'title': 'Clinical Update: Active Regimen in Progress',
-      'body':
-          'Dr. Arvind Kumar updated your morning regimen with Amlodipine Besylate 5 mg and Metformin 500 mg. Blood pressure targets are stable.',
-      'time': 'Today, 08:30 AM',
-      'category': 'Clinical',
-      'icon': Icons.medication_rounded,
+      'title': 'Appointment Confirmed',
+      'body': 'Cardiology OPD • 28 Oct, 10:30 AM (Room 304)',
+      'time': '10 Oct',
+      'category': 'Appointments',
+      'icon': Icons.calendar_month_rounded,
       'color': AppTheme.primaryBlue,
       'bg': AppTheme.primaryBlueSurface,
-      'actionType': 'rx',
-      'actionLabel': 'View Prescription Details',
+      'actionType': 'appointment',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Upcoming Scan: 2D Echocardiogram [Diagnostic Imaging]',
-      'body':
-          'Type: Diagnostic Scan (Ultrasound imaging). Scheduled for 28 Oct 2026 at St. John’s Cardiac Imaging Suite 2. Please arrive 15 minutes prior to the scan appointment.',
+      'title': 'Next Scan: 2D Echo',
+      'body': 'Diagnostic Ultrasound • 28 Oct, Suite 2',
       'time': 'Yesterday',
       'category': 'Tests',
       'icon': Icons.biotech_rounded,
@@ -41,44 +39,41 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       'bg': AppTheme.warningSurface,
       'actionType': 'test',
       'testId': 'test-003',
-      'actionLabel': 'View Scheduled Scan Details',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Hospital Appointment Confirmed',
-      'body':
-          'Cardiology OPD follow-up confirmed with Dr. Arvind Kumar for 28 Oct 2026 at 10:30 AM (Room 304).',
-      'time': '10 Oct 2026',
-      'category': 'Appointments',
-      'icon': Icons.calendar_month_rounded,
+      'title': 'Regimen Updated',
+      'body': 'Morning: Amlodipine 5mg & Metformin 500mg',
+      'time': '08:30 AM',
+      'category': 'Clinical',
+      'icon': Icons.medication_rounded,
       'color': AppTheme.primaryBlue,
       'bg': AppTheme.primaryBlueSurface,
-      'actionType': 'appointment',
-      'actionLabel': 'View Appointment Details',
-    },
-    {
-      'title': 'Medical Allergy / Medication Note Recorded',
-      'body':
-          'Telmisartan course marked discontinued due to mild dry throat complaints. Replaced with Amlodipine monotherapy.',
-      'time': '14 Jun 2026',
-      'category': 'Clinical',
-      'icon': Icons.health_and_safety_rounded,
-      'color': const Color(0xFF7C3AED),
-      'bg': const Color(0xFFF5F3FF),
       'actionType': 'rx',
-      'actionLabel': 'View Clinical Rx',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Laboratory Test Verified: 12-Lead ECG Report',
-      'body':
-          'Type: Diagnostic Cardiology Test. Dr. Arvind Kumar reviewed your ECG report: Normal sinus rhythm at 72 bpm. No acute ischemic changes detected.',
-      'time': '04 Oct 2026',
+      'title': 'ECG Verified',
+      'body': 'Sinus rhythm 72 bpm • Normal',
+      'time': '04 Oct',
       'category': 'Tests',
       'icon': Icons.assignment_turned_in_rounded,
       'color': AppTheme.successGreen,
       'bg': AppTheme.successSurface,
       'actionType': 'test',
       'testId': 'test-001',
-      'actionLabel': 'View ECG Test Report',
+      'actionLabel': 'Details',
+    },
+    {
+      'title': 'Allergy Recorded',
+      'body': 'Telmisartan stopped (throat irritation)',
+      'time': '14 Jun',
+      'category': 'Clinical',
+      'icon': Icons.health_and_safety_rounded,
+      'color': const Color(0xFF7C3AED),
+      'bg': const Color(0xFFF5F3FF),
+      'actionType': 'rx',
+      'actionLabel': 'Details',
     },
   ];
 
@@ -94,7 +89,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       backgroundColor: AppTheme.backgroundCream,
       appBar: AppBar(
         title: Text(
-          'Notifications & Alerts',
+          'Alerts',
           style: GoogleFonts.outfit(
             fontSize: 18,
             fontWeight: FontWeight.w700,

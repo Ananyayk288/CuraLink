@@ -97,14 +97,14 @@ void main() {
 
       // Verify detail sheet opened with clinical instructions
       expect(
-        find.text('CLINICAL DOSAGE & TIMING INSTRUCTIONS'),
+        find.text('DOSAGE & TIMING'),
         findsOneWidget,
       );
-      expect(find.text('Close Details'), findsOneWidget);
+      expect(find.text('Close'), findsOneWidget);
 
       // Close detail sheet
-      await tester.ensureVisible(find.text('Close Details'));
-      await tester.tap(find.text('Close Details'));
+      await tester.ensureVisible(find.text('Close'));
+      await tester.tap(find.text('Close'));
       await tester.pumpAndSettle();
     },
   );
@@ -152,13 +152,13 @@ void main() {
       // Verify Login UI elements
       expect(find.text('Welcome back'), findsOneWidget);
       expect(
-        find.text('Sign in to continue to your healthcare dashboard.'),
+        find.text('Sign in to continue'),
         findsOneWidget,
       );
-      expect(find.text('Unique Patient ID'), findsOneWidget);
+      expect(find.text('Patient ID'), findsOneWidget);
       expect(find.text('Password'), findsOneWidget);
       expect(find.text('Sign In'), findsOneWidget);
-      expect(find.text('Official Patient Healthcare Portal'), findsOneWidget);
+      expect(find.text('Patient Portal'), findsOneWidget);
       expect(find.text('Forgot password?'), findsOneWidget);
     },
   );
@@ -394,7 +394,7 @@ void main() {
 
       // Verify DiagnosticReportDetailScreen is shown
       expect(find.text('Diagnostic Test Details'), findsOneWidget);
-      expect(find.text('Key Clinical Lab Findings'), findsOneWidget);
+      expect(find.text('Findings'), findsOneWidget);
       expect(find.text('Heart Rate'), findsOneWidget);
       expect(find.text('72 bpm (Normal Sinus)'), findsOneWidget);
 
@@ -417,9 +417,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify NotificationsScreen
-      expect(find.text('Notifications & Alerts'), findsOneWidget);
+      expect(find.text('Alerts'), findsAtLeastNWidgets(1));
       expect(
-        find.text('Clinical Update: Active Regimen in Progress'),
+        find.text('Appointment Confirmed'),
         findsOneWidget,
       );
 
@@ -481,14 +481,14 @@ void main() {
       expect(find.widgetWithText(InkWell, 'Help & Info'), findsNothing);
 
       // Home shows compact latest diagnostic report card
-      expect(find.text('LATEST DIAGNOSTIC REPORT'), findsOneWidget);
+      expect(find.text('Latest Report'), findsOneWidget);
       expect(find.text('12-Lead Electrocardiogram (ECG)'), findsOneWidget);
 
-      // Tapping View Full Report opens DiagnosticReportDetailScreen
+      // Tapping View Report opens DiagnosticReportDetailScreen
       await tester.ensureVisible(
-        find.widgetWithText(ElevatedButton, 'View Full Report'),
+        find.widgetWithText(ElevatedButton, 'View Report'),
       );
-      await tester.tap(find.widgetWithText(ElevatedButton, 'View Full Report'));
+      await tester.tap(find.widgetWithText(ElevatedButton, 'View Report'));
       await tester.pumpAndSettle();
 
       expect(find.text('Diagnostic Test Details'), findsOneWidget);

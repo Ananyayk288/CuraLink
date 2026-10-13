@@ -70,8 +70,7 @@ class _DailyMedicationScheduleScreenState
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Medication schedule grouped by doctor-prescribed administration timings. '
-                        'Please take all medicines strictly as advised by your healthcare provider.',
+                        'Take medicines strictly as prescribed by your doctor.',
                         style: GoogleFonts.outfit(
                           fontSize: 11.5,
                           color: AppTheme.primaryBlueDark,
@@ -172,7 +171,7 @@ class _DailyMedicationScheduleScreenState
     if (_selectedFilter == 'Morning') {
       return _buildSingleTimeGroup(
         title: 'Morning Regimen',
-        subtitle: 'Prescribed for morning administration (08:00 AM - 11:59 AM)',
+        subtitle: '08:00 AM - 11:59 AM',
         icon: Icons.wb_sunny_rounded,
         color: const Color(0xFFD97706),
         bg: const Color(0xFFFFFBEB),
@@ -183,7 +182,7 @@ class _DailyMedicationScheduleScreenState
     if (_selectedFilter == 'Afternoon') {
       return _buildSingleTimeGroup(
         title: 'Afternoon Regimen',
-        subtitle: 'Prescribed for midday administration (12:00 PM - 04:59 PM)',
+        subtitle: '12:00 PM - 04:59 PM',
         icon: Icons.wb_cloudy_rounded,
         color: const Color(0xFF2563EB),
         bg: const Color(0xFFEFF6FF),
@@ -194,7 +193,7 @@ class _DailyMedicationScheduleScreenState
     if (_selectedFilter == 'Evening') {
       return _buildSingleTimeGroup(
         title: 'Evening Regimen',
-        subtitle: 'Prescribed for evening administration (05:00 PM - 07:59 PM)',
+        subtitle: '05:00 PM - 07:59 PM',
         icon: Icons.wb_twilight_rounded,
         color: const Color(0xFFD97706),
         bg: const Color(0xFFFFFBEB),
@@ -205,7 +204,7 @@ class _DailyMedicationScheduleScreenState
     if (_selectedFilter == 'Night') {
       return _buildSingleTimeGroup(
         title: 'Night Regimen',
-        subtitle: 'Prescribed for bedtime administration (08:00 PM - 11:59 PM)',
+        subtitle: '08:00 PM - 11:59 PM',
         icon: Icons.nightlight_round,
         color: const Color(0xFF4338CA),
         bg: const Color(0xFFEEF2FF),
@@ -221,7 +220,7 @@ class _DailyMedicationScheduleScreenState
         _buildTimeSectionHeader(
           title: 'Morning Regimen',
           subtitle:
-              '08:00 AM - 11:59 AM • ${morningMeds.length} Prescribed Dose${morningMeds.length > 1 ? "s" : ""}',
+              '08:00 AM - 11:59 AM • ${morningMeds.length} dose${morningMeds.length > 1 ? "s" : ""}',
           icon: Icons.wb_sunny_rounded,
           color: const Color(0xFFD97706),
           bg: const Color(0xFFFFFBEB),
@@ -238,7 +237,7 @@ class _DailyMedicationScheduleScreenState
         _buildTimeSectionHeader(
           title: 'Afternoon Regimen',
           subtitle:
-              '12:00 PM - 04:59 PM • ${afternoonMeds.length} Prescribed Dose${afternoonMeds.length > 1 ? "s" : ""}',
+              '12:00 PM - 04:59 PM • ${afternoonMeds.length} dose${afternoonMeds.length > 1 ? "s" : ""}',
           icon: Icons.wb_cloudy_rounded,
           color: const Color(0xFF2563EB),
           bg: const Color(0xFFEFF6FF),
@@ -255,7 +254,7 @@ class _DailyMedicationScheduleScreenState
         _buildTimeSectionHeader(
           title: 'Evening Regimen',
           subtitle:
-              '05:00 PM - 07:59 PM • ${eveningMeds.length} Prescribed Dose${eveningMeds.length > 1 ? "s" : ""}',
+              '05:00 PM - 07:59 PM • ${eveningMeds.length} dose${eveningMeds.length > 1 ? "s" : ""}',
           icon: Icons.wb_twilight_rounded,
           color: const Color(0xFFD97706),
           bg: const Color(0xFFFFFBEB),
@@ -272,7 +271,7 @@ class _DailyMedicationScheduleScreenState
         _buildTimeSectionHeader(
           title: 'Night Regimen',
           subtitle:
-              '08:00 PM - 11:59 PM • ${nightMeds.length} Prescribed Dose${nightMeds.length > 1 ? "s" : ""}',
+              '08:00 PM - 11:59 PM • ${nightMeds.length} dose${nightMeds.length > 1 ? "s" : ""}',
           icon: Icons.nightlight_round,
           color: const Color(0xFF4338CA),
           bg: const Color(0xFFEEF2FF),

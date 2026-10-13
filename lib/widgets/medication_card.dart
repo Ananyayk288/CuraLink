@@ -220,7 +220,7 @@ class MedicationCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Tap card for details',
+                    'Details',
                     style: GoogleFonts.outfit(
                       fontSize: 11,
                       color: AppTheme.primaryBlue,

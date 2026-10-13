@@ -163,7 +163,7 @@ class MedicationDetailSheet extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Physical Packaging: A ${medication.stickerColor} sticker is affixed to this medicine package for quick visual recognition. Always verify the printed name and dosage.',
+                          '${medication.stickerColor} sticker packaging for visual identification.',
                           style: GoogleFonts.outfit(
                             fontSize: 11.5,
                             color: AppTheme.textSecondary,
@@ -182,7 +182,7 @@ class MedicationDetailSheet extends StatelessWidget {
 
               // Clinical Prescription Schedule Details
               Text(
-                'CLINICAL DOSAGE & TIMING INSTRUCTIONS',
+                'DOSAGE & TIMING',
                 style: GoogleFonts.outfit(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
@@ -200,7 +200,7 @@ class MedicationDetailSheet extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _buildDetailRow('Scheduled Timing', medication.timing),
+                    _buildDetailRow('Timing', medication.timing),
                     const SizedBox(height: 8),
                     _buildDetailRow('Frequency', medication.frequency),
                     const SizedBox(height: 8),
@@ -209,7 +209,7 @@ class MedicationDetailSheet extends StatelessWidget {
                       medication.mealInstructionDisplay,
                     ),
                     const SizedBox(height: 8),
-                    _buildDetailRow('Treatment Duration', medication.duration),
+                    _buildDetailRow('Duration', medication.duration),
                   ],
                 ),
               ),
@@ -217,7 +217,7 @@ class MedicationDetailSheet extends StatelessWidget {
 
               // Prescribing Physician Information
               Text(
-                'ORDERING PHYSICIAN & PRESCRIPTION REFERENCE',
+                'PRESCRIBED BY',
                 style: GoogleFonts.outfit(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
@@ -236,17 +236,17 @@ class MedicationDetailSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildDetailRow(
-                      'Prescribing Doctor',
+                      'Doctor',
                       medication.prescribingDoctor,
                     ),
                     const SizedBox(height: 8),
                     _buildDetailRow(
-                      'Prescription Date',
+                      'Date',
                       dateFormat.format(medication.prescribedDate),
                     ),
                     const SizedBox(height: 8),
                     _buildDetailRow(
-                      'Linked Consultation Rx',
+                      'Rx Ref',
                       medication.prescriptionId,
                     ),
                   ],
@@ -273,7 +273,7 @@ class MedicationDetailSheet extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Clinical Notes: ${medication.clinicalNotes}',
+                          medication.clinicalNotes!,
                           style: GoogleFonts.outfit(
                             fontSize: 12,
                             color: AppTheme.textSecondary,
@@ -300,7 +300,7 @@ class MedicationDetailSheet extends StatelessWidget {
                   ),
                   onPressed: () => Navigator.pop(context),
                   child: Text(
-                    'Close Details',
+                    'Close',
                     style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,

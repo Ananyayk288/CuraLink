@@ -24,21 +24,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Map<String, dynamic>> _homeNotifications = [
     {
-      'title': 'Hospital Appointment Confirmed',
-      'body':
-          'Cardiology OPD follow-up confirmed with Dr. Arvind Kumar for 28 Oct 2026 at 10:30 AM (Room 304).',
-      'time': '10 Oct 2026',
+      'title': 'Appointment Confirmed',
+      'body': 'Cardiology OPD • 28 Oct, 10:30 AM (Room 304)',
+      'time': '10 Oct',
       'category': 'Appointments',
       'icon': Icons.calendar_month_rounded,
       'color': AppTheme.primaryBlue,
       'bg': AppTheme.primaryBlueSurface,
       'actionType': 'appointment',
-      'actionLabel': 'View Appointment Details',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Upcoming Scan: 2D Echocardiogram [Diagnostic Imaging]',
-      'body':
-          'Type: Diagnostic Scan (Ultrasound imaging). Scheduled for 28 Oct 2026 at St. John’s Cardiac Imaging Suite 2. Please arrive 15 minutes prior to the scan appointment.',
+      'title': 'Next Scan: 2D Echo',
+      'body': 'Diagnostic Ultrasound • 28 Oct, Suite 2',
       'time': 'Yesterday',
       'category': 'Tests',
       'icon': Icons.biotech_rounded,
@@ -46,44 +44,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
       'bg': AppTheme.warningSurface,
       'actionType': 'test',
       'testId': 'test-003',
-      'actionLabel': 'View Scheduled Scan Details',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Regimen Update: Morning Regimen Active',
-      'body':
-          'Dr. Arvind Kumar updated your morning regimen with Amlodipine Besylate 5 mg and Metformin 500 mg. Blood pressure targets are stable.',
-      'time': 'Today, 08:30 AM',
+      'title': 'Regimen Updated',
+      'body': 'Morning: Amlodipine 5mg & Metformin 500mg',
+      'time': '08:30 AM',
       'category': 'Clinical',
       'icon': Icons.medication_rounded,
       'color': AppTheme.primaryBlue,
       'bg': AppTheme.primaryBlueSurface,
       'actionType': 'rx',
-      'actionLabel': 'View Prescription Details',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Laboratory Test Verified: 12-Lead ECG Report',
-      'body':
-          'Type: Diagnostic Cardiology Test. Dr. Arvind Kumar reviewed your ECG report: Normal sinus rhythm at 72 bpm. No acute ischemic changes detected.',
-      'time': '04 Oct 2026',
+      'title': 'ECG Verified',
+      'body': 'Sinus rhythm 72 bpm • Normal',
+      'time': '04 Oct',
       'category': 'Tests',
       'icon': Icons.assignment_turned_in_rounded,
       'color': AppTheme.successGreen,
       'bg': AppTheme.successSurface,
       'actionType': 'test',
       'testId': 'test-001',
-      'actionLabel': 'View ECG Test Report',
+      'actionLabel': 'Details',
     },
     {
-      'title': 'Medical Allergy / Medication Note Recorded',
-      'body':
-          'Telmisartan course marked discontinued due to mild dry throat complaints. Replaced with Amlodipine monotherapy.',
-      'time': '14 Jun 2026',
+      'title': 'Allergy Recorded',
+      'body': 'Telmisartan stopped (throat irritation)',
+      'time': '14 Jun',
       'category': 'Clinical',
       'icon': Icons.health_and_safety_rounded,
       'color': const Color(0xFF7C3AED),
       'bg': const Color(0xFFF5F3FF),
       'actionType': 'rx',
-      'actionLabel': 'View Clinical Rx',
+      'actionLabel': 'Details',
     },
   ];
 
@@ -287,15 +282,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Next: Morning 08:00 AM  •  Amlodipine Besylate & Metformin',
-                      style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.textSecondary),
+                      'Next Dose: 08:00 AM • Morning',
+                      style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
                     ),
                   ),
                 ],
               ),
             ),
           ],
-          // Next Clinical Investigation (Explicit Scan vs Test Notification)
+          // Next Scan / Test (Minimized Text)
           if (appState.diagnosticTests.any((t) => t.status == TestStatus.scheduled)) ...[
             Builder(
               builder: (context) {
@@ -304,10 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     .toList();
                 final nextInv = scheduledTests.first;
                 final isScan = nextInv.category == TestCategory.diagnosticScan;
-                final invType = isScan ? '[Diagnostic Scan]' : '[Laboratory Test]';
-                final daysText = nextInv.scheduledDate != null
-                    ? 'In 4 days (${DateFormat('dd MMM yyyy, hh:mm a').format(nextInv.scheduledDate!)})'
-                    : 'In 4 days';
+                final label = isScan ? 'Next Scan' : 'Next Test';
                 return Container(
                   margin: const EdgeInsets.only(top: 8),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -333,14 +325,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             children: [
                               TextSpan(
-                                text: 'Next $invType: ',
+                                text: '$label: ',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w800,
                                   color: Color(0xFFB45309),
                                 ),
                               ),
                               TextSpan(
-                                text: '${nextInv.testName}  •  $daysText',
+                                text: '${nextInv.testName} (4 days)',
                                 style: const TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ],
@@ -507,7 +499,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Upcoming Scans & Tests to be Done',
+                        'Next Scans & Tests',
                         style: GoogleFonts.outfit(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
@@ -523,7 +515,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         border: Border.all(color: const Color(0xFFFCD34D)),
                       ),
                       child: Text(
-                        '4 days to go',
+                        '4 days',
                         style: GoogleFonts.outfit(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
@@ -576,8 +568,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   const SizedBox(width: 4),
                                   Text(
                                     test.category == TestCategory.diagnosticScan
-                                        ? 'DIAGNOSTIC SCAN (Imaging)'
-                                        : 'LABORATORY TEST (Pathology)',
+                                        ? 'Scan'
+                                        : 'Test',
                                     style: GoogleFonts.outfit(
                                       fontSize: 10.5,
                                       fontWeight: FontWeight.w800,
@@ -593,7 +585,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          '${test.category == TestCategory.diagnosticScan ? "[Scan] " : "[Test] "}${test.testName}',
+                          test.testName,
                           style: GoogleFonts.outfit(
                             fontSize: 13.5,
                             fontWeight: FontWeight.w700,
@@ -622,33 +614,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Arrive 15 min prior • Fasting not required',
-                                style: GoogleFonts.outfit(fontSize: 11, color: AppTheme.textMuted),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
                             TextButton(
                               onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => DiagnosticReportDetailScreen(test: test)),
                               ),
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                 minimumSize: Size.zero,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'View Details →',
+                                'Details',
                                 style: GoogleFonts.outfit(
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w700,
@@ -686,7 +663,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _SectionHeader(
             icon: Icons.notifications_active_rounded,
             iconColor: AppTheme.primaryBlue,
-            title: 'Notifications & Clinical Alerts',
+            title: 'Alerts',
             badge: Container(
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -715,7 +692,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.radiusPill)),
               ),
               child: Text(
-                'Full Center',
+                'All',
                 style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue),
               ),
             ),
@@ -745,7 +722,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(16),
               alignment: Alignment.center,
               child: Text(
-                'No notifications in this category.',
+                'No alerts',
                 style: GoogleFonts.outfit(color: AppTheme.textMuted, fontSize: 13),
               ),
             )
@@ -765,7 +742,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
-                    '+${filtered.length - 1} more alert${filtered.length > 2 ? 's' : ''} • View in Notifications Center',
+                    '+${filtered.length - 1} more',
                     style: GoogleFonts.outfit(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -1112,7 +1089,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _SectionHeader(
             icon: Icons.biotech_outlined,
             iconColor: const Color(0xFF7C3AED),
-            title: 'LATEST DIAGNOSTIC REPORT',
+            title: 'Latest Report',
             badge: _PillBadge(
               label: latestTest.isCompleted ? 'Completed' : 'Scheduled',
               color: latestTest.isCompleted ? AppTheme.successGreen : AppTheme.warningAmber,
@@ -1170,7 +1147,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 context,
                 MaterialPageRoute(builder: (_) => DiagnosticReportDetailScreen(test: latestTest)),
               ),
-              child: const Text('View Full Report'),
+              child: const Text('View Report'),
             ),
           ),
         ],

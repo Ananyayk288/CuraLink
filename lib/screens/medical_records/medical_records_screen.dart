@@ -169,7 +169,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen>
               TextField(
                 controller: _medSearchController,
                 decoration: InputDecoration(
-                  hintText: 'Search medication by name or doctor...',
+                  hintText: 'Search medications...',
                   hintStyle: GoogleFonts.outfit(
                     fontSize: 13,
                     color: AppTheme.textMuted,
@@ -398,8 +398,8 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen>
           Expanded(
             child: Text(
               isHistorical
-                  ? 'Historical records show previous courses. Past medications are not active unless re-prescribed.'
-                  : 'Active medical orders confirmed on current clinical prescriptions. Tap any card for full details.',
+                  ? 'Previous courses. Not active unless re-prescribed.'
+                  : 'Active prescriptions. Tap card for details.',
               style: GoogleFonts.outfit(
                 fontSize: 11.5,
                 color: isHistorical
@@ -454,7 +454,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen>
               TextField(
                 controller: _testSearchController,
                 decoration: InputDecoration(
-                  hintText: 'Search test name, facility, or doctor...',
+                  hintText: 'Search scans & tests...',
                   hintStyle: GoogleFonts.outfit(
                     fontSize: 13,
                     color: AppTheme.textMuted,
@@ -740,7 +740,7 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'View Full Report Details',
+                    'View Report',
                     style: GoogleFonts.outfit(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w700,

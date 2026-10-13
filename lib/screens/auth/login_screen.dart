@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Official Patient Healthcare Portal',
+                                  'Patient Portal',
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 4),
                             const Text(
-                              'Sign in to continue to your healthcare dashboard.',
+                              'Sign in to continue',
                               style: TextStyle(
                                 fontSize: 13.5,
                                 color: AppTheme.textMuted,
@@ -260,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // 3. Unique Patient ID Input Field
                             const Text(
-                              'Unique Patient ID',
+                              'Patient ID',
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
@@ -274,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               decoration: InputDecoration(
-                                hintText: 'Enter Patient ID (e.g. PNT10492)',
+                                hintText: 'Patient ID (PNT10492)',
                                 hintStyle: const TextStyle(
                                   color: AppTheme.textLight,
                                   fontSize: 13.5,
@@ -358,7 +358,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               decoration: InputDecoration(
-                                hintText: '6-digit password (e.g. 123456)',
+                                hintText: '6-digit password',
                                 hintStyle: const TextStyle(
                                   color: AppTheme.textLight,
                                   fontSize: 13.5,
@@ -451,7 +451,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     const SizedBox(width: 6),
                                     const Text(
-                                      'Remember email',
+                                      'Remember ID',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: AppTheme.textSecondary,
@@ -518,7 +518,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Footer note
                             const Center(
                               child: Text(
-                                'CuraLink Health • Secure Patient Healthcare Portal',
+                                'CuraLink Health',
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: AppTheme.textLight,

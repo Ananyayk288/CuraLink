@@ -86,8 +86,8 @@ class PrescriptionDetailScreen extends StatelessWidget {
                               children: [
                                 StatusChip(
                                   label: prescription.isActive
-                                      ? 'Active Order'
-                                      : 'Past Order',
+                                      ? 'Active'
+                                      : 'Past',
                                   variant: prescription.isActive
                                       ? ChipVariant.emerald
                                       : ChipVariant.slate,
@@ -141,7 +141,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Visit Reason: ${prescription.visitReason}',
+                              'Reason: ${prescription.visitReason}',
                               style: GoogleFonts.outfit(
                                 fontSize: 12.5,
                                 color: AppTheme.textSecondary,
@@ -172,7 +172,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Doctor’s Clinical Instructions',
+                                  'Instructions',
                                   style: GoogleFonts.outfit(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -205,7 +205,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Prescribed Medications (${prescription.medications.length})',
+                            'Medications (${prescription.medications.length})',
                             style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -231,7 +231,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Associated Scans & Tests (${prescription.associatedTests.length})',
+                              'Scans & Tests (${prescription.associatedTests.length})',
                               style: GoogleFonts.outfit(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
