@@ -69,7 +69,15 @@ let containerInstance: ServiceContainer | null = null;
 export function getContainer(): ServiceContainer {
   if (containerInstance) return containerInstance;
 
-  const provider = (process.env.DATA_PROVIDER || "mock").toLowerCase();
+  const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supaKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const isSupaConfigured = Boolean(
+    supaUrl &&
+    !supaUrl.includes("your-project") &&
+    supaKey &&
+    supaKey.length > 20
+  );
+  const provider = (process.env.DATA_PROVIDER || (isSupaConfigured ? "supabase" : "mock")).toLowerCase();
 
   // Core cross-cutting adapters
   const clock = new SystemClock();

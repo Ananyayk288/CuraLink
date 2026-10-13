@@ -17,6 +17,7 @@ export interface SupabaseActivePrescriptionRow {
   revision: number;
   parent_prescription_id: string | null;
   committed_at: string;
+  uhid?: string;
 }
 
 export interface SupabasePrescriptionMedicineRow {
@@ -33,7 +34,7 @@ export interface SupabasePrescriptionMedicineRow {
 
 export function mapSupabaseToPatientSummary(row: SupabaseActivePrescriptionRow): PatientSummary {
   return {
-    id: row.patient_id,
+    id: row.uhid || row.patient_id,
     displayName: row.patient_display_name,
     requiresStickers: row.requires_stickers,
     preferredLanguage: row.preferred_language,

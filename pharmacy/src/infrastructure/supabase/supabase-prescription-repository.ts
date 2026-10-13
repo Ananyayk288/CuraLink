@@ -20,11 +20,11 @@ export class SupabasePrescriptionRepository
     const { data, error } = await client
       .from("pharmacy_active_prescriptions")
       .select("*")
-      .eq("patient_id", patientId)
+      .or(`patient_id.eq.${patientId},uhid.eq.${patientId}`)
       .eq("status", "COMMITTED")
       .order("revision", { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error || !data) return null;
 
@@ -50,7 +50,7 @@ export class SupabasePrescriptionRepository
       .select("*")
       .eq("prescription_id", prescriptionId)
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error || !data) return null;
 

@@ -153,6 +153,27 @@ export async function savePatientToSupabase(patient: PatientData): Promise<{
       }
     }
 
+    // Also insert into appointments table so doctor desk sees the pending appointment
+    try {
+      const aptId = `apt-${patient.uhid}`;
+      const tokenNum = `TOKEN-${String(patient.uhid).replace(/\D/g, '').slice(-2) || '01'}`;
+      await client.from('appointments').upsert([
+        {
+          id: aptId,
+          patient_id: patientId || patient.uhid,
+          doctor_id: null,
+          token_number: tokenNum,
+          reason_for_visit: 'Care Team Intake & Clinical Triage Consultation',
+          appointment_time: 'Today • Walk-in',
+          booking_channel: 'CARE_TEAM_FIELD',
+          status: 'PENDING',
+          created_at: new Date().toISOString(),
+        },
+      ], { onConflict: 'id' });
+    } catch (aptErr) {
+      console.warn('Auto-appointment creation notice:', aptErr);
+    }
+
     return { success: true, supabaseId: patientId };
   } catch (err: any) {
     return { success: false, error: err.message };

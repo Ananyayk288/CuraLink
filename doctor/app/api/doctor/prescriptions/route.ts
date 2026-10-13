@@ -130,25 +130,48 @@ export async function POST(request: Request) {
         patient_id: newPrescription.patientId,
         doctor_id: newPrescription.doctorId,
         doctor_name: newPrescription.doctorName,
+        hospital_id: 'HOSP-001',
         prescription_type: newPrescription.prescriptionType,
         symptoms_notes: newPrescription.symptomsNotes,
         follow_up_date: newPrescription.followUpDate || null,
         follow_up_notes: newPrescription.followUpNotes || null,
         telephony_trigger_enabled: newPrescription.telephonyTriggerEnabled,
         status: newPrescription.status,
+        revision: 1,
+        committed_at: newPrescription.createdAt,
         created_at: newPrescription.createdAt,
       },
-      medicines: newMedicines.map(m => ({
-        id: m.id,
-        prescription_id: m.prescriptionId,
-        medicine_name: m.medicineName,
-        dosage: m.dosage || '',
-        frequency: m.frequency,
-        no_of_days: m.noOfDays,
-        meal_relation: m.mealRelation,
-        instructions: m.instructions,
-        dispense_status: m.dispenseStatus,
-      })),
+      medicines: newMedicines.map(m => {
+        const freq = (m.frequency || '').toUpperCase();
+        const slots: string[] = [];
+        if (freq === '1-0-1') slots.push('MORNING', 'NIGHT');
+        else if (freq === '1-1-1') slots.push('MORNING', 'AFTERNOON', 'NIGHT');
+        else if (freq === '1-0-0') slots.push('MORNING');
+        else if (freq === '0-1-0') slots.push('AFTERNOON');
+        else if (freq === '0-0-1') slots.push('NIGHT');
+        else if (freq === '0-1-1') slots.push('AFTERNOON', 'NIGHT');
+        else slots.push('MORNING');
+
+        const isBeforeFood = (m.mealRelation || '').toLowerCase().includes('before');
+        const days = Number(m.noOfDays) || 15;
+        const qty = days * Math.max(1, slots.length);
+
+        return {
+          id: m.id,
+          prescription_id: m.prescriptionId,
+          medicine_name: m.medicineName,
+          dosage: m.dosage || '',
+          frequency: m.frequency,
+          no_of_days: days,
+          duration: `${days} days`,
+          meal_relation: m.mealRelation,
+          instructions: m.instructions,
+          dispense_status: m.dispenseStatus,
+          dose_slots: slots,
+          before_food: isBeforeFood,
+          quantity_prescribed: qty,
+        };
+      }),
       diagnostics: newDiagnostics.map(d => ({
         id: d.id,
         prescription_id: d.prescriptionId,
