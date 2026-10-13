@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#grad)" />
+  <!-- Medical Cross / Pill Symbol -->
+  <rect x="216" y="128" width="80" height="256" rx="40" fill="#ffffff" />
+  <rect x="128" y="216" width="256" height="80" rx="40" fill="#ffffff" />
+  <!-- Center circle badge -->
+  <circle cx="256" cy="256" r="32" fill="#3b82f6" />
+  <circle cx="256" cy="256" r="16" fill="#facc15" />
+</svg>
