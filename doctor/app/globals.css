@@ -4,7 +4,7 @@
 
 @layer base {
   html, body {
-    @apply h-full bg-slate-50 text-slate-800 antialiased font-sans;
+    @apply h-full bg-[#FAF7F2] text-slate-900 antialiased font-sans selection:bg-blue-100 selection:text-blue-900;
   }
 }
 

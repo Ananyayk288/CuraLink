@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   title: 'CURALINK — Doctor Clinical Coordination Portal',
   description: 'AI-assisted vernacular chronic care management & clinical coordination portal',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.png',
-    apple: '/curalink-symbol.png',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
 };
 
@@ -35,7 +35,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-slate-50 text-slate-800" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <body className="min-h-screen bg-[#FAF7F2] text-slate-900" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         {children}
       </body>
     </html>
