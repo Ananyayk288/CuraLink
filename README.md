@@ -23,5 +23,5 @@ npm install
 npm run dev
 ```
 
-The portal runs locally at [http://localhost:3000](http://localhost:3000).
+The portal runs locally at [http://localhost:3001](http://localhost:3001).
 

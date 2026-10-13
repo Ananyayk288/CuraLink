@@ -43,7 +43,7 @@ npm run build
 npm start
 
 # 3. Open in your browser:
-http://localhost:3000
+http://localhost:3001
 ```
 
 ---
