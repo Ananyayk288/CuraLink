@@ -653,17 +653,26 @@ export default function DoctorPortal() {
       <aside className="hidden lg:flex w-72 bg-white border-r border-slate-200 flex-col justify-between shrink-0 select-none shadow-sm z-30">
         <div>
           {/* Brand Header */}
-          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md shadow-teal-100">
-                <Stethoscope className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                <img
+                  src="/curalink-symbol.png"
+                  alt="CuraLink Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
-                <h1 className="text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
-                  CURALINK
-                </h1>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-teal-600">
-                  Doctor Portal
+                <div className="flex items-center gap-1.5">
+                  <h1 className="text-lg font-black tracking-tight text-slate-900 leading-tight">
+                    CuraLink
+                  </h1>
+                  <span className="bg-teal-50 text-teal-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
+                    Doctor
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-400 font-medium block">
+                  Connect • Care • Heal
                 </span>
               </div>
             </div>
@@ -818,15 +827,24 @@ export default function DoctorPortal() {
             <div>
               <div className="p-5 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md shadow-teal-100">
-                    <Stethoscope className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                    <img
+                      src="/curalink-symbol.png"
+                      alt="CuraLink Logo"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <div>
-                    <h2 className="text-lg font-extrabold text-slate-900 leading-tight">
-                      CURALINK
-                    </h2>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-teal-600">
-                      Doctor Portal
+                    <div className="flex items-center gap-1.5">
+                      <h2 className="text-base font-black text-slate-900 leading-tight">
+                        CuraLink
+                      </h2>
+                      <span className="bg-teal-50 text-teal-700 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
+                        Doctor
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-medium block">
+                      Connect • Care • Heal
                     </span>
                   </div>
                 </div>
@@ -1004,12 +1022,16 @@ export default function DoctorPortal() {
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-xs">
-                <Stethoscope className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 p-0.5 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                <img
+                  src="/curalink-symbol.png"
+                  alt="CuraLink"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
-                <span className="text-base font-extrabold tracking-tight text-slate-900 leading-tight">
-                  CURALINK
+                <span className="text-sm font-black tracking-tight text-slate-900 leading-tight">
+                  CuraLink
                 </span>
                 <span className="block text-[9px] font-bold uppercase tracking-wider text-teal-600 -mt-0.5">
                   Doctor Portal

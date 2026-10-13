@@ -240,13 +240,17 @@ export default function DoctorAuthModal({
         {/* Modal Header & Branding */}
         <div className="pt-6 sm:pt-7 px-5 sm:px-8 pb-4 sm:pb-5 border-b border-slate-100 bg-slate-50/50">
           <div className="flex items-center gap-3 sm:gap-3.5 mb-2">
-            <div className="w-11 sm:w-12 h-11 sm:h-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white shadow-lg shadow-teal-600/20 shrink-0">
-              <Stethoscope className="w-5 sm:w-6 h-5 sm:h-6" />
+            <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-2xl bg-white border border-slate-200/90 p-1.5 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+              <img
+                src="/curalink-symbol.png"
+                alt="CuraLink Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
-                  CURALINK
+                  CuraLink
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-teal-100 text-teal-800 border border-teal-200">
                   Doctor Portal
@@ -262,16 +266,21 @@ export default function DoctorAuthModal({
             <span className="flex items-center gap-1 font-semibold text-teal-700">
               <ShieldCheck className="w-3.5 h-3.5 text-teal-600" /> 256-bit Encrypted Session
             </span>
-            <span className="text-slate-400 hidden xs:inline sm:inline">CDSCO / MCI Standard</span>
+            <span className="text-slate-400 hidden xs:inline sm:inline">Connect • Care • Heal</span>
           </div>
         </div>
 
         {/* SUCCESS SCREEN (AFTER REGISTRATION) */}
         {registeredDoctor ? (
           <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-200">
-            {/* Success Icon */}
-            <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner ring-6 sm:ring-8 ring-emerald-50">
-              <CheckCircle2 className="w-8 sm:w-9 h-8 sm:h-9" />
+            {/* Success Icon & CuraLink Brand */}
+            <div className="flex items-center justify-center gap-3 mx-auto">
+              <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl bg-white border-2 border-teal-200 p-2 flex items-center justify-center shadow-md overflow-hidden">
+                <img src="/curalink-symbol.png" alt="CuraLink" className="w-full h-full object-contain" />
+              </div>
+              <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-inner ring-4 sm:ring-6 ring-emerald-50">
+                <CheckCircle2 className="w-7 sm:w-8 h-7 sm:h-8" />
+              </div>
             </div>
 
             <div>
