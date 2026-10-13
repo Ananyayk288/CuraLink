@@ -483,22 +483,19 @@ END $$;
 -- Enables live WebSocket broadcasts across portals
 -- ----------------------------------------------------------------------------
 DO $$
+DECLARE
+  t TEXT;
 BEGIN
-  ALTER PUBLICATION supabase_realtime ADD TABLE patients;
-EXCEPTION WHEN duplicate_object THEN END;
-BEGIN
-  ALTER PUBLICATION supabase_realtime ADD TABLE appointments;
-EXCEPTION WHEN duplicate_object THEN END;
-BEGIN
-  ALTER PUBLICATION supabase_realtime ADD TABLE escalations;
-EXCEPTION WHEN duplicate_object THEN END;
-BEGIN
-  ALTER PUBLICATION supabase_realtime ADD TABLE prescriptions;
-EXCEPTION WHEN duplicate_object THEN END;
-BEGIN
-  ALTER PUBLICATION supabase_realtime ADD TABLE dispense_events;
-EXCEPTION WHEN duplicate_object THEN END;
-$$;
+  FOR t IN SELECT unnest(ARRAY['patients', 'appointments', 'escalations', 'prescriptions', 'dispense_events'])
+  LOOP
+    BEGIN
+      EXECUTE format('ALTER PUBLICATION supabase_realtime ADD TABLE %I;', t);
+    EXCEPTION
+      WHEN duplicate_object THEN NULL;
+      WHEN undefined_object THEN NULL;
+    END;
+  END LOOP;
+END $$;
 
 -- ============================================================================
 -- 22. RICH SEED DATA FOR IMMEDIATE DEMO TESTING
