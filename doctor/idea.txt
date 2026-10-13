@@ -1,0 +1,21 @@
+|| SHREE ||
+
+5 roles - Doctor, Patient/Guardian, Pharmacy, Hospital, ADMIN
+TTS needed
+
+Doctor - can see every patient detail - prescription, and details
+Patient - his all history, medical buys too
+Pharmacy - Only patient's latest medicine
+
+DOCTOR
+
+Create follow up, enter his condition and follow up, create medicine tab and add medicines to be bought, cannot delete anything, only draft and save. history. 
+
+specify doctor while doing followup
+
+PATIENT/GUARDIAN
+
+books appointment online, all online for smartphones
+tablet phones - uses stt and books appointment thru number buttons, id and communications - normal message
+chronic follow up - thru call for both, use either stt or, voice triggers or buttons
+if not picked above threshold, inform doctor and hospital 

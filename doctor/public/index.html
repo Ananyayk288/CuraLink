@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CURALINK — Doctor Clinical Coordination Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            stickerPink: '#ec4899',
+            stickerBlue: '#2563eb',
+            stickerYellow: '#eab308',
+            stickerGreen: '#10b981',
+            stickerPurple: '#8b5cf6',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex">
+
+  <!-- ============================================================ -->
+  <!-- LEFT SIDEBAR NAVIGATION BAR                                   -->
+  <!-- ============================================================ -->
+  <aside class="w-72 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 h-screen sticky top-0 z-40 shadow-sm">
+    <!-- Top Branding & Navigation Links -->
+    <div class="flex flex-col h-full overflow-y-auto">
+      <!-- Logo Header -->
+      <div class="p-5 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+          <i data-lucide="activity" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-lg tracking-tight text-slate-900">CURALINK</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 rounded">Doctor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu (Enlarged Tabs for Effortless Doctor Clicking) -->
+      <nav class="p-4 space-y-2">
+        <button onclick="navigateView('dashboard')" id="nav-dashboard" class="nav-btn active w-full px-4 py-3.5 rounded-xl text-sm font-extrabold flex items-center justify-between text-slate-700 hover:bg-slate-100 transition-all text-left">
+          <div class="flex items-center gap-3">
+            <i data-lucide="layout-dashboard" class="w-5 h-5 text-emerald-600"></i>
+            <span>Command Center</span>
+          </div>
+          <span id="badge-nav-appointments" class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-extrabold">5 Pending</span>
+        </button>
+
+        <button onclick="navigateView('patients')" id="nav-patients" class="nav-btn w-full px-4 py-3.5 rounded-xl text-sm font-extrabold flex items-center justify-between text-slate-700 hover:bg-slate-100 transition-all text-left">
+          <div class="flex items-center gap-3">
+            <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
+            <span>Patients Directory</span>
+          </div>
+          <span id="badge-nav-patients" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-extrabold">8</span>
+        </button>
+
+        <button onclick="navigateView('tasks')" id="nav-tasks" class="nav-btn w-full px-4 py-3.5 rounded-xl text-sm font-extrabold flex items-center justify-between text-slate-700 hover:bg-slate-100 transition-all text-left">
+          <div class="flex items-center gap-3">
+            <i data-lucide="phone-call" class="w-5 h-5 text-amber-600"></i>
+            <span>AI Call Triage</span>
+          </div>
+          <span id="badge-nav-tasks" class="px-2 py-0.5 bg-amber-500 text-white rounded-full text-xs font-extrabold">1</span>
+        </button>
+
+        <button onclick="navigateView('substitutions')" id="nav-substitutions" class="nav-btn w-full px-4 py-3.5 rounded-xl text-sm font-extrabold flex items-center justify-between text-slate-700 hover:bg-slate-100 transition-all text-left">
+          <div class="flex items-center gap-3">
+            <i data-lucide="repeat" class="w-5 h-5 text-blue-600"></i>
+            <span>Substitutions</span>
+          </div>
+          <span id="badge-nav-subs" class="px-2 py-0.5 bg-blue-600 text-white rounded-full text-xs font-extrabold">1</span>
+        </button>
+      </nav>
+
+      <!-- Supabase Connection & Calling Agent Architecture -->
+      <div class="p-4 mt-auto space-y-2 border-t border-slate-100">
+        <button onclick="openSupabaseModal()" id="sidebar-supabase-btn" class="w-full p-3 rounded-xl text-xs font-extrabold bg-slate-900 text-white hover:bg-slate-800 flex items-center justify-between transition-all shadow-sm">
+          <div class="flex items-center gap-2">
+            <span id="sidebar-supabase-indicator" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <span id="sidebar-supabase-label">Supabase: Standby</span>
+          </div>
+          <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+
+        <button onclick="openArchitectureModal()" class="w-full p-2.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-between transition-all">
+          <div class="flex items-center gap-2">
+            <i data-lucide="file-code" class="w-4 h-4 text-slate-600"></i>
+            <span>Calling Agent Architecture</span>
+          </div>
+          <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400"></i>
+        </button>
+      </div>
+
+      <!-- Doctor Identity Footer -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50/70 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-slate-900 text-white font-extrabold text-xs flex items-center justify-center shrink-0">
+          SS
+        </div>
+        <div class="overflow-hidden">
+          <p class="text-xs font-extrabold text-slate-900 truncate">Dr. Suresh Sharma</p>
+          <p class="text-[11px] text-slate-500 truncate">KMC-84920 • Internal Medicine</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- MAIN CONTENT AREA                                             -->
+  <!-- ============================================================ -->
+  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+
+    <!-- Main Dynamic Views -->
+    <main class="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+      <!-- ============================================================ -->
+      <!-- VIEW 1: COMMAND CENTER (STATS + ONLY PENDING APPOINTMENTS)   -->
+      <!-- ============================================================ -->
+      <div id="view-dashboard" class="space-y-6">
+        <!-- Top Stats Row (Interactive & Clickable) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Stat 1: Pending Appointments (Click to scroll into queue) -->
+          <div onclick="scrollToPendingAppointments()" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:shadow-md hover:border-emerald-400 active:scale-[0.98] transition-all group" title="Click to view pending appointments queue">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 group-hover:text-emerald-700 transition-colors">Pending Appointments</p>
+              <p id="kpi-pending-appointments" class="text-3xl font-extrabold text-emerald-600 mt-1">5</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-100 group-hover:scale-105 transition-all">
+              <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <!-- Stat 2: Enrolled Patients (Click to open Patients Directory) -->
+          <div onclick="navigateView('patients')" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:shadow-md hover:border-indigo-400 active:scale-[0.98] transition-all group" title="Click to view all enrolled patients">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 group-hover:text-indigo-700 transition-colors">Enrolled Patients</p>
+              <p id="kpi-total-patients" class="text-3xl font-extrabold text-slate-900 mt-1">8</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-indigo-50 group-hover:text-indigo-600 group-hover:scale-105 transition-all">
+              <i data-lucide="user-check" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <!-- Stat 3: AI Call Tasks (Click to open Triage Desk) -->
+          <div onclick="navigateView('tasks')" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:shadow-md hover:border-amber-400 active:scale-[0.98] transition-all group" title="Click to review pending AI call transcription tasks">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 group-hover:text-amber-700 transition-colors">AI Call Tasks</p>
+              <p id="kpi-pending-tasks" class="text-3xl font-extrabold text-amber-600 mt-1">1</p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-100 group-hover:scale-105 transition-all">
+              <i data-lucide="cpu" class="w-6 h-6"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: ONLY PENDING APPOINTMENTS -->
+        <div id="appointments-queue-card" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300">
+          <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg font-extrabold text-slate-900">Today's Pending Appointments Queue</h2>
+                <span id="appointments-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">5 Waiting</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointments List Cards -->
+          <div id="pending-appointments-container" class="divide-y divide-slate-100">
+            <!-- Dynamically populated with pending appointment cards -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- VIEW 2: 3-TAB ENCOUNTER WORKSPACE (THE CORE DOCTOR WORKFLOW)  -->
+      <!-- ============================================================ -->
+      <div id="view-encounter" class="hidden space-y-6">
+        <!-- Breadcrumb & Top Bar -->
+        <div class="flex items-center justify-between">
+          <button onclick="navigateView('dashboard')" class="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1.5 font-bold">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Pending Appointments Queue
+          </button>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500">Prescribing Clinician:</span>
+            <span class="px-2.5 py-1 bg-slate-900 text-white rounded-lg text-xs font-bold font-mono">Dr. Suresh Sharma, MD</span>
+          </div>
+        </div>
+
+        <!-- Patient Header Card -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <div id="enc-avatar-initials" class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-extrabold text-xl shrink-0">
+              RG
+            </div>
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h2 id="enc-patient-name" class="text-xl font-extrabold text-slate-900">Ramesh Gowda</h2>
+                <span id="enc-patient-uhid" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200">ARV-2026-001</span>
+                <span id="enc-token-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">TOKEN-01</span>
+                <span id="enc-language-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  ಕನ್ನಡ (Kannada)
+                </span>
+              </div>
+              <p id="enc-demographics-line" class="text-xs text-slate-500 mt-1">
+                58 Years • Male • Phone: +91 98801 12345 • Reason for Visit: Monthly Checkup
+              </p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Appointment Time</p>
+            <p id="enc-appointment-time" class="text-sm font-extrabold text-slate-900 mt-0.5">Today • 09:30 AM</p>
+          </div>
+        </div>
+
+        <!-- The 3 Mandatory Tabs Navigation -->
+        <div class="border-b border-slate-200 flex items-center gap-6">
+          <button onclick="switchEncounterTab('new-rx')" id="enc-tab-btn-new-rx" class="enc-tab-btn active pb-3 text-xs font-extrabold border-b-2 border-emerald-600 text-emerald-700 flex items-center gap-2">
+            <i data-lucide="file-plus-2" class="w-4 h-4"></i> 1. New Prescription & Medication Regimen
+          </button>
+          <button onclick="switchEncounterTab('rx-history')" id="enc-tab-btn-rx-history" class="enc-tab-btn pb-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+            <i data-lucide="history" class="w-4 h-4"></i> 2. Prescription History (Read-Only)
+          </button>
+          <button onclick="switchEncounterTab('med-history')" id="enc-tab-btn-med-history" class="enc-tab-btn pb-3 text-xs font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+            <i data-lucide="pill" class="w-4 h-4"></i> 3. Medication History (Read-Only)
+          </button>
+        </div>
+
+        <!-- ------------------------------------------------------------ -->
+        <!-- TAB 1: NEW PRESCRIPTION & ORDERS WORKSPACE                   -->
+        <!-- ------------------------------------------------------------ -->
+        <div id="enc-tab-new-rx" class="space-y-6">
+          <form id="new-rx-form" onsubmit="handleNewPrescriptionSubmit(event)" class="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+            <input type="hidden" id="rx-patient-id" name="patient_id">
+            <input type="hidden" id="rx-appointment-id" name="appointment_id">
+
+            <!-- Prescriber Header Banner -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Attending Prescribing Clinician</span>
+                <p class="text-sm font-extrabold text-slate-900">Dr. Suresh Sharma, MD</p>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Prescription Date</span>
+                <p id="rx-current-date" class="text-xs font-mono font-bold text-slate-800"></p>
+              </div>
+            </div>
+
+            <!-- PRESCRIPTION MODE SELECTOR (NORMAL PRESCRIPTION vs SCAN/LAB TEST) -->
+            <div class="bg-slate-50/80 p-4 rounded-xl border border-slate-200 space-y-2.5">
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                <i data-lucide="layers" class="w-4 h-4 text-emerald-600"></i>
+                Select Prescription Order Type *
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="cursor-pointer">
+                  <input type="radio" name="rx_mode" value="NORMAL" checked onchange="switchRxMode('NORMAL')" class="sr-only peer">
+                  <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-50/60 bg-white hover:bg-slate-50 transition-all shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                      <span class="text-xl">💊</span>
+                      <div>
+                        <p class="text-xs font-extrabold text-slate-900">Normal Prescription</p>
+                      </div>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="cursor-pointer">
+                  <input type="radio" name="rx_mode" value="SCAN_TEST" onchange="switchRxMode('SCAN_TEST')" class="sr-only peer">
+                  <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-amber-600 peer-checked:bg-amber-50/60 bg-white hover:bg-slate-50 transition-all shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                      <span class="text-xl">🔬</span>
+                      <div>
+                        <p class="text-xs font-extrabold text-slate-900">Scan / Lab Test</p>
+                      </div>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Symptoms Notes (With Word Limit Enforcement) -->
+            <div id="field-symptoms-container" class="space-y-4">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-bold text-slate-700">
+                    Patient Symptoms & Clinical Observations *
+                  </label>
+                  <span id="symptoms-word-counter" class="text-xs font-mono font-bold text-slate-500">
+                    0 / 300 words
+                  </span>
+                </div>
+                <textarea id="rx-symptoms-notes" name="symptoms_notes" required rows="3" oninput="updateWordCount(this.value)" placeholder="Enter observed symptoms, patient complaints, vitals, or clinical progress notes..." class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 leading-relaxed"></textarea>
+                <p id="symptoms-word-warning" class="hidden text-xs text-rose-600 font-bold mt-1">
+                  ⚠️ Word limit exceeded! Maximum 300 words allowed as per database constraints.
+                </p>
+              </div>
+            </div>
+
+            <!-- SECTION A: MEDICATION REGIMEN TABLE ("MEDICAL THING") -->
+            <div id="section-medication-regimen" class="space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                    <i data-lucide="pill" class="w-4 h-4 text-emerald-600"></i>
+                    Medication Regimen (Rx Orders)
+                  </h3>
+                  <!-- Visible Tablet Timing Color Code Legend -->
+                  <div class="flex items-center gap-2 text-[10px] font-extrabold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">
+                    <span class="text-slate-500 uppercase">Tablet Timing Colors:</span>
+                    <span class="inline-flex items-center gap-1 text-red-600"><span class="w-2 h-2 rounded-full bg-red-500"></span>Morning: Red</span>
+                    <span class="text-slate-300">•</span>
+                    <span class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Afternoon: Green</span>
+                    <span class="text-slate-300">•</span>
+                    <span class="inline-flex items-center gap-1 text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Night: Blue</span>
+                  </div>
+                </div>
+                <button type="button" onclick="addMedicationRegimenRow()" class="px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1 transition-all self-start sm:self-auto">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i> + Add Medicine to Regimen
+                </button>
+              </div>
+
+              <!-- Table Container -->
+              <div class="border border-slate-200 rounded-xl overflow-x-auto shadow-sm">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                    <tr>
+                      <th class="py-2.5 px-3 min-w-[220px]">Medicine Name & Strength (Pre-fed)</th>
+                      <th class="py-2.5 px-3 w-28 text-center">No. of Days</th>
+                      <th class="py-2.5 px-3 w-44">How Many Times (Frequency)</th>
+                      <th class="py-2.5 px-3 w-36">Meal Relation</th>
+                      <th class="py-2.5 px-3 min-w-[150px] text-center">Tablet Color Code</th>
+                      <th class="py-2.5 px-2 w-12 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="medication-regimen-tbody" class="divide-y divide-slate-100">
+                    <!-- Dynamic Rows populated with autocomplete -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SECTION B: DIAGNOSTIC SCANS & LAB INVESTIGATIONS (SEARCHABLE) -->
+            <div id="section-diagnostic-orders" class="hidden space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                <div>
+                  <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                    <i data-lucide="microscope" class="w-4 h-4 text-amber-600"></i>
+                    Diagnostic Orders: Scans & Lab Tests
+                  </h3>
+                </div>
+              </div>
+
+              <!-- Search & Add Bar with Autocomplete -->
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                <div class="flex flex-col sm:flex-row items-center gap-2">
+                  <div class="relative flex-1 w-full">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                    <input type="text" id="diag-search-input" oninput="handleDiagnosticSearchInput(this.value)" placeholder="Type to search Scans / Lab Tests (e.g. HbA1c, Chest X-Ray, ECHO, Ultrasound, Lipid Profile)..." autocomplete="off" class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 font-medium">
+                    <!-- Autocomplete dropdown list for scans/tests -->
+                    <div id="diag-autocomplete-list" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-30 max-h-56 overflow-y-auto divide-y divide-slate-100 text-xs">
+                      <!-- Filtered diagnostic options injected here -->
+                    </div>
+                  </div>
+                  <button type="button" onclick="addSelectedDiagnosticManual()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shrink-0 transition-all shadow-sm">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Investigation
+                  </button>
+                </div>
+
+                <!-- Quick Suggested Investigation Chips -->
+                <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">Quick Add:</span>
+                  <button type="button" onclick="quickAddDiagnostic('HbA1c (Glycated Hemoglobin)')" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 transition-all">+ HbA1c Blood Test</button>
+                  <button type="button" onclick="quickAddDiagnostic('Chest X-Ray (PA View)')" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 transition-all">+ Chest X-Ray</button>
+                  <button type="button" onclick="quickAddDiagnostic('Ultrasound Whole Abdomen & Pelvis (USG)')" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 transition-all">+ USG Abdomen</button>
+                  <button type="button" onclick="quickAddDiagnostic('Lipid Profile (Full Panel)')" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 transition-all">+ Lipid Profile</button>
+                  <button type="button" onclick="quickAddDiagnostic('12-Lead Electrocardiogram (ECG)')" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 transition-all">+ Resting ECG</button>
+                  <button type="button" onclick="quickAddDiagnostic('Kidney Function Test (KFT / Creatinine, BUN, Uric Acid)')" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-800 border border-slate-200 transition-all">+ Kidney Function (KFT)</button>
+                </div>
+              </div>
+
+              <!-- Ordered Diagnostics Table -->
+              <div class="border border-slate-200 rounded-xl overflow-x-auto shadow-sm">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-amber-50/60 border-b border-slate-200 text-amber-900 font-bold uppercase tracking-wider text-[10px]">
+                    <tr>
+                      <th class="py-2.5 px-3 min-w-[200px]">Ordered Scan / Lab Test</th>
+                      <th class="py-2.5 px-3 w-28">Category / Type</th>
+                      <th class="py-2.5 px-3 min-w-[240px]">Preparation & Patient Instructions</th>
+                      <th class="py-2.5 px-2 w-12 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="diagnostic-orders-tbody" class="divide-y divide-slate-100">
+                    <tr id="empty-diagnostics-row">
+                      <td colspan="4" class="py-4 text-center text-slate-400 text-xs italic">
+                        No diagnostic scans or tests added yet. Use the search box above to add tests.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ENHANCED FOLLOW-UP SCHEDULING SECTION (FOR DOCTOR) -->
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-3">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                  <i data-lucide="calendar-plus" class="w-4 h-4 text-indigo-600"></i>
+                  Doctor Follow-Up Scheduling
+                </label>
+                <span id="followup-display-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">No Follow-up Scheduled</span>
+              </div>
+
+              <!-- Quick Follow-up Duration Chips -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-[11px] font-bold text-slate-500">Quick Duration:</span>
+                <button type="button" onclick="setFollowUpDuration(7)" class="px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200 transition-all">7 Days (1 Wk)</button>
+                <button type="button" onclick="setFollowUpDuration(15)" class="px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200 transition-all">15 Days (2 Wks)</button>
+                <button type="button" onclick="setFollowUpDuration(30)" class="px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200 transition-all">30 Days (1 Mo)</button>
+                <button type="button" onclick="setFollowUpDuration(90)" class="px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200 transition-all">90 Days (3 Mos)</button>
+                <button type="button" onclick="clearFollowUp()" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-rose-600">Clear</button>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Target Consultation Date</label>
+                  <input type="date" id="rx-follow-up-date" name="follow_up_date" onchange="onFollowUpDateChanged(this.value)" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white font-medium">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Clinical Follow-up Purpose / Goals</label>
+                  <input type="text" id="rx-follow-up-notes" name="follow_up_notes" placeholder="e.g. Review HbA1c & KFT reports; adjust Metformin if HbA1c > 7.5%" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium">
+                </div>
+              </div>
+            </div>
+
+            <!-- Lifestyle Instructions -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">General Lifestyle / Dietary Instructions</label>
+              <input type="text" id="rx-clinical-instructions" name="clinical_instructions" placeholder="e.g. Low sodium diet, 30 min daily brisk walk, monitor blood sugar weekly" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+
+            <!-- TELEPHONY & AI CALLING AGENT TRIGGER TOGGLE BUTTON -->
+            <div class="p-4 rounded-xl border border-indigo-200 bg-indigo-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm shadow-indigo-600/30">
+                  <i data-lucide="radio" class="w-5 h-5 animate-pulse"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-extrabold text-indigo-950">AI Voice Reminder & SMS Dual Trigger (Supabase Realtime)</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-200 text-indigo-900">Calling Agent</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="rx-telephony-trigger-toggle" checked class="sr-only peer">
+                  <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                </label>
+                <span id="trigger-status-label" class="text-xs font-extrabold text-emerald-800">Trigger Active</span>
+              </div>
+            </div>
+
+            <!-- Submit Action Footer -->
+            <div class="pt-2 flex items-center justify-between border-t border-slate-100">
+              <button type="button" onclick="navigateView('dashboard')" class="px-4 py-2 border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl text-xs font-bold transition-all">
+                Cancel
+              </button>
+              <button type="submit" id="btn-submit-prescription" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold flex items-center gap-2 shadow-md shadow-emerald-600/20 transition-all">
+                <i data-lucide="check-circle" class="w-4 h-4"></i> Submit Complete Prescription & Orders
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ------------------------------------------------------------ -->
+        <!-- TAB 2: PRESCRIPTION HISTORY (READ-ONLY)                      -->
+        <!-- ------------------------------------------------------------ -->
+        <div id="enc-tab-rx-history" class="hidden space-y-4">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-700 flex items-center gap-2">
+              <i data-lucide="lock" class="w-4 h-4 text-slate-500"></i>
+              Read-Only Clinical Audit History (Doctor Name & Timestamp Verified)
+            </span>
+            <span class="text-[11px] text-slate-500 font-mono">Immutable Legal Record</span>
+          </div>
+
+          <div id="encounter-rx-history-container" class="space-y-4">
+            <!-- Dynamically populated with past prescription cards -->
+          </div>
+        </div>
+
+        <!-- ------------------------------------------------------------ -->
+        <!-- TAB 3: MEDICATION HISTORY (READ-ONLY)                        -->
+        <!-- ------------------------------------------------------------ -->
+        <div id="enc-tab-med-history" class="hidden space-y-4">
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-700 flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-slate-500"></i>
+              Read-Only Chronological Medication History Across Prescriptions
+            </span>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th class="py-3 px-4">Medicine & Strength</th>
+                  <th class="py-3 px-4">Days</th>
+                  <th class="py-3 px-4">Frequency</th>
+                  <th class="py-3 px-4">Meal Relation</th>
+                  <th class="py-3 px-4">Tablet Color Code</th>
+                  <th class="py-3 px-4">Prescribed Date</th>
+                  <th class="py-3 px-4">Prescribing Doctor</th>
+                </tr>
+              </thead>
+              <tbody id="encounter-med-history-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- VIEW 3: PATIENTS DIRECTORY (ALL DEMO PATIENTS)               -->
+      <!-- ============================================================ -->
+      <div id="view-patients" class="hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900">Enrolled Patients Directory</h1>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="relative w-72">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+              <input type="text" id="patients-search-input" oninput="filterPatients(this.value)" placeholder="Search UHID, name, phone..." class="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
+            </div>
+            <select id="filter-lang-select" onchange="filterLanguage(this.value)" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium text-slate-700 focus:outline-none">
+              <option value="ALL">All Languages</option>
+              <option value="KANNADA">Kannada</option>
+              <option value="HINDI">Hindi</option>
+              <option value="TAMIL">Tamil</option>
+              <option value="TELUGU">Telugu</option>
+              <option value="MARATHI">Marathi</option>
+              <option value="ENGLISH">English</option>
+            </select>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50/75 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th class="py-3 px-4">Patient UHID & Name</th>
+                  <th class="py-3 px-4">Demographics & Phone</th>
+                  <th class="py-3 px-4">Preferred Language</th>
+                  <th class="py-3 px-4">Active Rx Lineage</th>
+                  <th class="py-3 px-4">Adherence Rate</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="patients-table-body" class="divide-y divide-slate-100">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- ============================================================ -->
+      <!-- VIEW 5: AI CALL-TO-TASK TRIAGE DESK                          -->
+      <!-- ============================================================ -->
+      <div id="view-tasks" class="hidden space-y-6">
+        <div>
+          <h1 class="text-2xl font-extrabold text-slate-900">AI Call-Intelligence Triage Desk</h1>
+        </div>
+        <div id="pending-tasks-list" class="space-y-4"></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- VIEW 6: PHARMACY SUBSTITUTION GATE                           -->
+      <!-- ============================================================ -->
+      <div id="view-substitutions" class="hidden space-y-6">
+        <div>
+          <h1 class="text-2xl font-extrabold text-slate-900">Pharmacy Substitution Gate</h1>
+        </div>
+        <div id="pending-subs-list" class="space-y-4"></div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-6 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2 mt-auto">
+      <p>CURALINK — Clean Architecture Clinical Platform • Built for HackSprint 2026</p>
+      <p class="text-[11px] text-slate-400">Append-Only Clinical History • Reliable Doctor Healthcare Coordination</p>
+    </footer>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: AI CALLING AGENT ARCHITECTURE (FOR USER'S FRIEND)    -->
+  <!-- ============================================================ -->
+  <div id="architecture-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl border border-slate-200 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center font-bold">
+            <i data-lucide="cpu" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900">AI Calling Agent Trigger & Feeder Architecture</h3>
+          </div>
+        </div>
+        <button onclick="closeArchitectureModal()" class="text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 text-xs text-slate-700 space-y-4 pr-1 leading-relaxed font-mono bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <p class="font-bold text-slate-900 font-sans text-sm">📡 How the AI Calling Agent Consumes Doctor Prescriptions:</p>
+        
+        <p><strong>1. Trigger Source:</strong> Supabase Database Webhook OR GET <code>/api/v1/telephony/pending-triggers</code></p>
+        
+        <p><strong>2. Inbound JSON Payload Structure:</strong></p>
+        <pre class="bg-slate-900 text-emerald-400 p-3 rounded-lg overflow-x-auto text-[11px]">
+{
+  "prescription_id": "uuid-here",
+  "doctor_name": "Dr. Suresh Sharma, MD",
+  "patient": {
+    "uhid": "ARV-2026-001",
+    "name": "Ramesh Gowda",
+    "phone_number": "+919880112345",
+    "literacy_status": "ILLITERATE",
+    "preferred_language": "KANNADA",
+    "device_type": "FEATURE_PHONE"
+  },
+  "medication_regimen": [
+    {
+      "medicine_name": "Metformin Hydrochloride",
+      "dosage": "500mg",
+      "no_of_days": 30,
+      "frequency": "1-0-1 (Twice Daily)",
+      "meal_relation": "After Food",
+      "color_sticker": "PINK",
+      "symbol": "CIRCLE",
+      "voice_prompt_hint": "Packet with PINK Sticker (CIRCLE)"
+    }
+  ]
+}</pre>
+
+        <p class="font-bold text-slate-900 font-sans text-sm mt-3">🎙️ Voice Prompt Construction Rules:</p>
+        <ul class="list-disc pl-5 space-y-1 font-sans text-xs">
+          <li><strong>For Low-Literacy Patients:</strong> Voice MUST refer to the physical color sticker and symbol in patient's preferred language:
+            <br><em>"ನಮಸ್ಕಾರ ರಮೇಶ್ ಅವರೇ. ಗುಲಾಬಿ ಬಣ್ಣದ (PINK) ಸ್ಟಿಕ್ಕರ್ ಇರುವ ಮಾತ್ರೆ ತಗೊಳ್ಳಿ. ತೆಗೆದುಕೊಂಡಿದ್ದರೆ 1 ಒತ್ತಿ. ಸಹಾಯ ಬೇಕಿದ್ದರೆ 2 ಒತ್ತಿ."</em>
+          </li>
+          <li><strong>Keypad DTMF Webhook Callback:</strong> Post result back to <code>POST /api/v1/telephony/adherence-gather</code> with digits:
+            <br><code>1 = Taken</code> • <code>2 = Help Requested</code> • <code>3 = Remind Later</code>
+          </li>
+          <li><strong>SMS Dispatch:</strong> Concurrently dispatch neutral SMS token and appointment confirmation.</li>
+        </ul>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+        <span class="text-[11px] text-slate-400">Architecture doc available in project root as AI_CALLING_AGENT_ARCHITECTURE.md</span>
+        <button onclick="closeArchitectureModal()" class="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition-all">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: SUPABASE DATABASE CONNECTION CONFIGURATION             -->
+  <!-- ============================================================ -->
+  <div id="supabase-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full border border-slate-200 shadow-2xl p-6 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900">Supabase Connection Settings</h3>
+          </div>
+        </div>
+        <button onclick="closeSupabaseModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900">
+        <p class="font-bold">⚡ Zero-Delay Realtime Updates</p>
+      </div>
+
+      <form id="supabase-config-form" onsubmit="handleSupabaseConfigSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Supabase Project ID</label>
+          <input type="text" id="supabase-project-id" name="project_id" placeholder="e.g. xyzabcdefghijklmnop" autocomplete="off" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-mono">
+          <p class="text-[10px] text-slate-400 mt-1">Found in your Supabase dashboard URL: https://[project-id].supabase.co</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Supabase Anon Key</label>
+          <input type="password" id="supabase-anon-key" name="anon_key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." autocomplete="off" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-mono">
+          <p class="text-[10px] text-slate-400 mt-1">Found in Supabase Project Settings → API → Project API Keys (anon / public)</p>
+        </div>
+
+        <div id="supabase-status-banner" class="text-xs p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 flex items-center justify-between">
+          <span id="supabase-modal-status-text">Checking status...</span>
+          <button type="button" onclick="testSupabaseConnection()" class="px-2.5 py-1 text-[11px] font-bold bg-slate-200 hover:bg-slate-300 rounded-md text-slate-800 transition-colors">Test Connection</button>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeSupabaseModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-800">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm">Save & Connect</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
