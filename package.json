@@ -1,0 +1,10 @@
+{
+  "name": "curalink-careteam-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix careteam run dev",
+    "build": "npm --prefix careteam run build",
+    "start": "npm --prefix careteam run start"
+  }
+}
