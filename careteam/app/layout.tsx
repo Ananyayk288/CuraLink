@@ -31,7 +31,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-slate-50 text-slate-800" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <body className="min-h-screen bg-[#FAF7F2] text-slate-900 antialiased" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
         {children}
       </body>
     </html>

@@ -10,11 +10,24 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#3B82F6',
+          600: '#1D64F2', // Primary vibrant blue from photo
+          700: '#1554D6',
+          800: '#1044B2',
+          900: '#0B3082',
+        },
+        cream: {
+          50: '#FAF8F5',
+          100: '#FAF7F2', // Warm cream background from photo
+          200: '#F3EFE8',
+          300: '#EAE4D9',
+          border: '#E5DFD4',
+          card: '#FFFFFF',
         },
       },
     },
