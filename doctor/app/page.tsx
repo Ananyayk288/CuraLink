@@ -98,6 +98,12 @@ export default function DoctorPortal() {
   const [activeTab, setActiveTab] = useState<'command' | 'prescription' | 'patients' | 'architecture' | 'supabase'>('command');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Photo-matching Date & Time Selector state (Reference UI)
+  const [selectedMonth, setSelectedMonth] = useState('July');
+  const [selectedDay, setSelectedDay] = useState(17);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('10:00 AM');
+  const [activityTab, setActivityTab] = useState<'upcoming' | 'past'>('upcoming');
+
   // Core Data State
   const [stats, setStats] = useState({
     pending_appointments: 0,
@@ -646,16 +652,16 @@ export default function DoctorPortal() {
   const isSymptomsOverLimit = symptomsCharCount > 500 || symptomsWordCount > 100;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#FAF7F2] text-slate-900">
       {/* ============================================================== */}
       {/* 1. DESKTOP LEFT-DOCKED NAVIGATION SIDEBAR (HIDDEN ON MOBILE) */}
       {/* ============================================================== */}
-      <aside className="hidden lg:flex w-72 bg-white border-r border-slate-200 flex-col justify-between shrink-0 select-none shadow-sm z-30">
+      <aside className="hidden lg:flex w-72 bg-[#FAF7F2] border-r border-[#E8E2D5] flex-col justify-between shrink-0 select-none shadow-xs z-30">
         <div>
           {/* Brand Header */}
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+          <div className="p-5 border-b border-[#E8E2D5]/80 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+              <div className="w-11 h-11 rounded-2xl bg-white border border-[#E8E2D5] p-1.5 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
                 <img
                   src="/curalink-symbol.png"
                   alt="CuraLink Logo"
@@ -667,7 +673,7 @@ export default function DoctorPortal() {
                   <h1 className="text-lg font-black tracking-tight text-slate-900 leading-tight">
                     CuraLink
                   </h1>
-                  <span className="bg-teal-50 text-teal-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
+                  <span className="bg-blue-50 text-blue-700 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-blue-200 uppercase tracking-wider">
                     Doctor
                   </span>
                 </div>
@@ -683,18 +689,20 @@ export default function DoctorPortal() {
             {/* Command Center */}
             <button
               onClick={() => setActiveTab('command')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl font-semibold text-[15px] transition-all ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
                 activeTab === 'command'
-                  ? 'bg-teal-50 text-teal-700 shadow-xs border border-teal-200/60'
-                  : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <Activity className={`w-5 h-5 ${activeTab === 'command' ? 'text-teal-600' : 'text-slate-400'}`} />
+                <Activity className={`w-5 h-5 ${activeTab === 'command' ? 'text-white' : 'text-slate-400'}`} />
                 <span>Command Center</span>
               </div>
               {stats.pending_appointments > 0 && (
-                <span className="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                  activeTab === 'command' ? 'bg-white/20 text-white' : 'bg-amber-500 text-white'
+                }`}>
                   {stats.pending_appointments}
                 </span>
               )}
@@ -703,18 +711,20 @@ export default function DoctorPortal() {
             {/* Prescription */}
             <button
               onClick={() => setActiveTab('prescription')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl font-semibold text-[15px] transition-all ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
                 activeTab === 'prescription'
-                  ? 'bg-teal-50 text-teal-700 shadow-xs border border-teal-200/60'
-                  : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <Pill className={`w-5 h-5 ${activeTab === 'prescription' ? 'text-teal-600' : 'text-slate-400'}`} />
-                <span>Prescription</span>
+                <Pill className={`w-5 h-5 ${activeTab === 'prescription' ? 'text-white' : 'text-slate-400'}`} />
+                <span>Prescription Desk</span>
               </div>
               {selectedPatient && (
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 max-w-[90px] truncate">
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full max-w-[90px] truncate ${
+                  activeTab === 'prescription' ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-700'
+                }`}>
                   {selectedPatient.name.split(' ')[0]}
                 </span>
               )}
@@ -723,92 +733,98 @@ export default function DoctorPortal() {
             {/* Enrolled Patients */}
             <button
               onClick={() => setActiveTab('patients')}
-              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl font-semibold text-[15px] transition-all ${
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
                 activeTab === 'patients'
-                  ? 'bg-teal-50 text-teal-700 shadow-xs border border-teal-200/60'
-                  : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-teal-600' : 'text-slate-400'}`} />
+                <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-white' : 'text-slate-400'}`} />
                 <span>Enrolled Patients</span>
               </div>
-              <span className="text-xs font-bold text-slate-500 px-2 py-0.5 bg-slate-100 rounded-full">
+              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                activeTab === 'patients' ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-700'
+              }`}>
                 {patients.length}
               </span>
             </button>
 
-            <div className="pt-2 pb-1 border-t border-slate-100"></div>
+            <div className="pt-2 pb-1 border-t border-[#E8E2D5]/70"></div>
 
             {/* AI Telephony Architecture */}
             <button
               onClick={() => setActiveTab('architecture')}
-              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl font-semibold text-[15px] transition-all ${
+              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
                 activeTab === 'architecture'
-                  ? 'bg-teal-50 text-teal-700 shadow-xs border border-teal-200/60'
-                  : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
               }`}
             >
-              <Sparkles className={`w-5 h-5 ${activeTab === 'architecture' ? 'text-teal-600' : 'text-indigo-500'}`} />
+              <Sparkles className={`w-5 h-5 ${activeTab === 'architecture' ? 'text-white' : 'text-blue-500'}`} />
               <span>Calling Architecture</span>
             </button>
 
             {/* Supabase Settings */}
             <button
               onClick={() => setActiveTab('supabase')}
-              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl font-semibold text-[15px] transition-all ${
+              className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all ${
                 activeTab === 'supabase'
-                  ? 'bg-teal-50 text-teal-700 shadow-xs border border-teal-200/60'
-                  : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                  : 'text-slate-600 hover:bg-[#F3EFE6] hover:text-slate-900'
               }`}
             >
-              <Database className={`w-5 h-5 ${activeTab === 'supabase' ? 'text-teal-600' : 'text-emerald-500'}`} />
+              <Database className={`w-5 h-5 ${activeTab === 'supabase' ? 'text-white' : 'text-emerald-600'}`} />
               <span>Supabase Sync</span>
             </button>
           </nav>
         </div>
 
-        {/* Doctor Identity & Footer */}
-        <div className="p-4 border-t border-slate-200/80 bg-slate-50/70">
-          <div className="flex items-center justify-between mb-2.5 gap-2">
-            <div className="flex items-center gap-3 overflow-hidden min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-teal-100 border border-teal-200 text-teal-800 flex items-center justify-center font-black text-sm shrink-0">
+        {/* Doctor Card in Sidebar (Photo-matching Dr. Reginald Leiw layout) */}
+        <div className="p-3.5 m-3 rounded-3xl bg-white border border-[#E8E2D5] shadow-xs">
+          <div className="flex items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
+              <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
                 {currentDoctor?.name
                   ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
                   : 'SS'}
               </div>
               <div className="overflow-hidden min-w-0">
-                <div className="font-bold text-slate-900 text-sm truncate leading-tight">
+                <div className="font-bold text-slate-900 text-xs truncate leading-tight">
                   {currentDoctor?.name || DOCTOR_PROFILE.name}
                 </div>
-                <div className="text-[11px] font-mono text-teal-700 font-bold truncate flex items-center gap-1.5 mt-0.5">
-                  <span className="bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200">
+                <div className="text-[10px] text-slate-400 font-medium truncate mt-0.5">
+                  Consultant • Chronic Care
+                </div>
+                <div className="text-[10px] font-mono text-blue-600 font-bold truncate flex items-center gap-1 mt-0.5">
+                  <span className="bg-blue-50 px-1.5 py-0.2 rounded-full border border-blue-200">
                     {currentDoctor?.id || 'DOC84920'}
                   </span>
-                  <span className="text-[10px] text-emerald-600 font-sans font-semibold">✓ Verified</span>
                 </div>
               </div>
             </div>
             <button
               type="button"
-              onClick={handleSignOut}
-              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all shrink-0"
-              title="Sign Out / Switch Doctor"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all active:scale-95 shadow-2xs"
+              title="Doctor Profile / Switch"
             >
-              <LogOut className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-          <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 pt-2 border-t border-slate-200">
+          <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500 pt-2 border-t border-[#E8E2D5] mt-2">
             <span className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${stats.supabase.configured ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-              {stats.supabase.configured ? 'Supabase Active' : 'Local Mock Active'}
+              {stats.supabase.configured ? 'Supabase Active' : 'Local Mock'}
             </span>
             <button
               type="button"
-              onClick={() => setIsAuthModalOpen(true)}
-              className="text-teal-600 hover:underline text-[11px] font-bold"
+              onClick={handleSignOut}
+              className="text-slate-400 hover:text-red-600 flex items-center gap-1 transition-colors"
+              title="Sign Out"
             >
-              Switch
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Exit</span>
             </button>
           </div>
         </div>
@@ -820,14 +836,14 @@ export default function DoctorPortal() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 sm:w-80 bg-white shadow-2xl flex flex-col justify-between z-50 animate-in slide-in-from-left duration-200">
+          <div className="fixed inset-y-0 left-0 w-72 sm:w-80 bg-[#FAF7F2] shadow-2xl flex flex-col justify-between z-50 animate-in slide-in-from-left duration-200 border-r border-[#E8E2D5]">
             <div>
-              <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+              <div className="p-5 border-b border-[#E8E2D5] flex items-center justify-between bg-gradient-to-b from-[#C8E0FD]/60 to-transparent">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-white border border-[#E8E2D5] p-1.5 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
                     <img
                       src="/curalink-symbol.png"
                       alt="CuraLink Logo"
@@ -839,7 +855,7 @@ export default function DoctorPortal() {
                       <h2 className="text-base font-black text-slate-900 leading-tight">
                         CuraLink
                       </h2>
-                      <span className="bg-teal-50 text-teal-700 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-teal-200 uppercase tracking-wider">
+                      <span className="bg-blue-100 text-blue-700 text-[9px] font-extrabold px-2 py-0.5 rounded-full border border-blue-200 uppercase tracking-wider">
                         Doctor
                       </span>
                     </div>
@@ -851,9 +867,9 @@ export default function DoctorPortal() {
                 <button
                   type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="w-9 h-9 rounded-full bg-white border border-[#E8E2D5] text-slate-500 hover:text-slate-900 shadow-2xs flex items-center justify-center transition-colors"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -863,18 +879,20 @@ export default function DoctorPortal() {
                     setActiveTab('command');
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
                     activeTab === 'command'
-                      ? 'bg-teal-50 text-teal-700 border border-teal-200/60'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                      : 'text-slate-600 hover:bg-[#F3EFE6]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Activity className={`w-5 h-5 ${activeTab === 'command' ? 'text-teal-600' : 'text-slate-400'}`} />
+                    <Activity className={`w-5 h-5 ${activeTab === 'command' ? 'text-white' : 'text-slate-400'}`} />
                     <span>Command Center</span>
                   </div>
                   {stats.pending_appointments > 0 && (
-                    <span className="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                      activeTab === 'command' ? 'bg-white/20 text-white' : 'bg-amber-500 text-white'
+                    }`}>
                       {stats.pending_appointments}
                     </span>
                   )}
@@ -885,18 +903,20 @@ export default function DoctorPortal() {
                     setActiveTab('prescription');
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
                     activeTab === 'prescription'
-                      ? 'bg-teal-50 text-teal-700 border border-teal-200/60'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                      : 'text-slate-600 hover:bg-[#F3EFE6]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Pill className={`w-5 h-5 ${activeTab === 'prescription' ? 'text-teal-600' : 'text-slate-400'}`} />
+                    <Pill className={`w-5 h-5 ${activeTab === 'prescription' ? 'text-white' : 'text-slate-400'}`} />
                     <span>Prescription Desk</span>
                   </div>
                   {selectedPatient && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 max-w-[90px] truncate">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full max-w-[90px] truncate ${
+                      activeTab === 'prescription' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}>
                       {selectedPatient.name.split(' ')[0]}
                     </span>
                   )}
@@ -907,35 +927,37 @@ export default function DoctorPortal() {
                     setActiveTab('patients');
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
                     activeTab === 'patients'
-                      ? 'bg-teal-50 text-teal-700 border border-teal-200/60'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                      : 'text-slate-600 hover:bg-[#F3EFE6]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-teal-600' : 'text-slate-400'}`} />
+                    <Users className={`w-5 h-5 ${activeTab === 'patients' ? 'text-white' : 'text-slate-400'}`} />
                     <span>Enrolled Patients</span>
                   </div>
-                  <span className="text-xs font-bold text-slate-500 px-2 py-0.5 bg-slate-100 rounded-full">
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                    activeTab === 'patients' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                  }`}>
                     {patients.length}
                   </span>
                 </button>
 
-                <div className="pt-2 pb-1 border-t border-slate-100" />
+                <div className="pt-2 pb-1 border-t border-[#E8E2D5]" />
 
                 <button
                   onClick={() => {
                     setActiveTab('architecture');
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
                     activeTab === 'architecture'
-                      ? 'bg-teal-50 text-teal-700 border border-teal-200/60'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                      : 'text-slate-600 hover:bg-[#F3EFE6]'
                   }`}
                 >
-                  <Sparkles className={`w-5 h-5 ${activeTab === 'architecture' ? 'text-teal-600' : 'text-indigo-500'}`} />
+                  <Sparkles className={`w-5 h-5 ${activeTab === 'architecture' ? 'text-white' : 'text-blue-500'}`} />
                   <span>Calling Architecture</span>
                 </button>
 
@@ -944,22 +966,22 @@ export default function DoctorPortal() {
                     setActiveTab('supabase');
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
                     activeTab === 'supabase'
-                      ? 'bg-teal-50 text-teal-700 border border-teal-200/60'
-                      : 'text-slate-600 hover:bg-slate-100'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                      : 'text-slate-600 hover:bg-[#F3EFE6]'
                   }`}
                 >
-                  <Database className={`w-5 h-5 ${activeTab === 'supabase' ? 'text-teal-600' : 'text-emerald-500'}`} />
+                  <Database className={`w-5 h-5 ${activeTab === 'supabase' ? 'text-white' : 'text-emerald-600'}`} />
                   <span>Supabase Sync</span>
                 </button>
               </nav>
             </div>
 
-            <div className="p-4 border-t border-slate-200/80 bg-slate-50/70">
+            <div className="p-4 border-t border-[#E8E2D5] bg-white m-3 rounded-3xl shadow-xs">
               <div className="flex items-center justify-between mb-2.5 gap-2">
                 <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-teal-100 border border-teal-200 text-teal-800 flex items-center justify-center font-black text-xs shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
                     {currentDoctor?.name
                       ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
                       : 'SS'}
@@ -968,7 +990,7 @@ export default function DoctorPortal() {
                     <div className="font-bold text-slate-900 text-xs truncate">
                       {currentDoctor?.name || DOCTOR_PROFILE.name}
                     </div>
-                    <div className="text-[10px] font-mono text-teal-700 font-bold truncate">
+                    <div className="text-[10px] font-mono text-blue-600 font-bold truncate">
                       {currentDoctor?.id || 'DOC84920'} • <span className="font-sans text-emerald-600">✓ Verified</span>
                     </div>
                   </div>
@@ -985,7 +1007,7 @@ export default function DoctorPortal() {
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 pt-2 border-t border-slate-200">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 pt-2 border-t border-[#E8E2D5]">
                 <span className="flex items-center gap-1.5">
                   <span className={`w-2 h-2 rounded-full ${stats.supabase.configured ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
                   {stats.supabase.configured ? 'Supabase Active' : 'Local Mock'}
@@ -996,7 +1018,7 @@ export default function DoctorPortal() {
                     setIsMobileMenuOpen(false);
                     setIsAuthModalOpen(true);
                   }}
-                  className="text-teal-600 hover:underline text-[11px] font-bold"
+                  className="text-blue-600 hover:underline text-[11px] font-bold"
                 >
                   Switch
                 </button>
@@ -1009,20 +1031,20 @@ export default function DoctorPortal() {
       {/* ============================================================== */}
       {/* MAIN CONTENT AREA */}
       {/* ============================================================== */}
-      <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-slate-50">
-        {/* Mobile Top Header Bar */}
-        <header className="lg:hidden bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+      <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-[#FAF7F2]">
+        {/* Mobile Top Header Bar with sky-blue gradient wash and circular buttons */}
+        <header className="lg:hidden bg-gradient-to-b from-[#C8E0FD]/85 via-[#EBF3FD]/60 to-[#FAF7F2] border-b border-[#E8E2D5]/80 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
           <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -ml-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
               title="Open Navigation"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-4 h-4" />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 p-0.5 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+              <div className="w-9 h-9 rounded-2xl bg-white border border-[#E8E2D5] p-1 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
                 <img
                   src="/curalink-symbol.png"
                   alt="CuraLink"
@@ -1033,7 +1055,7 @@ export default function DoctorPortal() {
                 <span className="text-sm font-black tracking-tight text-slate-900 leading-tight">
                   CuraLink
                 </span>
-                <span className="block text-[9px] font-bold uppercase tracking-wider text-teal-600 -mt-0.5">
+                <span className="block text-[9px] font-bold uppercase tracking-wider text-blue-600 -mt-0.5">
                   Doctor Portal
                 </span>
               </div>
@@ -1041,14 +1063,14 @@ export default function DoctorPortal() {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 text-[11px] font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-              <span className="font-mono font-bold">{currentDoctor?.id || 'DOC84920'}</span>
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#E8E2D5] text-blue-700 text-[11px] font-bold shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+              <span className="font-mono">{currentDoctor?.id || 'DOC84920'}</span>
             </div>
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="p-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
               title="Switch Doctor Profile"
             >
               <User className="w-4 h-4" />
@@ -1078,272 +1100,553 @@ export default function DoctorPortal() {
 
         <div className="p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-4 sm:space-y-6 pb-24 lg:pb-8">
           {/* ========================================================== */}
-          {/* VIEW: COMMAND CENTER */}
+          {/* VIEW: COMMAND CENTER (MATCHING REFERENCE UI) */}
           {/* ========================================================== */}
           {activeTab === 'command' && (
             <div className="space-y-6">
-              {/* Headline with NO Tagline underneath */}
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-                  Command Center
-                </h2>
-                <div className="flex items-center gap-2.5">
-                  <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 text-xs font-semibold">
-                    <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-                    <span>{currentDoctor ? currentDoctor.name : DOCTOR_PROFILE.name}</span>
-                    <span className="font-mono text-teal-700 font-bold">({currentDoctor?.id || 'DOC84920'})</span>
-                  </div>
+              {/* Sky-Blue Gradient Header Wash & Title */}
+              <div className="rounded-3xl bg-gradient-to-b from-[#C8E0FD]/85 via-[#EBF3FD]/55 to-white border border-[#E8E2D5] p-5 sm:p-7 shadow-xs">
+                <div className="flex items-center justify-between mb-4">
                   <button
+                    type="button"
                     onClick={loadInitialData}
-                    className="p-2 rounded-lg border border-slate-200 hover:bg-white text-slate-600 transition-all text-sm font-medium flex items-center gap-1.5"
-                    title="Refresh Data"
+                    className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+                    title="Refresh Schedule"
                   >
                     <RefreshCw className="w-4 h-4" />
-                    <span>Refresh</span>
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-500 hidden sm:inline">Active Practitioner:</span>
+                    <span className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-white border border-[#E8E2D5] text-blue-700 shadow-2xs">
+                      {currentDoctor?.id || 'DOC84920'}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="w-10 h-10 rounded-full bg-white border border-[#E8E2D5] text-slate-700 shadow-2xs flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+                    title="Doctor Settings / Switch"
+                  >
+                    <User className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-1">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-blue-600 tracking-tight leading-tight">
+                    Book an Appointment
+                  </h1>
+                  <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                    Clinical queue, consultation slots, and practitioner schedule
+                  </p>
+                </div>
+              </div>
+
+              {/* Photo-Matching Doctor Card (Dr. Reginald Leiw Layout) */}
+              <div className="bg-white rounded-3xl border border-[#E8E2D5] p-4 sm:p-5 shadow-xs flex items-center justify-between gap-3 sm:gap-4 hover:border-blue-300 transition-all">
+                <div className="flex items-center gap-3.5 sm:gap-4 overflow-hidden min-w-0">
+                  <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-base sm:text-lg shadow-2xs shrink-0">
+                    {currentDoctor?.name
+                      ? currentDoctor.name.replace('Dr.', '').trim().slice(0, 2).toUpperCase()
+                      : 'RL'}
+                  </div>
+                  <div className="overflow-hidden min-w-0">
+                    <h2 className="font-extrabold text-slate-900 text-base sm:text-lg truncate leading-tight">
+                      {currentDoctor?.name || 'Dr. Reginald Leiw'}
+                    </h2>
+                    <p className="text-xs text-slate-400 font-medium truncate mt-0.5">
+                      Consultant • Chronic Care &amp; Internal Medicine
+                    </p>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="text-xs font-bold text-slate-800">
+                        $120.00
+                      </span>
+                      <span className="text-[10px] text-slate-400">•</span>
+                      <span className="text-[11px] font-mono text-blue-600 font-semibold">
+                        {currentDoctor?.id || 'DOC84920'}
+                      </span>
+                      <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        ✓ Verified
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="w-9 sm:w-10 h-9 sm:h-10 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 transition-all hover:scale-105 active:scale-95 shadow-2xs"
+                  title="Switch Practitioner"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Segmented Control Toggle (Matching Screen 2's "Upcoming" vs "Past" Pill Bar) */}
+              <div className="flex justify-center sm:justify-start">
+                <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1 shadow-2xs">
+                  <button
+                    type="button"
+                    onClick={() => setActivityTab('upcoming')}
+                    className={`px-5 sm:px-6 py-2 rounded-full text-xs font-bold transition-all ${
+                      activityTab === 'upcoming'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Upcoming
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivityTab('past')}
+                    className={`px-5 sm:px-6 py-2 rounded-full text-xs font-bold transition-all ${
+                      activityTab === 'past'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Past
                   </button>
                 </div>
               </div>
 
-              {/* Clickable KPI Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {/* Pending Appointments Card -> Clickable */}
-                <div
-                  onClick={() => {
-                    const firstPending = pendingAppointments[0];
-                    if (firstPending && firstPending.patient) {
-                      handleStartPrescription(firstPending.patient, firstPending.id);
-                    } else {
-                      setActiveTab('prescription');
-                    }
-                  }}
-                  className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-teal-400 hover:shadow-md transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Pending Appointments
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Clock className="w-5 h-5" />
+              {/* UPCOMING VIEW (DATE & TIME CAROUSEL + QUEUE) */}
+              {activityTab === 'upcoming' && (
+                <div className="space-y-6">
+                  {/* DATE & TIME SECTION (EXACT REPLICA FROM REFERENCE PHOTO) */}
+                  <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 shadow-xs space-y-5">
+                    {/* Month Carousel */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                          Date &amp; Time
+                        </span>
+                        <span className="text-xs text-blue-600 font-semibold flex items-center gap-1">
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>{selectedMonth} 2026</span>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none">
+                        {['April', 'May', 'June', 'July', 'August', 'September'].map(m => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => setSelectedMonth(m)}
+                            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
+                              selectedMonth === m
+                                ? 'bg-blue-600 text-white shadow-xs'
+                                : 'bg-[#FAF8F5] text-slate-600 hover:bg-slate-100 border border-[#E8E2D5]'
+                            }`}
+                          >
+                            {m}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                  <div className="mt-3 flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-slate-900">
-                      {pendingAppointments.length}
-                    </span>
-                    <span className="text-xs font-semibold text-amber-600">
-                      Awaiting Consultation
-                    </span>
-                  </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
-                    <span>Click to start prescription</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                </div>
 
-                {/* Enrolled Patients Card -> Clickable */}
-                <div
-                  onClick={() => setActiveTab('patients')}
-                  className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-teal-400 hover:shadow-md transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Enrolled Patients
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Users className="w-5 h-5" />
-                    </div>
-                  </div>
-                  <div className="mt-3 flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-slate-900">
-                      {patients.length}
-                    </span>
-                    <span className="text-xs font-semibold text-teal-600">
-                      Active In Care Program
-                    </span>
-                  </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
-                    <span>Click to view directory</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                </div>
-
-                {/* Prescription Desk Card -> Clickable */}
-                <div
-                  onClick={() => {
-                    setActiveTab('prescription');
-                    setRxSubTab('new');
-                    setIsPrescriptionDraftActive(true);
-                  }}
-                  className="bg-white p-5 rounded-2xl border border-slate-200 hover:border-teal-400 hover:shadow-md transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Prescription Desk
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <Pill className="w-5 h-5" />
-                    </div>
-                  </div>
-                  <div className="mt-3 flex items-baseline gap-2">
-                    <span className="text-3xl font-extrabold text-slate-900">
-                      Rx
-                    </span>
-                    <span className="text-xs font-semibold text-purple-600">
-                      Draft & Order Desk
-                    </span>
-                  </div>
-                  <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
-                    <span>Click to open prescription</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Today's Pending Appointments Queue Table */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-bold text-base text-slate-900">
-                      Today&apos;s Pending Appointments
-                    </h3>
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                      {pendingAppointments.length} Pending
-                    </span>
-                  </div>
-                  <span className="text-xs text-slate-400 font-medium">
-                    Showing pending consultations only
-                  </span>
-                </div>
-
-                {pendingAppointments.length === 0 ? (
-                  <div className="p-12 text-center text-slate-500">
-                    <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-                    <p className="font-bold text-slate-800">All appointments completed for today!</p>
-                  </div>
-                ) : (
-                  <>
-                    {/* Mobile Appointments Card List */}
-                    <div className="block md:hidden divide-y divide-slate-100">
-                      {pendingAppointments.map(apt => (
-                        <div key={apt.id} className="p-4 space-y-3">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <div className="font-bold text-slate-900 text-sm">
-                                {apt.patient ? apt.patient.name : 'Unknown Patient'}
-                              </div>
-                              {apt.patient && (
-                                <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                                  <span className="font-mono">{apt.patient.uhid}</span>
-                                  <span>•</span>
-                                  <span>{apt.patient.age}y / {apt.patient.gender}</span>
-                                </div>
-                              )}
-                            </div>
-                            <span className="font-mono font-bold text-xs px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200 shrink-0">
-                              {apt.tokenNumber}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between text-xs gap-2">
-                            <span className="text-slate-700 font-medium line-clamp-1">
-                              {apt.reasonForVisit}
-                            </span>
-                            {apt.patient && (
-                              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
-                                {apt.patient.language}
+                    {/* Day Carousel */}
+                    <div>
+                      <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
+                        {[
+                          { day: 15, name: 'Tue', dots: ['#F59E0B'] },
+                          { day: 16, name: 'Wed', dots: ['#F59E0B', '#3B82F6'] },
+                          { day: 17, name: 'Thu', dots: ['#F59E0B', '#F97316', '#3B82F6', '#4338CA'] },
+                          { day: 18, name: 'Fri', dots: ['#3B82F6'] },
+                          { day: 19, name: 'Sat', dots: ['#10B981'] },
+                          { day: 20, name: 'Sun', dots: [] },
+                          { day: 21, name: 'Mon', dots: ['#F59E0B', '#3B82F6'] },
+                          { day: 22, name: 'Tue', dots: ['#3B82F6'] },
+                        ].map(item => {
+                          const isSelected = selectedDay === item.day;
+                          return (
+                            <button
+                              key={item.day}
+                              type="button"
+                              onClick={() => setSelectedDay(item.day)}
+                              className={`flex flex-col items-center justify-center min-w-[56px] py-3 px-3 rounded-2xl transition-all shrink-0 ${
+                                isSelected
+                                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-600'
+                                  : 'bg-white text-slate-700 border border-[#E8E2D5] hover:bg-blue-50/50 shadow-2xs'
+                              }`}
+                            >
+                              <span className="text-base font-black leading-none mb-1">
+                                {item.day}
                               </span>
-                            )}
-                          </div>
+                              <span className={`text-[11px] font-semibold leading-none ${
+                                isSelected ? 'text-white/90' : 'text-slate-400'
+                              }`}>
+                                {item.name}
+                              </span>
 
-                          <div className="pt-2 flex items-center justify-between border-t border-slate-100">
-                            <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
-                              <Clock className="w-3.5 h-3.5 text-slate-400" />
-                              <span>{apt.appointmentTime}</span>
-                            </span>
-                            {apt.patient && (
-                              <button
-                                onClick={() => handleStartPrescription(apt.patient!, apt.id)}
-                                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-xs transition-all active:scale-95"
-                              >
-                                <Pill className="w-3.5 h-3.5" />
-                                <span>Prescribe</span>
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                              {/* Tiny indicator dots below the date */}
+                              <div className="flex items-center gap-1 mt-2 h-1.5">
+                                {item.dots.length > 0 ? (
+                                  item.dots.map((dotColor, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="w-1.5 h-1.5 rounded-full"
+                                      style={{ backgroundColor: isSelected ? '#FFFFFF' : dotColor }}
+                                    />
+                                  ))
+                                ) : (
+                                  <span className="w-1.5 h-1.5 opacity-0" />
+                                )}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
 
-                    {/* Desktop Appointments Table */}
-                    <div className="hidden md:block overflow-x-auto">
-                      <table className="w-full text-left text-sm">
-                        <thead className="bg-slate-50/80 text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200/80">
-                          <tr>
-                            <th className="px-6 py-3.5">Token &amp; Time</th>
-                            <th className="px-6 py-3.5">Patient Details</th>
-                            <th className="px-6 py-3.5">Language</th>
-                            <th className="px-6 py-3.5">Reason for Visit</th>
-                            <th className="px-6 py-3.5 text-right">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
+                    {/* Time Slots ("Select a Time" Chips Grid) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Select a Time
+                        </span>
+                        <span className="text-xs text-blue-600 font-semibold flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>Select a Time</span>
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5">
+                        {[
+                          '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM',
+                          '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
+                          '1:00 PM', '1:30 PM'
+                        ].map(slot => {
+                          const isSelectedSlot = selectedTimeSlot === slot;
+                          return (
+                            <button
+                              key={slot}
+                              type="button"
+                              onClick={() => setSelectedTimeSlot(slot)}
+                              className={`py-2.5 px-3 rounded-2xl text-xs font-bold transition-all text-center border ${
+                                isSelectedSlot
+                                  ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/25'
+                                  : 'bg-blue-50/40 hover:bg-blue-100 text-blue-700 border-blue-200/80 shadow-2xs'
+                              }`}
+                            >
+                              {slot}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Big Electric Blue Pill CTA Button */}
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const firstPending = pendingAppointments[0];
+                          if (firstPending && firstPending.patient) {
+                            handleStartPrescription(firstPending.patient, firstPending.id);
+                          } else {
+                            setActiveTab('prescription');
+                          }
+                        }}
+                        className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 active:scale-98"
+                      >
+                        <Clock className="w-4 h-4" />
+                        <span>Book an Appointment ({selectedDay} {selectedMonth} at {selectedTimeSlot})</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Quick Metric KPI Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Pending Appointments Card */}
+                    <div
+                      onClick={() => {
+                        const firstPending = pendingAppointments[0];
+                        if (firstPending && firstPending.patient) {
+                          handleStartPrescription(firstPending.patient, firstPending.id);
+                        } else {
+                          setActiveTab('prescription');
+                        }
+                      }}
+                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                          Pending Queue
+                        </span>
+                        <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Clock className="w-5 h-5" />
+                        </div>
+                      </div>
+                      <div className="mt-3 flex items-baseline gap-2">
+                        <span className="text-3xl font-extrabold text-slate-900">
+                          {pendingAppointments.length}
+                        </span>
+                        <span className="text-xs font-semibold text-amber-600">
+                          Awaiting Consultation
+                        </span>
+                      </div>
+                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <span>Click to start prescription</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                    </div>
+
+                    {/* Enrolled Patients Card */}
+                    <div
+                      onClick={() => setActiveTab('patients')}
+                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                          Enrolled Patients
+                        </span>
+                        <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Users className="w-5 h-5" />
+                        </div>
+                      </div>
+                      <div className="mt-3 flex items-baseline gap-2">
+                        <span className="text-3xl font-extrabold text-slate-900">
+                          {patients.length}
+                        </span>
+                        <span className="text-xs font-semibold text-blue-600">
+                          Active In Care Program
+                        </span>
+                      </div>
+                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <span>Click to view directory</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                    </div>
+
+                    {/* Prescription Desk Card */}
+                    <div
+                      onClick={() => {
+                        setActiveTab('prescription');
+                        setRxSubTab('new');
+                        setIsPrescriptionDraftActive(true);
+                      }}
+                      className="bg-white p-5 rounded-3xl border border-[#E8E2D5] hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group shadow-2xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                          Prescription Desk
+                        </span>
+                        <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Pill className="w-5 h-5" />
+                        </div>
+                      </div>
+                      <div className="mt-3 flex items-baseline gap-2">
+                        <span className="text-3xl font-extrabold text-slate-900">
+                          Rx
+                        </span>
+                        <span className="text-xs font-semibold text-purple-600">
+                          Draft &amp; Order Desk
+                        </span>
+                      </div>
+                      <div className="mt-2 text-xs text-slate-400 flex items-center gap-1">
+                        <span>Click to open prescription</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Today's Pending Appointments Queue Table */}
+                  <div className="bg-white rounded-3xl border border-[#E8E2D5] shadow-xs overflow-hidden">
+                    <div className="px-6 py-4 border-b border-[#E8E2D5] flex items-center justify-between bg-[#FAF8F5]">
+                      <div className="flex items-center gap-3">
+                        <h3 className="font-bold text-base text-slate-900">
+                          Today&apos;s Consultation Queue
+                        </h3>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                          {pendingAppointments.length} Pending
+                        </span>
+                      </div>
+                      <span className="text-xs text-slate-400 font-medium">
+                        Live attending consultations
+                      </span>
+                    </div>
+
+                    {pendingAppointments.length === 0 ? (
+                      <div className="p-12 text-center text-slate-500">
+                        <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
+                        <p className="font-bold text-slate-800">All appointments completed for today!</p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Mobile Appointments Card List */}
+                        <div className="block md:hidden divide-y divide-[#E8E2D5]">
                           {pendingAppointments.map(apt => (
-                            <tr key={apt.id} className="hover:bg-teal-50/30 transition-colors">
-                              <td className="px-6 py-4">
-                                <span className="font-mono font-bold text-xs px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200 mr-2">
-                                  {apt.tokenNumber}
-                                </span>
-                                <span className="text-xs text-slate-500 font-medium">
-                                  {apt.appointmentTime}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4">
-                                {apt.patient ? (
-                                  <div>
-                                    <div className="font-bold text-slate-900">
-                                      {apt.patient.name}
-                                    </div>
-                                    <div className="text-xs text-slate-500 flex items-center gap-2">
-                                      <span>{apt.patient.uhid}</span>
+                            <div key={apt.id} className="p-4 space-y-3">
+                              <div className="flex items-start justify-between gap-2">
+                                <div>
+                                  <div className="font-bold text-slate-900 text-sm">
+                                    {apt.patient ? apt.patient.name : 'Unknown Patient'}
+                                  </div>
+                                  {apt.patient && (
+                                    <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                                      <span className="font-mono">{apt.patient.uhid}</span>
                                       <span>•</span>
                                       <span>{apt.patient.age}y / {apt.patient.gender}</span>
                                     </div>
-                                  </div>
-                                ) : (
-                                  <span className="text-slate-400">Loading patient...</span>
-                                )}
-                              </td>
-                              <td className="px-6 py-4">
+                                  )}
+                                </div>
+                                <span className="font-mono font-bold text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-[#E8E2D5] shrink-0">
+                                  {apt.tokenNumber}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center justify-between text-xs gap-2">
+                                <span className="text-slate-700 font-medium line-clamp-1">
+                                  {apt.reasonForVisit}
+                                </span>
                                 {apt.patient && (
-                                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
                                     {apt.patient.language}
                                   </span>
                                 )}
-                              </td>
-                              <td className="px-6 py-4">
-                                <span className="text-xs text-slate-700 font-medium">
-                                  {apt.reasonForVisit}
+                              </div>
+
+                              <div className="pt-2 flex items-center justify-between border-t border-[#E8E2D5]/70">
+                                <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                                  <span>{apt.appointmentTime}</span>
                                 </span>
-                              </td>
-                              <td className="px-6 py-4 text-right">
                                 {apt.patient && (
                                   <button
                                     onClick={() => handleStartPrescription(apt.patient!, apt.id)}
-                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-xs transition-all active:scale-95"
+                                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/25 transition-all active:scale-95"
                                   >
                                     <Pill className="w-3.5 h-3.5" />
                                     <span>Prescribe</span>
                                   </button>
                                 )}
-                              </td>
-                            </tr>
+                              </div>
+                            </div>
                           ))}
-                        </tbody>
-                      </table>
+                        </div>
+
+                        {/* Desktop Appointments Table */}
+                        <div className="hidden md:block overflow-x-auto">
+                          <table className="w-full text-left text-sm">
+                            <thead className="bg-[#FAF8F5] text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-[#E8E2D5]">
+                              <tr>
+                                <th className="px-6 py-3.5">Token &amp; Time</th>
+                                <th className="px-6 py-3.5">Patient Details</th>
+                                <th className="px-6 py-3.5">Language</th>
+                                <th className="px-6 py-3.5">Reason for Visit</th>
+                                <th className="px-6 py-3.5 text-right">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#E8E2D5]">
+                              {pendingAppointments.map(apt => (
+                                <tr key={apt.id} className="hover:bg-blue-50/40 transition-colors">
+                                  <td className="px-6 py-4">
+                                    <span className="font-mono font-bold text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-[#E8E2D5] mr-2">
+                                      {apt.tokenNumber}
+                                    </span>
+                                    <span className="text-xs text-slate-500 font-medium">
+                                      {apt.appointmentTime}
+                                    </span>
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    {apt.patient ? (
+                                      <div>
+                                        <div className="font-bold text-slate-900">
+                                          {apt.patient.name}
+                                        </div>
+                                        <div className="text-xs text-slate-500 flex items-center gap-2">
+                                          <span>{apt.patient.uhid}</span>
+                                          <span>•</span>
+                                          <span>{apt.patient.age}y / {apt.patient.gender}</span>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <span className="text-slate-400">Loading patient...</span>
+                                    )}
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    {apt.patient && (
+                                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                        {apt.patient.language}
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td className="px-6 py-4">
+                                    <span className="text-xs text-slate-700 font-medium">
+                                      {apt.reasonForVisit}
+                                    </span>
+                                  </td>
+                                  <td className="px-6 py-4 text-right">
+                                    {apt.patient && (
+                                      <button
+                                        onClick={() => handleStartPrescription(apt.patient!, apt.id)}
+                                        className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/25 transition-all active:scale-95"
+                                      >
+                                        <Pill className="w-3.5 h-3.5" />
+                                        <span>Prescribe</span>
+                                      </button>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* PAST VIEW (EXACT REPLICA OF REFERENCE PHOTO SCREEN 2: "ACTIVITY") */}
+              {activityTab === 'past' && (
+                <div className="space-y-6">
+                  {/* Hero Doctor Card Replica */}
+                  <div className="bg-white rounded-3xl border border-[#E8E2D5] p-6 sm:p-10 shadow-xs text-center space-y-6 max-w-xl mx-auto">
+                    {/* Big Squircle Portrait Container */}
+                    <div className="w-48 sm:w-60 h-48 sm:h-60 rounded-[32px] bg-[#EDE6D8] border-2 border-[#E8E2D5] overflow-hidden mx-auto flex items-center justify-center shadow-inner relative">
+                      <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-t from-slate-900/10 to-transparent">
+                        <div className="w-20 h-20 rounded-full bg-white/90 border border-blue-200 flex items-center justify-center text-blue-600 shadow-md">
+                          <Stethoscope className="w-10 h-10" />
+                        </div>
+                        <span className="font-extrabold text-sm text-slate-800 mt-3">
+                          {currentDoctor?.name || 'Dr. Suresh Sharma, MD'}
+                        </span>
+                        <span className="text-[11px] text-slate-500 font-medium">
+                          Attending Clinical Consultant
+                        </span>
+                      </div>
                     </div>
-                  </>
-                )}
-              </div>
+
+                    <div className="space-y-1.5">
+                      <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                        No Past Activity
+                      </h3>
+                      <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                        Ready to explore DA offering? Discover our Products &amp; Services
+                      </p>
+                    </div>
+
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActivityTab('upcoming');
+                          const firstPending = pendingAppointments[0];
+                          if (firstPending && firstPending.patient) {
+                            handleStartPrescription(firstPending.patient, firstPending.id);
+                          }
+                        }}
+                        className="w-full py-4 px-6 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all text-center flex items-center justify-center gap-2 active:scale-98"
+                      >
+                        <span>Book an Appointment</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -1353,23 +1656,23 @@ export default function DoctorPortal() {
           {activeTab === 'prescription' && (
             <div className="space-y-6">
               {/* Patient Banner with Selector */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs">
+              <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 shadow-xs">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-lg sm:text-xl shrink-0">
+                  <div className="flex items-center gap-3.5 sm:gap-4">
+                    <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-lg sm:text-xl shrink-0 shadow-2xs">
                       {selectedPatient ? selectedPatient.name.charAt(0) : 'P'}
                     </div>
                     <div>
                       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                        <h2 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">
+                        <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-tight">
                           {selectedPatient ? selectedPatient.name : 'Select a Patient'}
                         </h2>
                         {selectedPatient && (
                           <>
-                            <span className="font-mono text-[11px] sm:text-xs font-semibold px-2 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200">
+                            <span className="font-mono text-[11px] sm:text-xs font-bold px-2.5 py-0.5 bg-slate-100 text-slate-700 rounded-full border border-[#E8E2D5]">
                               {selectedPatient.uhid}
                             </span>
-                            <span className="text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            <span className="text-[11px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
                               {selectedPatient.language}
                             </span>
                           </>
@@ -1381,7 +1684,7 @@ export default function DoctorPortal() {
                           <span>•</span>
                           <span>{selectedPatient.phone}</span>
                           <span>•</span>
-                          <span className="text-teal-700 font-semibold truncate max-w-xs">
+                          <span className="text-blue-700 font-semibold truncate max-w-xs">
                             {selectedPatient.chronicConditions.join(', ')}
                           </span>
                         </div>
@@ -1401,7 +1704,7 @@ export default function DoctorPortal() {
                           setSelectedAppointmentId(null);
                         }
                       }}
-                      className="text-xs font-semibold px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 w-full sm:w-auto"
+                      className="text-xs font-semibold px-3.5 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 w-full sm:w-auto"
                     >
                       {patients.map(p => (
                         <option key={p.id} value={p.id}>
@@ -1413,59 +1716,65 @@ export default function DoctorPortal() {
                 </div>
               </div>
 
-              {/* 3 TABS HEADER: New Prescription | Prescription History | Medication History */}
-              <div className="flex items-center border-b border-slate-200 gap-1 sm:gap-2 overflow-x-auto pb-px">
-                <button
-                  onClick={() => {
-                    setRxSubTab('new');
-                    setIsPrescriptionDraftActive(true);
-                  }}
-                  className={`px-3.5 sm:px-5 py-2.5 sm:py-3 font-bold text-xs sm:text-sm border-b-2 transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap ${
-                    rxSubTab === 'new'
-                      ? 'border-teal-600 text-teal-700 bg-white rounded-t-xl'
-                      : 'border-transparent text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>New Prescription</span>
-                </button>
-                <button
-                  onClick={() => setRxSubTab('rxHistory')}
-                  className={`px-3.5 sm:px-5 py-2.5 sm:py-3 font-bold text-xs sm:text-sm border-b-2 transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap ${
-                    rxSubTab === 'rxHistory'
-                      ? 'border-teal-600 text-teal-700 bg-white rounded-t-xl'
-                      : 'border-transparent text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <FileText className="w-4 h-4" />
-                  <span>Prescription History</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[11px] bg-slate-100 text-slate-600 font-bold">
-                    {rxHistory.length}
-                  </span>
-                </button>
-                <button
-                  onClick={() => setRxSubTab('medHistory')}
-                  className={`px-3.5 sm:px-5 py-2.5 sm:py-3 font-bold text-xs sm:text-sm border-b-2 transition-all flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap ${
-                    rxSubTab === 'medHistory'
-                      ? 'border-teal-600 text-teal-700 bg-white rounded-t-xl'
-                      : 'border-transparent text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  <Pill className="w-4 h-4" />
-                  <span>Medication History</span>
-                  <span className="px-1.5 py-0.2 rounded-full text-[11px] bg-slate-100 text-slate-600 font-bold">
-                    {medHistory.length}
-                  </span>
-                </button>
+              {/* 3 TABS SEGMENTED PILL CONTROL (MATCHING SCREENSHOT AESTHETIC) */}
+              <div className="flex overflow-x-auto pb-1 scrollbar-none">
+                <div className="inline-flex p-1.5 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1 shadow-2xs">
+                  <button
+                    onClick={() => {
+                      setRxSubTab('new');
+                      setIsPrescriptionDraftActive(true);
+                    }}
+                    className={`px-5 py-2 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+                      rxSubTab === 'new'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>New Prescription</span>
+                  </button>
+                  <button
+                    onClick={() => setRxSubTab('rxHistory')}
+                    className={`px-5 py-2 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+                      rxSubTab === 'rxHistory'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Prescription History</span>
+                    <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                      rxSubTab === 'rxHistory' ? 'bg-white/20 text-white' : 'bg-[#DDD5C7] text-slate-700'
+                    }`}>
+                      {rxHistory.length}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setRxSubTab('medHistory')}
+                    className={`px-5 py-2 rounded-full font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+                      rxSubTab === 'medHistory'
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <Pill className="w-3.5 h-3.5" />
+                    <span>Medication History</span>
+                    <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                      rxSubTab === 'medHistory' ? 'bg-white/20 text-white' : 'bg-[#DDD5C7] text-slate-700'
+                    }`}>
+                      {medHistory.length}
+                    </span>
+                  </button>
+                </div>
               </div>
 
               {/* TAB 1: NEW PRESCRIPTION */}
               {rxSubTab === 'new' && (
                 !isPrescriptionDraftActive ? (
                   /* Empty state when no prescription is active */
-                  <div className="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center space-y-4 shadow-xs">
-                    <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto shadow-inner">
-                      <Pill className="w-7 sm:w-8 h-7 sm:h-8" />
+                  <div className="bg-white rounded-3xl border border-[#E8E2D5] p-8 sm:p-12 text-center space-y-4 shadow-xs">
+                    <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center mx-auto shadow-inner">
+                      <Pill className="w-8 h-8" />
                     </div>
                     <div>
                       <h3 className="text-base sm:text-lg font-bold text-slate-900">
@@ -1479,7 +1788,7 @@ export default function DoctorPortal() {
                       <button
                         type="button"
                         onClick={() => setIsPrescriptionDraftActive(true)}
-                        className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm bg-teal-600 hover:bg-teal-700 text-white shadow-md transition-all active:scale-95"
+                        className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all active:scale-95"
                       >
                         <Plus className="w-5 h-5" />
                         <span>New Prescription</span>
@@ -1490,34 +1799,34 @@ export default function DoctorPortal() {
                   /* Active Prescription Form */
                   <form onSubmit={handleSubmitPrescription} className="space-y-4 sm:space-y-6">
                     {/* Order Mode Switcher (2 modes: Normal Prescription & Scan / Lab Test) */}
-                    <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                    <div className="bg-white p-4 rounded-3xl border border-[#E8E2D5] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shadow-xs">
                       <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 max-w-3xl">
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap">
                           Prescription Mode:
                         </span>
-                        <div className="flex-1 grid grid-cols-2 p-1.5 bg-slate-100 rounded-2xl border border-slate-200 gap-2">
+                        <div className="flex-1 grid grid-cols-2 p-1 bg-[#EDE7DC] rounded-full border border-[#E8E2D5] gap-1 shadow-2xs">
                           <button
                             type="button"
                             onClick={() => setRxMode('NORMAL')}
-                            className={`flex items-center justify-center gap-2 sm:gap-3 py-2.5 sm:py-3 px-3 sm:px-6 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                            className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-xs font-bold transition-all ${
                               rxMode === 'NORMAL'
-                                ? 'bg-white text-teal-700 shadow-xs'
+                                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
                                 : 'text-slate-600 hover:text-slate-900'
                             }`}
                           >
-                            <span className="text-xl sm:text-2xl leading-none">💊</span>
+                            <span className="text-lg leading-none">💊</span>
                             <span>Normal Prescription</span>
                           </button>
                           <button
                             type="button"
                             onClick={() => setRxMode('SCAN_TEST')}
-                            className={`flex items-center justify-center gap-2 sm:gap-3 py-2.5 sm:py-3 px-3 sm:px-6 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                            className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-full text-xs font-bold transition-all ${
                               rxMode === 'SCAN_TEST'
-                                ? 'bg-white text-teal-700 shadow-xs'
+                                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
                                 : 'text-slate-600 hover:text-slate-900'
                             }`}
                           >
-                            <span className="text-xl sm:text-2xl leading-none">🔬</span>
+                            <span className="text-lg leading-none">🔬</span>
                             <span>Scan / Lab Test</span>
                           </button>
                         </div>
@@ -1526,7 +1835,7 @@ export default function DoctorPortal() {
                       <button
                         type="button"
                         onClick={() => setIsPrescriptionDraftActive(false)}
-                        className="text-xs font-semibold px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-100 transition-all whitespace-nowrap text-center justify-center flex items-center"
+                        className="text-xs font-bold px-4 py-2.5 rounded-full border border-[#E8E2D5] text-slate-500 hover:bg-slate-100 transition-all whitespace-nowrap text-center justify-center flex items-center"
                       >
                         Clear / Discard Draft
                       </button>
@@ -1536,7 +1845,7 @@ export default function DoctorPortal() {
                     {rxMode === 'NORMAL' && (
                       <div className="space-y-6">
                         {/* Patient Symptoms Textarea (with Word / Character Limit) */}
-                        <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2">
+                        <div className="bg-white p-5 sm:p-6 rounded-3xl border border-[#E8E2D5] space-y-2.5 shadow-xs">
                           <div className="flex items-center justify-between">
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
                               Patient Symptoms & Clinical Notes
@@ -1555,12 +1864,12 @@ export default function DoctorPortal() {
                             value={symptomsNotes}
                             onChange={e => setSymptomsNotes(e.target.value)}
                             placeholder="Enter patient reported symptoms, duration, and observations (e.g. polyuria, morning dizziness, resting blood pressure)..."
-                            className="w-full text-sm p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+                            className="w-full text-sm p-3.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all text-slate-900"
                           />
                         </div>
 
                         {/* "Medical Thing" (Medication Regimen Table - Extended Size) */}
-                        <div className="bg-white rounded-2xl border border-slate-200 overflow-visible shadow-xs">
+                        <div className="bg-white rounded-3xl border border-[#E8E2D5] overflow-visible shadow-xs">
                           <div className="px-4 sm:px-7 py-3.5 sm:py-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between bg-slate-50/50 gap-3">
                             <div>
                               <h3 className="font-bold text-base sm:text-lg text-slate-900">
@@ -1611,7 +1920,7 @@ export default function DoctorPortal() {
                                         <button
                                           type="button"
                                           onClick={handleImportAllDoctorMedicines}
-                                          className="text-[11px] font-bold text-teal-700 hover:text-teal-800 bg-teal-50 hover:bg-teal-100 px-2.5 py-1 rounded-lg border border-teal-200 transition-colors"
+                                          className="text-[11px] font-bold text-blue-700 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg border border-blue-200 transition-colors"
                                         >
                                           Import All
                                         </button>
@@ -1621,7 +1930,7 @@ export default function DoctorPortal() {
                                     <div className="overflow-y-auto max-h-[300px] divide-y divide-slate-100">
                                       {historyLoading ? (
                                         <div className="p-6 text-center text-xs text-slate-400">
-                                          <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-2 text-teal-600" />
+                                          <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-2 text-blue-600" />
                                           Loading medical history...
                                         </div>
                                       ) : doctorPrescribedMeds.length === 0 ? (
@@ -1640,11 +1949,11 @@ export default function DoctorPortal() {
                                               key={`import-med-${idx}`}
                                               type="button"
                                               onClick={() => handleImportMedicine(med)}
-                                              className="w-full text-left px-4 py-3 hover:bg-teal-50/60 transition-colors flex items-start justify-between gap-3 group"
+                                              className="w-full text-left px-4 py-3 hover:bg-blue-50/60 transition-colors flex items-start justify-between gap-3 group"
                                             >
                                               <div className="space-y-1 min-w-0">
                                                 <div className="flex items-center gap-2">
-                                                  <span className="font-bold text-xs text-slate-800 group-hover:text-teal-700 truncate">
+                                                  <span className="font-bold text-xs text-slate-800 group-hover:text-blue-700 truncate">
                                                     {med.medicineName}
                                                   </span>
                                                   {med.dosage && (
@@ -1688,7 +1997,7 @@ export default function DoctorPortal() {
                                                     />
                                                   ))}
                                                 </div>
-                                                <span className="text-[10px] font-bold text-teal-600 group-hover:translate-x-0.5 transition-transform">
+                                                <span className="text-[10px] font-bold text-blue-600 group-hover:translate-x-0.5 transition-transform">
                                                   + Import
                                                 </span>
                                               </div>
@@ -1704,7 +2013,7 @@ export default function DoctorPortal() {
                               <button
                                 type="button"
                                 onClick={addMedicineRow}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 transition-all"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-all"
                               >
                                 <Plus className="w-4 h-4" />
                                 <span>Add Medicine</span>
@@ -1750,13 +2059,13 @@ export default function DoctorPortal() {
                                       }}
                                       onFocus={() => setActiveMedDropdown(row.id)}
                                       placeholder="Search medicine name (e.g. Metformin)..."
-                                      className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                      className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
 
                                     {row.dosage && (
                                       <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Dose:</span>
-                                        <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-100">
+                                        <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
                                           {row.dosage}
                                         </span>
                                       </div>
@@ -1772,7 +2081,7 @@ export default function DoctorPortal() {
                                               e.preventDefault();
                                               selectPrefedMedicine(row.id, item);
                                             }}
-                                            className="p-3 hover:bg-teal-50 active:bg-teal-100 cursor-pointer text-xs flex items-center justify-between"
+                                            className="p-3 hover:bg-blue-50 active:bg-blue-100 cursor-pointer text-xs flex items-center justify-between"
                                           >
                                             <div className="min-w-0 pr-2">
                                               <div className="font-bold text-slate-800 truncate">{item.name}</div>
@@ -1780,7 +2089,7 @@ export default function DoctorPortal() {
                                                 {item.dosage} • {item.defaultFreq} • {item.defaultMeal}
                                               </div>
                                             </div>
-                                            <span className="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-1 rounded-md shrink-0">
+                                            <span className="text-[10px] font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded-md shrink-0">
                                               Select
                                             </span>
                                           </div>
@@ -1892,14 +2201,14 @@ export default function DoctorPortal() {
                                             }}
                                             onFocus={() => setActiveMedDropdown(row.id)}
                                             placeholder="Type medicine name (e.g. Metformin)..."
-                                            className="w-full text-base font-semibold p-3.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                            className="w-full text-base font-semibold p-3.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                           />
 
                                           {/* Dosage indicator when populated or imported */}
                                           {row.dosage && (
                                             <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
                                               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Dose:</span>
-                                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-teal-50 text-teal-700 border border-teal-100">
+                                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-100">
                                                 {row.dosage}
                                               </span>
                                               {row.instructions && (
@@ -1916,9 +2225,9 @@ export default function DoctorPortal() {
                                               className="absolute left-0 top-full mt-2 w-full min-w-[420px] max-h-72 overflow-y-auto bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 divide-y divide-slate-100 ring-1 ring-black/5"
                                               style={{ minWidth: '420px' }}
                                             >
-                                              <div className="px-4 py-2.5 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between border-b border-slate-100">
+                                               <div className="px-4 py-2.5 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between border-b border-slate-100">
                                                 <span>Pre-fed Medicine Database ({matchingMedicines.length})</span>
-                                                <span className="text-[10px] text-teal-600 font-semibold">Click to select dosing &amp; meal timing</span>
+                                                <span className="text-[10px] text-blue-600 font-semibold">Click to select dosing &amp; meal timing</span>
                                               </div>
                                               {matchingMedicines.slice(0, 8).map((item, idx) => (
                                                 <div
@@ -1927,12 +2236,12 @@ export default function DoctorPortal() {
                                                     e.preventDefault();
                                                     selectPrefedMedicine(row.id, item);
                                                   }}
-                                                  className="p-3.5 hover:bg-teal-50/80 cursor-pointer text-xs flex items-center justify-between transition-colors"
+                                                  className="p-3.5 hover:bg-blue-50/80 cursor-pointer text-xs flex items-center justify-between transition-colors"
                                                 >
                                                   <div>
                                                     <div className="font-bold text-slate-800 text-sm flex items-center gap-2">
                                                       <span>{item.name}</span>
-                                                      <span className="text-[10px] font-medium text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200/60">
+                                                      <span className="text-[10px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/60">
                                                         {item.category}
                                                       </span>
                                                     </div>
@@ -1944,7 +2253,7 @@ export default function DoctorPortal() {
                                                       <span>{item.defaultMeal}</span>
                                                     </div>
                                                   </div>
-                                                  <span className="text-[11px] font-bold text-teal-700 bg-teal-100/70 hover:bg-teal-200 px-3 py-1.5 rounded-lg border border-teal-200 transition-colors">
+                                                  <span className="text-[11px] font-bold text-blue-700 bg-blue-100/70 hover:bg-blue-200 px-3 py-1.5 rounded-lg border border-blue-200 transition-colors">
                                                     Select
                                                   </span>
                                                 </div>
@@ -1962,7 +2271,7 @@ export default function DoctorPortal() {
                                           max="180"
                                           value={row.noOfDays}
                                           onChange={e => updateMedicine(row.id, 'noOfDays', Number(e.target.value))}
-                                          className="w-24 text-base font-semibold p-3.5 rounded-xl border border-slate-200 text-center bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                          className="w-24 text-base font-semibold p-3.5 rounded-xl border border-slate-200 text-center bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                       </td>
 
@@ -1972,7 +2281,7 @@ export default function DoctorPortal() {
                                           <select
                                             value={row.frequency}
                                             onChange={e => updateMedicine(row.id, 'frequency', e.target.value)}
-                                            className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                            className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                           >
                                             <option value="1-0-1">1-0-1 (Twice Daily - Morn &amp; Night)</option>
                                             <option value="1-0-0">1-0-0 (Once Daily - Morning Only)</option>
@@ -2008,7 +2317,7 @@ export default function DoctorPortal() {
                                         <select
                                           value={row.mealRelation}
                                           onChange={e => updateMedicine(row.id, 'mealRelation', e.target.value)}
-                                          className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                          className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
                                           <option value="After Food">After Food</option>
                                           <option value="Before Food">Before Food</option>
@@ -2043,18 +2352,18 @@ export default function DoctorPortal() {
                     {rxMode === 'SCAN_TEST' && (
                       <div className="space-y-6">
                         {/* Notice Banner */}
-                        <div className="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 text-xs text-indigo-900 flex items-start gap-3">
-                          <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+                        <div className="p-4 rounded-3xl bg-blue-50/70 border border-blue-200 text-xs text-blue-900 flex items-start gap-3 shadow-2xs">
+                          <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                           <div>
                             <div className="font-bold text-sm">Diagnostic Investigation Workflow</div>
-                            <p className="mt-0.5">
+                            <p className="mt-0.5 text-blue-800">
                               Submitting this order sets a specialized AI telephony trigger that instructs the calling agent to phone the patient and dispatch an SMS to get the scan done, plus an automated reminder to bring the physical scan report to their appointment.
                             </p>
                           </div>
                         </div>
 
                         {/* Diagnostic Investigation Selector with 30+ Pre-fed Tests */}
-                        <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <div className="bg-white p-5 sm:p-6 rounded-3xl border border-[#E8E2D5] space-y-4 shadow-xs">
                           <div className="flex items-center justify-between">
                             <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
                               Search & Add Diagnostic Scan or Lab Test
@@ -2081,13 +2390,13 @@ export default function DoctorPortal() {
                                   if (e.key === 'Escape') setDiagDropdownOpen(false);
                                 }}
                                 placeholder="Type to search diagnostic test (e.g. Chest X-Ray, 2D ECHO, HbA1c, CBC, MRI)..."
-                                className="w-full text-sm font-semibold pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                className="w-full text-sm font-semibold pl-10 pr-4 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-slate-900 transition-all"
                               />
                             </div>
 
                             {/* Dropdown with results - closes immediately when not active */}
                             {diagDropdownOpen && (
-                              <div className="absolute left-0 top-full mt-1.5 w-full max-h-72 overflow-y-auto bg-white rounded-xl shadow-xl border border-slate-200 z-50 divide-y divide-slate-100">
+                              <div className="absolute left-0 top-full mt-1.5 w-full max-h-72 overflow-y-auto bg-white rounded-2xl shadow-xl border border-[#E8E2D5] z-50 divide-y divide-slate-100">
                                 {PREFED_DIAGNOSTICS.filter(d =>
                                   !diagSearch ||
                                   d.name.toLowerCase().includes(diagSearch.toLowerCase()) ||
@@ -2096,13 +2405,13 @@ export default function DoctorPortal() {
                                   <div
                                     key={idx}
                                     onMouseDown={() => addDiagnostic(item)}
-                                    className="p-3 hover:bg-teal-50 cursor-pointer text-xs flex items-center justify-between transition-colors"
+                                    className="p-3 hover:bg-blue-50/70 cursor-pointer text-xs flex items-center justify-between transition-colors"
                                   >
                                     <div>
                                       <div className="flex items-center gap-2">
                                         <span className="font-bold text-slate-800">{item.name}</span>
                                         <span
-                                          className={`px-2 py-0.2 rounded text-[10px] font-bold ${
+                                          className={`px-2 py-0.2 rounded-full text-[10px] font-bold ${
                                             item.type === 'SCAN'
                                               ? 'bg-purple-100 text-purple-700'
                                               : 'bg-emerald-100 text-emerald-700'
@@ -2117,7 +2426,7 @@ export default function DoctorPortal() {
                                     </div>
                                     <button
                                       type="button"
-                                      className="px-2.5 py-1 rounded-lg bg-teal-600 text-white font-bold text-xs"
+                                      className="px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors"
                                     >
                                       + Add
                                     </button>
@@ -2195,10 +2504,10 @@ export default function DoctorPortal() {
                     )}
 
                     {/* Doctor Follow-Up Option */}
-                    <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div className="bg-white p-5 rounded-3xl border border-[#E8E2D5] space-y-3 shadow-xs">
                       <div className="flex items-center justify-between">
                         <label className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-teal-600" />
+                          <Calendar className="w-4 h-4 text-blue-600" />
                           <span>Add Follow-Up Scheduling for Doctor</span>
                         </label>
                         <span className="text-xs text-slate-400">Optional</span>
@@ -2212,7 +2521,7 @@ export default function DoctorPortal() {
                             type="date"
                             value={followUpDate}
                             onChange={e => setFollowUpDate(e.target.value)}
-                            className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            className="w-full text-xs font-semibold p-3 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -2224,16 +2533,16 @@ export default function DoctorPortal() {
                             value={followUpNotes}
                             onChange={e => setFollowUpNotes(e.target.value)}
                             placeholder="e.g. Review HbA1c and Serum Creatinine lab reports; check BP response..."
-                            className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                            className="w-full text-xs font-semibold p-3 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* AI Telephony Calling & SMS Trigger Switch */}
-                    <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
+                    <div className="bg-white p-5 rounded-3xl border border-[#E8E2D5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-xs">
+                      <div className="flex items-center gap-3.5">
+                        <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 shadow-2xs">
                           <PhoneCall className="w-5 h-5" />
                         </div>
                         <div>
@@ -2253,38 +2562,43 @@ export default function DoctorPortal() {
                           onChange={e => setTelephonyTriggerEnabled(e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </label>
                     </div>
 
-                    {/* Submission & Doctor Sign-Off Banner */}
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 sm:p-5 bg-slate-900 text-white rounded-2xl shadow-md">
-                      <div>
-                        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                          Attending Physician Sign-Off
+                    {/* Submission & Doctor Sign-Off Banner with bold electric blue pill button */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-5 sm:p-6 bg-white rounded-3xl border border-[#E8E2D5] shadow-xs">
+                      <div className="flex items-center gap-3.5">
+                        <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 font-bold flex items-center justify-center shrink-0 shadow-2xs">
+                          <Stethoscope className="w-6 h-6" />
                         </div>
-                        <div className="text-base font-bold text-white mt-0.5">
-                          {currentDoctor?.name || DOCTOR_PROFILE.name}
-                        </div>
-                        <div className="text-xs text-slate-400">
-                          {DOCTOR_PROFILE.department} • {DOCTOR_PROFILE.license}
+                        <div>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            Attending Physician Sign-Off
+                          </div>
+                          <div className="text-base font-extrabold text-slate-900 mt-0.5">
+                            {currentDoctor?.name || DOCTOR_PROFILE.name}
+                          </div>
+                          <div className="text-xs text-slate-400 font-medium">
+                            {DOCTOR_PROFILE.department} • <span className="font-mono text-blue-600 font-bold">{currentDoctor?.id || DOCTOR_PROFILE.id}</span>
+                          </div>
                         </div>
                       </div>
 
                       <button
                         type="submit"
                         disabled={submitting || isSymptomsOverLimit}
-                        className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm bg-teal-500 hover:bg-teal-400 text-slate-950 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                        className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-8 py-4 rounded-full font-extrabold text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 transition-all active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {submitting ? (
                           <>
                             <RefreshCw className="w-4 h-4 animate-spin" />
-                            <span>Submitting...</span>
+                            <span>Signing &amp; Submitting...</span>
                           </>
                         ) : (
                           <>
                             <Send className="w-4 h-4" />
-                            <span>Submit Prescription</span>
+                            <span>Save &amp; Finalize Prescription</span>
                           </>
                         )}
                       </button>
@@ -2306,22 +2620,22 @@ export default function DoctorPortal() {
                   {historyLoading ? (
                     <div className="p-12 text-center text-slate-400">Loading prescription archive...</div>
                   ) : rxHistory.length === 0 ? (
-                    <div className="p-12 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">
+                    <div className="p-12 text-center text-slate-400 bg-white rounded-3xl border border-[#E8E2D5]">
                       No past prescriptions found for this patient.
                     </div>
                   ) : (
                     rxHistory.map((rx: any) => (
-                      <div key={rx.id} className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-xs">
-                        <div className="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                      <div key={rx.id} className="bg-white rounded-3xl border border-[#E8E2D5] p-6 space-y-4 shadow-xs">
+                        <div className="flex items-center justify-between border-b border-[#E8E2D5]/70 pb-3 flex-wrap gap-2">
                           <div className="flex items-center gap-3">
-                            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded bg-slate-100 text-slate-800 border border-slate-200">
+                            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-[#E8E2D5]">
                               {rx.id}
                             </span>
                             <span
-                              className={`px-2.5 py-0.5 rounded text-xs font-bold ${
+                              className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                                 rx.prescriptionType === 'SCAN_TEST'
                                   ? 'bg-purple-100 text-purple-800'
-                                  : 'bg-teal-100 text-teal-800'
+                                  : 'bg-blue-50 text-blue-700 border border-blue-200'
                               }`}
                             >
                               {rx.prescriptionType === 'SCAN_TEST' ? '🔬 Scan / Lab Test' : '💊 Normal Prescription'}
@@ -2431,7 +2745,7 @@ export default function DoctorPortal() {
 
               {/* TAB 3: MEDICATION HISTORY (READ-ONLY) */}
               {rxSubTab === 'medHistory' && (
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                <div className="bg-white rounded-3xl border border-[#E8E2D5] shadow-xs overflow-hidden">
                   <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                     <h3 className="font-bold text-base text-slate-900">
                       Chronological Medication History for {selectedPatient?.name}
@@ -2525,7 +2839,7 @@ export default function DoctorPortal() {
               </div>
 
               {/* Search & Language Filters */}
-              <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-center justify-between">
+              <div className="bg-white p-4 rounded-3xl border border-[#E8E2D5] flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-center justify-between shadow-xs">
                 <div className="relative w-full md:w-80">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                   <input
@@ -2533,19 +2847,19 @@ export default function DoctorPortal() {
                     value={patientSearch}
                     onChange={e => setPatientSearch(e.target.value)}
                     placeholder="Search by name, UHID, phone, or condition..."
-                    className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full text-xs font-semibold pl-10 pr-4 py-2.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
                   />
                 </div>
 
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 w-full md:w-auto no-scrollbar">
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 w-full md:w-auto scrollbar-none">
                   {['ALL', 'KANNADA', 'HINDI', 'TELUGU', 'TAMIL', 'MARATHI', 'ENGLISH'].map(lang => (
                     <button
                       key={lang}
                       onClick={() => setPatientLangFilter(lang)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
                         patientLangFilter === lang
-                          ? 'bg-teal-600 text-white shadow-xs'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          ? 'bg-blue-600 text-white shadow-xs'
+                          : 'bg-white text-slate-600 hover:bg-[#F3EFE6] border border-[#E8E2D5]'
                       }`}
                     >
                       {lang}
@@ -2554,41 +2868,46 @@ export default function DoctorPortal() {
                 </div>
               </div>
 
-              {/* Patients Grid */}
+              {/* Patients Grid with photo-matching rounded-3xl white cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filteredPatients.map(pt => (
                   <div
                     key={pt.id}
-                    className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 hover:shadow-md hover:border-teal-300 transition-all flex flex-col justify-between"
+                    className="bg-white rounded-3xl border border-[#E8E2D5] p-5 space-y-4 hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between shadow-xs"
                   >
                     <div>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="font-bold text-base text-slate-900 leading-tight">
-                            {pt.name}
-                          </h3>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="font-mono text-[11px] font-bold text-slate-500">
-                              {pt.uhid}
-                            </span>
-                            <span>•</span>
-                            <span className="text-xs text-slate-500">
-                              {pt.age}y / {pt.gender}
-                            </span>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-black text-sm shrink-0 shadow-2xs">
+                            {pt.name.charAt(0)}
+                          </div>
+                          <div>
+                            <h3 className="font-extrabold text-base text-slate-900 leading-tight">
+                              {pt.name}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="font-mono text-[11px] font-bold text-slate-500">
+                                {pt.uhid}
+                              </span>
+                              <span>•</span>
+                              <span className="text-xs text-slate-500">
+                                {pt.age}y / {pt.gender}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
                           {pt.language}
                         </span>
                       </div>
 
-                      <div className="mt-3 space-y-1.5 text-xs text-slate-600">
+                      <div className="mt-3.5 space-y-1.5 text-xs text-slate-600">
                         <div>
                           <strong className="text-slate-700">Phone:</strong> {pt.phone}
                         </div>
                         <div>
                           <strong className="text-slate-700">Conditions:</strong>{' '}
-                          <span className="text-teal-700 font-semibold">
+                          <span className="text-blue-700 font-semibold">
                             {pt.chronicConditions.join(', ')}
                           </span>
                         </div>
@@ -2600,16 +2919,16 @@ export default function DoctorPortal() {
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <div className="pt-3 border-t border-[#E8E2D5] flex items-center justify-between">
                       <span className="text-[11px] font-bold text-slate-400">
                         Device: {pt.deviceType}
                       </span>
                       <button
                         onClick={() => handleStartPrescription(pt)}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-xs transition-all active:scale-95"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/25 transition-all active:scale-95"
                       >
                         <Pill className="w-3.5 h-3.5" />
-                        <span>Start Prescription</span>
+                        <span>Prescribe</span>
                       </button>
                     </div>
                   </div>
@@ -2650,30 +2969,30 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
               </div>
 
               {/* Architecture Blueprint Card */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-xs text-sm">
+              <div className="bg-white rounded-3xl border border-[#E8E2D5] p-6 space-y-6 shadow-xs text-sm">
                 <div className="space-y-2">
                   <h3 className="font-bold text-base text-slate-900">
-                    System Architecture & Trigger Pipeline
+                    System Architecture &amp; Trigger Pipeline
                   </h3>
                   <p className="text-slate-600 text-xs leading-relaxed">
-                    This document describes how the AI Calling Agent integrates with the Doctor Portal via Supabase triggers. When the doctor clicks <strong>Submit Prescription</strong>, the portal registers an actionable payload in Supabase that your calling agent consumes to trigger a voice phone call and dispatch an SMS.
+                    This document describes how the AI Calling Agent integrates with the Doctor Portal via Supabase triggers. When the doctor clicks <strong>Save &amp; Finalize Prescription</strong>, the portal registers an actionable payload in Supabase that your calling agent consumes to trigger a voice phone call and dispatch an SMS.
                   </p>
                 </div>
 
                 {/* 3 Steps Pipeline */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 bg-teal-100 px-2 py-0.5 rounded">
+                  <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-full">
                       Step 1: Doctor Portal
                     </span>
-                    <div className="font-bold text-slate-900 text-sm">Medication & Scan Order</div>
+                    <div className="font-bold text-slate-900 text-sm">Medication &amp; Scan Order</div>
                     <p className="text-xs text-slate-600">
                       Doctor enters medicines (tablets, days, frequency with red/green/blue timing codes, meal instruction) or diagnostic tests (CT, ECG, CBC).
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-200 space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded">
+                  <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">
                       Step 2: Supabase Trigger
                     </span>
                     <div className="font-bold text-slate-900 text-sm">PostgreSQL Row Insert</div>
@@ -2682,8 +3001,8 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
+                  <div className="p-4 rounded-2xl bg-sky-50/60 border border-sky-200 space-y-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 bg-sky-100 px-2.5 py-0.5 rounded-full">
                       Step 3: AI Calling Agent
                     </span>
                     <div className="font-bold text-slate-900 text-sm">Voice Call + Normal SMS</div>
@@ -2757,8 +3076,8 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
               {/* Settings & Tables Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Column 1: Configuration Form */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-xs">
-                  <div className="border-b border-slate-100 pb-3">
+                <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 space-y-6 shadow-xs">
+                  <div className="border-b border-[#E8E2D5]/70 pb-3">
                     <h3 className="font-bold text-base text-slate-900">Supabase API Connection</h3>
                     <p className="text-xs text-slate-500">Provide your Supabase URL &amp; Public Anon Key for live cloud sync</p>
                   </div>
@@ -2777,7 +3096,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                           }
                         }}
                         placeholder="e.g. xyzabcopqrs"
-                        className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full text-sm font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-slate-900 transition-all"
                       />
                       <span className="text-[11px] text-slate-400 mt-1 block">
                         Auto-constructs https://&lt;project_id&gt;.supabase.co
@@ -2793,7 +3112,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                         value={supabaseUrl}
                         onChange={e => setSupabaseUrl(e.target.value)}
                         placeholder="https://xyzabcopqrs.supabase.co"
-                        className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full text-sm font-semibold p-3.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-slate-900 transition-all"
                       />
                     </div>
 
@@ -2806,13 +3125,13 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                         value={supabaseAnonKey}
                         onChange={e => setSupabaseAnonKey(e.target.value)}
                         placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                        className="w-full text-sm font-mono p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full text-sm font-mono p-3.5 rounded-2xl border border-[#E8E2D5] bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-slate-900 transition-all"
                       />
                     </div>
 
                     {supabaseStatusMsg && (
                       <div
-                        className={`p-3 rounded-xl text-xs font-semibold ${
+                        className={`p-3.5 rounded-2xl text-xs font-semibold ${
                           supabaseStatusMsg.startsWith('✓')
                             ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                             : 'bg-red-50 text-red-800 border border-red-200'
@@ -2825,7 +3144,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                     <div className="flex items-center gap-3 pt-2">
                       <button
                         type="submit"
-                        className="px-5 py-2.5 rounded-xl font-bold text-xs bg-teal-600 hover:bg-teal-700 text-white shadow-xs transition-all active:scale-95"
+                        className="px-6 py-3 rounded-full font-extrabold text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/25 transition-all active:scale-95"
                       >
                         Save Configuration
                       </button>
@@ -2833,7 +3152,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                         type="button"
                         onClick={handleTestSupabase}
                         disabled={supabaseTesting}
-                        className="px-5 py-2.5 rounded-xl font-bold text-xs border border-slate-300 text-slate-700 hover:bg-slate-100 transition-all flex items-center gap-1.5"
+                        className="px-5 py-3 rounded-full font-bold text-xs border border-[#E8E2D5] text-slate-700 hover:bg-[#F3EFE6] transition-all flex items-center gap-1.5 active:scale-95"
                       >
                         {supabaseTesting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                         <span>Test Connection</span>
@@ -2843,112 +3162,112 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                 </div>
 
                 {/* Column 2: Managed Cloud Tables & SQL Migration Card */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-xs flex flex-col justify-between">
+                <div className="bg-white rounded-3xl border border-[#E8E2D5] p-5 sm:p-6 space-y-4 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D5]/70">
                       <div>
                         <h3 className="font-bold text-base text-slate-900">PostgreSQL Cloud Tables</h3>
                         <p className="text-xs text-slate-500">All data retrieval and updation syncs across these 10 tables</p>
                       </div>
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-teal-50 text-teal-700 border border-teal-200">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-200">
                         10 Tables Active
                       </span>
                     </div>
 
                     <div className="space-y-2 text-xs">
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">doctors</span>
                           <p className="text-[10px] text-slate-500">Doctor accounts, DOCxxxxx IDs, 6-digit PINs, credentials</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Auth &amp; Profile
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">patients</span>
                           <p className="text-[10px] text-slate-500">Demographics, UHID, chronic conditions, phone, literacy</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Directory
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">appointments</span>
                           <p className="text-[10px] text-slate-500">Daily OPD queue, tokens, visit reasons, booking channels</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           OPD Queue
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">prescriptions</span>
                           <p className="text-[10px] text-slate-500">Doctor sign-offs, clinical notes, follow-ups (SQL immutable)</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Clinical Orders
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">prescription_medicines</span>
                           <p className="text-[10px] text-slate-500">Medication regimen, dosage, frequency, meal relation, days</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Dosing &amp; Regimen
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">prescription_diagnostics</span>
                           <p className="text-[10px] text-slate-500">Scans, radiology, ECG, ECHO, and laboratory orders</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Investigations
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">telephony_triggers</span>
                           <p className="text-[10px] text-slate-500">Outbound adherence AI voice calls and SMS reminders</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           AI Telephony
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">escalations</span>
                           <p className="text-[10px] text-slate-500">Field triage alerts escalated from ASHA care coordinators</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Field Triage
                         </span>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                      <div className="p-3 rounded-2xl bg-[#FAF8F5] border border-[#E8E2D5] flex items-center justify-between">
                         <div>
                           <span className="font-mono font-bold text-slate-800">care_team_users</span>
                           <p className="text-[10px] text-slate-500">CRT ID fieldworker credentials &amp; frontline logins</p>
                         </div>
-                        <span className="text-[10px] font-bold text-teal-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        <span className="text-[10px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
                           Care Team Auth
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <div className="pt-3 border-t border-[#E8E2D5]/70 flex items-center justify-between">
                     <span className="text-[11px] text-slate-500 font-mono">
                       doctor/supabase/schema.sql
                     </span>
@@ -2965,7 +3284,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
                             showToast('SQL schema ready in doctor/supabase/schema.sql', 'info');
                           });
                       }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
                     >
                       <Copy className="w-3.5 h-3.5" />
                       <span>Copy SQL Schema</span>
@@ -2979,66 +3298,85 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
       </main>
 
       {/* ============================================================== */}
-      {/* MOBILE BOTTOM NAVIGATION BAR */}
+      {/* FLOATING MOBILE BOTTOM NAVIGATION DOCK (PHOTO MATCHING) */}
       {/* ============================================================== */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 px-2 py-1.5 flex items-center justify-around shadow-lg">
-        <button
-          type="button"
-          onClick={() => setActiveTab('command')}
-          className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-bold transition-all relative ${
-            activeTab === 'command' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'
-          }`}
-        >
-          <Activity className="w-5 h-5 mb-0.5" />
-          <span>Command</span>
-          {stats.pending_appointments > 0 && (
-            <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-amber-500" />
-          )}
-        </button>
+      <nav className="lg:hidden fixed bottom-4 inset-x-0 z-40 px-3 pointer-events-none flex justify-center">
+        <div className="max-w-md w-full bg-white/95 backdrop-blur-xl border border-[#E8E2D5] rounded-full p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.12)] flex items-center justify-around pointer-events-auto">
+          {/* Command */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('command')}
+            className={`transition-all ${
+              activeTab === 'command'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
+                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+            }`}
+            title="Command Center"
+          >
+            <Activity className="w-4 h-4 shrink-0" />
+            {activeTab === 'command' && <span>Command</span>}
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('prescription')}
-          className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-bold transition-all ${
-            activeTab === 'prescription' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'
-          }`}
-        >
-          <Pill className="w-5 h-5 mb-0.5" />
-          <span>Prescription</span>
-        </button>
+          {/* Prescription */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('prescription')}
+            className={`transition-all ${
+              activeTab === 'prescription'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
+                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+            }`}
+            title="Prescription Desk"
+          >
+            <Pill className="w-4 h-4 shrink-0" />
+            {activeTab === 'prescription' && <span>Rx Desk</span>}
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('patients')}
-          className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-bold transition-all ${
-            activeTab === 'patients' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'
-          }`}
-        >
-          <Users className="w-5 h-5 mb-0.5" />
-          <span>Patients</span>
-        </button>
+          {/* Patients */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('patients')}
+            className={`transition-all ${
+              activeTab === 'patients'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
+                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+            }`}
+            title="Enrolled Patients"
+          >
+            <Users className="w-4 h-4 shrink-0" />
+            {activeTab === 'patients' && <span>Patients</span>}
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('architecture')}
-          className={`flex flex-col items-center py-1 px-2 rounded-xl text-[10px] font-bold transition-all ${
-            activeTab === 'architecture' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'
-          }`}
-        >
-          <Sparkles className="w-5 h-5 mb-0.5" />
-          <span>Architecture</span>
-        </button>
+          {/* Architecture */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('architecture')}
+            className={`transition-all ${
+              activeTab === 'architecture'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
+                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+            }`}
+            title="AI Telephony Architecture"
+          >
+            <Sparkles className="w-4 h-4 shrink-0" />
+            {activeTab === 'architecture' && <span>Calling</span>}
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('supabase')}
-          className={`flex flex-col items-center py-1 px-3 rounded-xl text-[10px] font-bold transition-all ${
-            activeTab === 'supabase' ? 'text-teal-600' : 'text-slate-400 hover:text-slate-600'
-          }`}
-        >
-          <Database className="w-5 h-5 mb-0.5" />
-          <span>Supabase</span>
-        </button>
+          {/* Supabase */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('supabase')}
+            className={`transition-all ${
+              activeTab === 'supabase'
+                ? 'bg-blue-600 text-white rounded-full px-4 py-2 flex items-center gap-1.5 font-bold shadow-md shadow-blue-500/30 text-xs'
+                : 'w-10 h-10 rounded-full text-slate-400 hover:text-slate-800 hover:bg-[#F6F2EA] flex items-center justify-center'
+            }`}
+            title="Supabase Sync"
+          >
+            <Database className="w-4 h-4 shrink-0" />
+            {activeTab === 'supabase' && <span>Sync</span>}
+          </button>
+        </div>
       </nav>
 
       {/* Professional Doctor Authentication Window */}
