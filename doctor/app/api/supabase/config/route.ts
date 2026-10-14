@@ -30,18 +30,23 @@ export async function POST(request: Request) {
       targetUrl = `https://${targetProject}.supabase.co`;
     }
 
-    // Set process.env
+    // Set process.env using dynamic key names to prevent Next.js SWC static AST string replacement
+    const env = process.env as Record<string, string | undefined>;
+    const kProjectId = 'NEXT_PUBLIC_' + 'SUPABASE_PROJECT_ID';
+    const kAnonKey = 'NEXT_PUBLIC_' + 'SUPABASE_ANON_KEY';
+    const kUrl = 'NEXT_PUBLIC_' + 'SUPABASE_URL';
+
     if (targetProject) {
-      process.env.SUPABASE_PROJECT_ID = targetProject;
-      process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID = targetProject;
+      env.SUPABASE_PROJECT_ID = targetProject;
+      env[kProjectId] = targetProject;
     }
     if (targetKey) {
-      process.env.SUPABASE_ANON_KEY = targetKey;
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = targetKey;
+      env.SUPABASE_ANON_KEY = targetKey;
+      env[kAnonKey] = targetKey;
     }
     if (targetUrl) {
-      process.env.SUPABASE_URL = targetUrl;
-      process.env.NEXT_PUBLIC_SUPABASE_URL = targetUrl;
+      env.SUPABASE_URL = targetUrl;
+      env[kUrl] = targetUrl;
     }
 
     // Reset client cache
