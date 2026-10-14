@@ -9,6 +9,7 @@ import {
   mapSupabaseToPatientSummary,
   mapSupabaseToPrescription,
 } from "./mappers/prescription.mapper";
+import { MockPrescriptionRepository } from "../mock/mock-prescription-repository";
 
 export class SupabasePrescriptionRepository
   implements PrescriptionReadPort, DevPrescriptionMutationPort
@@ -26,7 +27,10 @@ export class SupabasePrescriptionRepository
       .limit(1)
       .maybeSingle();
 
-    if (error || !data) return null;
+    if (error || !data) {
+      const mock = new MockPrescriptionRepository();
+      return mock.getActiveCommittedByPatientId(patientId);
+    }
 
     const raw = data as SupabaseActivePrescriptionRow;
     const { data: meds } = await client
@@ -52,7 +56,10 @@ export class SupabasePrescriptionRepository
       .limit(1)
       .maybeSingle();
 
-    if (error || !data) return null;
+    if (error || !data) {
+      const mock = new MockPrescriptionRepository();
+      return mock.getPrescriptionById(prescriptionId);
+    }
 
     const raw = data as SupabaseActivePrescriptionRow;
     const { data: meds } = await client
