@@ -357,19 +357,21 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen>
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue : AppTheme.surfaceMuted,
+          color: isSelected ? AppTheme.accentLime : AppTheme.surfaceMuted,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
+            color: isSelected ? AppTheme.accentLimeBorder : AppTheme.borderSubtle,
+            width: 1.2,
           ),
+          boxShadow: isSelected ? AppTheme.limeButtonShadow : null,
         ),
         alignment: Alignment.center,
         child: Text(
           title,
           style: GoogleFonts.outfit(
             fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? Colors.white : AppTheme.textSecondary,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? AppTheme.accentLimeDark : AppTheme.textSecondary,
           ),
         ),
       ),
@@ -549,19 +551,20 @@ class _MedicalRecordsScreenState extends State<MedicalRecordsScreen>
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue : AppTheme.backgroundWhite,
+          color: isSelected ? AppTheme.accentLime : AppTheme.backgroundWhite,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryBlue : AppTheme.borderSubtle,
+            color: isSelected ? AppTheme.accentLimeBorder : AppTheme.borderSubtle,
+            width: 1.2,
           ),
-          boxShadow: isSelected ? AppTheme.cardShadow : null,
+          boxShadow: isSelected ? AppTheme.limeButtonShadow : null,
         ),
         child: Text(
           label,
           style: GoogleFonts.outfit(
             fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : AppTheme.textSecondary,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? AppTheme.accentLimeDark : AppTheme.textSecondary,
           ),
         ),
       ),

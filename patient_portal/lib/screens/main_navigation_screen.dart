@@ -31,7 +31,7 @@ class MainNavigationScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundCream,
+      backgroundColor: AppTheme.backgroundLavender,
       body: IndexedStack(index: currentIndex, children: screens),
       bottomNavigationBar: _BottomNavBar(
         currentIndex: currentIndex,
@@ -67,7 +67,10 @@ class _BottomNavBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.backgroundWhite,
         boxShadow: AppTheme.navShadow,
-        border: const Border(top: BorderSide(color: AppTheme.borderSubtle, width: 1)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: const Border(
+          top: BorderSide(color: AppTheme.borderSubtle, width: 1),
+        ),
       ),
       padding: EdgeInsets.only(bottom: bottomPad > 0 ? bottomPad : 8, top: 10),
       child: Row(
@@ -104,24 +107,45 @@ class _NavBarItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.primaryBlueSurface : Colors.transparent,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+          border: isSelected
+              ? Border.all(color: AppTheme.primaryBlueBorder, width: 1)
+              : null,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isSelected ? item.activeIcon : item.icon,
-              size: 22,
-              color: isSelected ? AppTheme.primaryBlue : AppTheme.textMuted,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  isSelected ? item.activeIcon : item.icon,
+                  size: 22,
+                  color: isSelected ? AppTheme.primaryBlue : AppTheme.textMuted,
+                ),
+                if (isSelected)
+                  Positioned(
+                    right: -2,
+                    top: -1,
+                    child: Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: AppTheme.accentLime,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 3),
             Text(
               item.label,
               style: GoogleFonts.outfit(
-                fontSize: 10.5,
+                fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected ? AppTheme.primaryBlue : AppTheme.textMuted,
               ),

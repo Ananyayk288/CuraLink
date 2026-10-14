@@ -54,9 +54,17 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundCream,
+      backgroundColor: AppTheme.backgroundLavender,
       appBar: AppBar(
-        title: Text('Prescription History', style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
+        title: Text(
+          'Prescription History',
+          style: GoogleFonts.outfit(
+            fontSize: 19,
+            fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
+            color: AppTheme.textPrimary,
+          ),
+        ),
         actions: const [
           NotificationBellButton(),
           SizedBox(width: 8),
@@ -69,22 +77,28 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
             children: [
               // Search Field & Filter Chips
               Container(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-                color: AppTheme.backgroundWhite,
+                padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+                decoration: const BoxDecoration(
+                  color: AppTheme.backgroundWhite,
+                  border: Border(
+                    bottom: BorderSide(color: AppTheme.borderSubtle, width: 1),
+                  ),
+                ),
                 child: Column(
                   children: [
                     TextField(
                       controller: _searchController,
+                      style: GoogleFonts.outfit(fontSize: 13.5, color: AppTheme.textPrimary),
                       decoration: InputDecoration(
                         hintText: 'Search by doctor, medicine, diagnosis...',
-                        hintStyle: const TextStyle(
+                        hintStyle: GoogleFonts.outfit(
                           fontSize: 13,
                           color: AppTheme.textMuted,
                         ),
                         prefixIcon: const Icon(
                           Icons.search,
                           size: 20,
-                          color: AppTheme.textMuted,
+                          color: AppTheme.primaryBlue,
                         ),
                         suffixIcon: _searchQuery.isNotEmpty
                             ? IconButton(
@@ -100,11 +114,11 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                         filled: true,
                         fillColor: AppTheme.surfaceMuted,
                         contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
+                          horizontal: 16,
+                          vertical: 12,
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                           borderSide: BorderSide.none,
                         ),
                       ),
@@ -114,7 +128,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                         });
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -136,7 +150,6 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                   ],
                 ),
               ),
-              const Divider(),
 
               // List of Prescriptions (Timeline presentation)
               Expanded(
@@ -161,7 +174,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                             : null,
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(18),
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final rx = filtered[index];
@@ -188,17 +201,20 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue : AppTheme.backgroundWhite,
+          color: isSelected ? AppTheme.accentLime : AppTheme.backgroundWhite,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-          border: Border.all(color: isSelected ? AppTheme.primaryBlue : AppTheme.borderSubtle),
-          boxShadow: isSelected ? AppTheme.cardShadow : null,
+          border: Border.all(
+            color: isSelected ? AppTheme.accentLimeBorder : AppTheme.borderSubtle,
+            width: 1.2,
+          ),
+          boxShadow: isSelected ? AppTheme.limeButtonShadow : null,
         ),
         child: Text(
           '$label ($count)',
           style: GoogleFonts.outfit(
             fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : AppTheme.textSecondary,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? AppTheme.accentLimeDark : AppTheme.textSecondary,
           ),
         ),
       ),
@@ -211,7 +227,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
     DateFormat dateFormat,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: AppTheme.backgroundWhite,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -232,7 +248,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -244,14 +260,14 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 10,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
                           color: rx.isActive
                               ? AppTheme.primaryBlueSurface
                               : AppTheme.surfaceMuted,
-                          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusPill),
                           border: Border.all(
                             color: rx.isActive
                                 ? AppTheme.primaryBlueBorder
@@ -272,7 +288,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                               rx.referenceNumber,
                               style: GoogleFonts.outfit(
                                 fontSize: 13,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w800,
                                 color: rx.isActive
                                     ? AppTheme.primaryBlue
                                     : AppTheme.textPrimary,
@@ -287,7 +303,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                     children: [
                       Text(
                         dateFormat.format(rx.date),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 12,
                           color: AppTheme.textMuted,
                           fontWeight: FontWeight.w600,
@@ -311,12 +327,17 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
               // Doctor & Hospital
               Text(
                 rx.doctorName,
-                style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w700, color: AppTheme.textPrimary),
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  fontStyle: FontStyle.italic,
+                  color: AppTheme.textPrimary,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
                 '${rx.doctorSpecialty} • ${rx.hospitalOrClinic}',
-                style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.primaryBlue),
+                style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue),
               ),
               const SizedBox(height: 8),
 
@@ -325,13 +346,13 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundCream,
+                  color: AppTheme.backgroundLavender,
                   borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
                   border: Border.all(color: AppTheme.borderSubtle),
                 ),
                 child: Text(
                   'Diagnosis: ${rx.diagnosis}',
-                  style: GoogleFonts.outfit(fontSize: 12.5, fontWeight: FontWeight.w500, color: AppTheme.textSecondary),
+                  style: GoogleFonts.outfit(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppTheme.textSecondary),
                 ),
               ),
               const SizedBox(height: 10),
@@ -351,7 +372,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                       ),
                       child: Text(
                         '${m.name} · ${m.strength}',
-                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue),
+                        style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.primaryBlue),
                       ),
                     ),
                   ),
@@ -366,7 +387,7 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                     ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
 
               // Summary Footer with Open Full Record Link
               Row(
@@ -380,8 +401,8 @@ class _PrescriptionHistoryScreenState extends State<PrescriptionHistoryScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('View Full Rx', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue)),
-                      const SizedBox(width: 3),
+                      Text('View Full Rx', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w700, color: AppTheme.primaryBlue)),
+                      const SizedBox(width: 4),
                       const Icon(Icons.arrow_forward_ios_rounded, size: 11, color: AppTheme.primaryBlue),
                     ],
                   ),

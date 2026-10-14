@@ -19,13 +19,13 @@ class PrescriptionDetailScreen extends StatelessWidget {
     final dateFormat = DateFormat('dd MMMM yyyy');
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundCream,
+      backgroundColor: AppTheme.backgroundLavender,
       appBar: AppBar(
         title: Text(
           prescription.referenceNumber,
           style: GoogleFonts.outfit(
             fontSize: 18,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w800,
             color: AppTheme.textPrimary,
           ),
         ),
@@ -60,13 +60,13 @@ class PrescriptionDetailScreen extends StatelessWidget {
               children: [
                 const DemoBanner(),
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Top Clinical Header
+                      // Top Clinical Header (Styled like Doctor banner in Screen 3)
                       Container(
-                        padding: const EdgeInsets.all(18),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: AppTheme.backgroundWhite,
                           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -74,7 +74,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                             color: prescription.isActive
                                 ? AppTheme.primaryBlueBorder
                                 : AppTheme.borderSubtle,
-                            width: 1,
+                            width: 1.2,
                           ),
                           boxShadow: AppTheme.cardShadow,
                         ),
@@ -102,39 +102,43 @@ class PrescriptionDetailScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 14),
-                            Text(
-                              prescription.doctorName,
-                              style: GoogleFonts.outfit(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: AppTheme.textPrimary,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
+                            const SizedBox(height: 16),
                             Text(
                               prescription.doctorSpecialty,
                               style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 color: AppTheme.primaryBlue,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.3,
                               ),
                             ),
+                            const SizedBox(height: 2),
+                            Text(
+                              prescription.doctorName,
+                              style: GoogleFonts.outfit(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w800,
+                                fontStyle: FontStyle.italic,
+                                color: AppTheme.textPrimary,
+                                letterSpacing: -0.4,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
                             Text(
                               prescription.hospitalOrClinic,
                               style: GoogleFonts.outfit(
-                                fontSize: 12.5,
-                                color: AppTheme.textMuted,
+                                fontSize: 13,
+                                color: AppTheme.textSecondary,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 14),
                             const Divider(),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 12),
                             Text(
                               'Diagnosis: ${prescription.diagnosis}',
                               style: GoogleFonts.outfit(
-                                fontSize: 13.5,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: AppTheme.textPrimary,
                               ),
@@ -143,22 +147,22 @@ class PrescriptionDetailScreen extends StatelessWidget {
                             Text(
                               'Reason: ${prescription.visitReason}',
                               style: GoogleFonts.outfit(
-                                fontSize: 12.5,
+                                fontSize: 13,
                                 color: AppTheme.textSecondary,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       // Doctor's Instructions
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(18),
                         decoration: BoxDecoration(
                           color: AppTheme.primaryBlueSurface,
-                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
-                          border: Border.all(color: AppTheme.primaryBlueBorder),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                          border: Border.all(color: AppTheme.primaryBlueBorder, width: 1),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,15 +171,15 @@ class PrescriptionDetailScreen extends StatelessWidget {
                               children: [
                                 const Icon(
                                   Icons.notes_rounded,
-                                  size: 16,
+                                  size: 18,
                                   color: AppTheme.primaryBlue,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Instructions',
                                   style: GoogleFonts.outfit(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
                                     color: AppTheme.primaryBlue,
                                   ),
                                 ),
@@ -185,7 +189,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                             Text(
                               prescription.doctorInstructions,
                               style: GoogleFonts.outfit(
-                                fontSize: 13,
+                                fontSize: 13.5,
                                 color: AppTheme.textPrimary,
                                 height: 1.45,
                               ),
@@ -193,32 +197,33 @@ class PrescriptionDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 22),
 
                       // Prescribed Medications
                       Row(
                         children: [
                           const Icon(
                             Icons.medication_rounded,
-                            size: 18,
+                            size: 20,
                             color: AppTheme.primaryBlue,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Medications (${prescription.medications.length})',
                             style: GoogleFonts.outfit(
-                              fontSize: 16,
+                              fontSize: 17,
                               fontWeight: FontWeight.w800,
+                              fontStyle: FontStyle.italic,
                               color: AppTheme.textPrimary,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
                       ...prescription.medications.map(
                         (med) => MedicationCard(medication: med),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       // Associated Tests
                       if (prescription.associatedTests.isNotEmpty) ...[
@@ -226,28 +231,29 @@ class PrescriptionDetailScreen extends StatelessWidget {
                           children: [
                             const Icon(
                               Icons.biotech_rounded,
-                              size: 18,
+                              size: 20,
                               color: AppTheme.primaryBlue,
                             ),
                             const SizedBox(width: 8),
                             Text(
                               'Scans & Tests (${prescription.associatedTests.length})',
                               style: GoogleFonts.outfit(
-                                fontSize: 16,
+                                fontSize: 17,
                                 fontWeight: FontWeight.w800,
+                                fontStyle: FontStyle.italic,
                                 color: AppTheme.textPrimary,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         ...prescription.associatedTests.map(
                           (test) => DiagnosticTestCard(
                             test: test,
                             prescriptionRef: prescription.referenceNumber,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 18),
                       ],
 
                       // Follow up & Appointments
@@ -256,19 +262,20 @@ class PrescriptionDetailScreen extends StatelessWidget {
                         Text(
                           'Follow-up & Appointments',
                           style: GoogleFonts.outfit(
-                            fontSize: 16,
+                            fontSize: 17,
                             fontWeight: FontWeight.w800,
+                            fontStyle: FontStyle.italic,
                             color: AppTheme.textPrimary,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         if (prescription.followUpRecommendationText != null)
                           Container(
                             margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(14),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: AppTheme.warningSurface,
-                              borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                              borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                               border: Border.all(color: AppTheme.warningBorder),
                             ),
                             child: Column(
@@ -287,7 +294,7 @@ class PrescriptionDetailScreen extends StatelessWidget {
                                 Text(
                                   prescription.followUpRecommendationText!,
                                   style: GoogleFonts.outfit(
-                                    fontSize: 13,
+                                    fontSize: 13.5,
                                     fontWeight: FontWeight.w600,
                                     color: AppTheme.textPrimary,
                                   ),

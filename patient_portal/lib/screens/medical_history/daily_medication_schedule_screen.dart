@@ -143,19 +143,20 @@ class _DailyMedicationScheduleScreenState
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue : AppTheme.backgroundWhite,
+          color: isSelected ? AppTheme.accentLime : AppTheme.backgroundWhite,
           borderRadius: BorderRadius.circular(AppTheme.radiusPill),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryBlue : AppTheme.borderSubtle,
+            color: isSelected ? AppTheme.accentLimeBorder : AppTheme.borderSubtle,
+            width: 1.2,
           ),
-          boxShadow: isSelected ? AppTheme.cardShadow : null,
+          boxShadow: isSelected ? AppTheme.limeButtonShadow : null,
         ),
         child: Text(
           '$label ($count)',
           style: GoogleFonts.outfit(
             fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : AppTheme.textSecondary,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? AppTheme.accentLimeDark : AppTheme.textSecondary,
           ),
         ),
       ),

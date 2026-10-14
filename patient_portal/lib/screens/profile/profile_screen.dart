@@ -27,13 +27,14 @@ class ProfileScreen extends StatelessWidget {
         .join();
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundCream,
+      backgroundColor: AppTheme.backgroundLavender,
       appBar: AppBar(
         title: Text(
           'Patient Profile',
           style: GoogleFonts.outfit(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
+            fontSize: 19,
+            fontWeight: FontWeight.w800,
+            fontStyle: FontStyle.italic,
             color: AppTheme.textPrimary,
           ),
         ),
@@ -50,25 +51,25 @@ class ProfileScreen extends StatelessWidget {
               const DemoBanner(),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Patient Identity Card
                       _buildIdentityCard(context, patient, initials),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       // Clinical Health Profile Card
                       _buildClinicalProfileCard(patient),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       // Quick App Navigation Section
                       _buildNavigationSection(context, appState),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       // Patient Account Card
                       _buildPatientAccountCard(context, patient),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       // Privacy Notice
                       _buildOfflineNotice(),
@@ -90,7 +91,7 @@ class ProfileScreen extends StatelessWidget {
     String initials,
   ) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppTheme.backgroundWhite,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -101,15 +102,28 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: AppTheme.primaryBlueSurface,
-                child: Text(
-                  initials.isNotEmpty ? initials : 'P',
-                  style: GoogleFonts.outfit(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.primaryBlue,
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.primaryBlue,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryBlue.withValues(alpha: 0.25),
+                      blurRadius: 14,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    initials.isNotEmpty ? initials : 'P',
+                    style: GoogleFonts.outfit(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -121,10 +135,11 @@ class ProfileScreen extends StatelessWidget {
                     Text(
                       patient.fullName,
                       style: GoogleFonts.outfit(
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: FontWeight.w800,
+                        fontStyle: FontStyle.italic,
                         color: AppTheme.textPrimary,
-                        letterSpacing: -0.2,
+                        letterSpacing: -0.3,
                       ),
                     ),
                     const SizedBox(height: 3),
@@ -155,7 +170,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.verified_rounded,
-                  size: 20,
+                  size: 22,
                   color: AppTheme.primaryBlue,
                 ),
                 const SizedBox(width: 10),
@@ -166,7 +181,7 @@ class ProfileScreen extends StatelessWidget {
                       Text(
                         'Ayushman Bharat Health Account (ABHA)',
                         style: GoogleFonts.outfit(
-                          fontSize: 10.5,
+                          fontSize: 11,
                           fontWeight: FontWeight.w700,
                           color: AppTheme.primaryBlue,
                           letterSpacing: 0.3,
@@ -176,7 +191,7 @@ class ProfileScreen extends StatelessWidget {
                       Text(
                         patient.abhaNumber,
                         style: GoogleFonts.outfit(
-                          fontSize: 14,
+                          fontSize: 14.5,
                           fontWeight: FontWeight.w800,
                           color: AppTheme.textPrimary,
                           letterSpacing: 0.8,
@@ -191,15 +206,16 @@ class ProfileScreen extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppTheme.successGreen,
+                    color: AppTheme.accentLime,
                     borderRadius: BorderRadius.circular(AppTheme.radiusPill),
+                    boxShadow: AppTheme.limeButtonShadow,
                   ),
                   child: Text(
                     'Verified',
                     style: GoogleFonts.outfit(
                       fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      color: AppTheme.accentLimeDark,
                     ),
                   ),
                 ),
@@ -213,7 +229,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildClinicalProfileCard(dynamic patient) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppTheme.backgroundWhite,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -227,7 +243,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Container(
                 width: 4,
-                height: 16,
+                height: 18,
                 decoration: BoxDecoration(
                   color: AppTheme.primaryBlue,
                   borderRadius: BorderRadius.circular(2),
@@ -237,14 +253,15 @@ class ProfileScreen extends StatelessWidget {
               Text(
                 'Clinical Profile & Emergency Data',
                 style: GoogleFonts.outfit(
-                  fontSize: 14.5,
+                  fontSize: 15,
                   fontWeight: FontWeight.w800,
+                  fontStyle: FontStyle.italic,
                   color: AppTheme.textPrimary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           _buildProfileRow(
             icon: Icons.favorite_border_rounded,
             label: 'Primary Diagnosis',
@@ -287,7 +304,7 @@ class ProfileScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16, color: AppTheme.textMuted),
+        Icon(icon, size: 16, color: AppTheme.primaryBlue),
         const SizedBox(width: 10),
         SizedBox(
           width: 125,
@@ -304,7 +321,7 @@ class ProfileScreen extends StatelessWidget {
           child: Text(
             value,
             style: GoogleFonts.outfit(
-              fontSize: 12.5,
+              fontSize: 13,
               fontWeight: FontWeight.w700,
               color: AppTheme.textPrimary,
             ),
@@ -388,9 +405,9 @@ class ProfileScreen extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(9),
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -403,7 +420,7 @@ class ProfileScreen extends StatelessWidget {
               child: Text(
                 title,
                 style: GoogleFonts.outfit(
-                  fontSize: 13.5,
+                  fontSize: 14,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textPrimary,
                 ),
@@ -414,7 +431,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         subtitle: Text(
           subtitle,
-          style: GoogleFonts.outfit(fontSize: 11.5, color: AppTheme.textMuted),
+          style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textMuted),
         ),
         trailing: const Icon(
           Icons.chevron_right_rounded,
@@ -428,7 +445,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildPatientAccountCard(BuildContext context, dynamic patient) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: AppTheme.primaryBlueSurface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -437,7 +454,7 @@ class ProfileScreen extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -445,7 +462,7 @@ class ProfileScreen extends StatelessWidget {
             child: const Icon(
               Icons.verified_user_rounded,
               color: AppTheme.primaryBlue,
-              size: 20,
+              size: 22,
             ),
           ),
           const SizedBox(width: 12),
@@ -456,7 +473,7 @@ class ProfileScreen extends StatelessWidget {
                 Text(
                   'Verified Patient Account',
                   style: GoogleFonts.outfit(
-                    fontSize: 13,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w800,
                     color: AppTheme.primaryBlue,
                   ),
@@ -465,7 +482,7 @@ class ProfileScreen extends StatelessWidget {
                 Text(
                   '${patient.fullName} • ${patient.id}',
                   style: GoogleFonts.outfit(
-                    fontSize: 11.5,
+                    fontSize: 12,
                     color: AppTheme.textSecondary,
                   ),
                 ),
@@ -473,20 +490,18 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
             decoration: BoxDecoration(
-              color: AppTheme.emeraldBackground,
+              color: AppTheme.accentLime,
               borderRadius: BorderRadius.circular(AppTheme.radiusPill),
-              border: Border.all(
-                color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
-              ),
+              boxShadow: AppTheme.limeButtonShadow,
             ),
             child: Text(
               'Active',
               style: GoogleFonts.outfit(
                 fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.emeraldGreen,
+                fontWeight: FontWeight.w800,
+                color: AppTheme.accentLimeDark,
               ),
             ),
           ),
@@ -497,7 +512,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildOfflineNotice() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppTheme.surfaceMuted,
         borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -505,15 +520,15 @@ class ProfileScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.shield_outlined, size: 14, color: AppTheme.textMuted),
+          const Icon(Icons.shield_outlined, size: 16, color: AppTheme.primaryBlue),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Health records are securely encrypted and protected.',
+              'Health records are securely encrypted and protected under national data standards.',
               style: GoogleFonts.outfit(
-                fontSize: 11,
+                fontSize: 11.5,
                 color: AppTheme.textMuted,
-                height: 1.3,
+                height: 1.35,
               ),
             ),
           ),
