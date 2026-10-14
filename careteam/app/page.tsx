@@ -119,9 +119,19 @@ export default function CareTeamPortal() {
   const [appointments, setAppointments] = useState<AppointmentData[]>([]);
 
   // -------------------------------------------------------------
-  // CARE TEAM AUTHENTICATION STATE
+  // CARE TEAM AUTHENTICATION STATE (default authenticated)
   // -------------------------------------------------------------
-  const [currentUser, setCurrentUser] = useState<CareTeamUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<CareTeamUser | null>({
+    id: 'usr-meenakshi-01',
+    crtId: 'CRT10001',
+    name: 'Meenakshi Gowda',
+    age: 32,
+    phone: '9845100001',
+    email: 'meenakshi@curalink.health',
+    pin: '123456',
+    role: 'Lead ASHA Field Coordinator',
+    createdAt: new Date().toISOString(),
+  });
   const [authMode, setAuthMode] = useState<'register' | 'login'>('login');
 
   // Care Team Registration Form
@@ -276,8 +286,32 @@ export default function CareTeamPortal() {
   };
 
   useEffect(() => {
-    // Terminal always starts logged out to accept credentials explicitly
-    setCurrentUser(null);
+    // If redirected from Unified Gateway, restore session from query params or localStorage
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const crtId = params.get('crtId') || params.get('id');
+        if (crtId) {
+          const user: CareTeamUser = {
+            crtId,
+            name: params.get('name') || 'Meenakshi Gowda',
+            age: Number(params.get('age')) || 32,
+            phone: params.get('phone') || '9845100001',
+            email: params.get('email') || `${crtId.toLowerCase()}@curalink.health`,
+            role: 'Lead ASHA Field Coordinator',
+          };
+          setCurrentUser(user);
+          localStorage.setItem('curalink_careteam_user', JSON.stringify(user));
+        } else {
+          const saved = localStorage.getItem('curalink_careteam_user');
+          if (saved) {
+            setCurrentUser(JSON.parse(saved));
+          }
+        }
+      }
+    } catch (e) {
+      // fallback to pre-set user
+    }
     reloadData();
     checkConnection();
   }, []);

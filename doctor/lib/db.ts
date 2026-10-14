@@ -101,6 +101,8 @@ export interface DoctorUser {
   isVerified: boolean;
   department?: string;
   license?: string;
+  licenseNo?: string;
+  role?: string;
   createdAt: string;
 }
 

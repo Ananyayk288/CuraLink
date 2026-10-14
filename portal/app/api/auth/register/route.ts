@@ -49,11 +49,18 @@ export async function POST(request: Request) {
         }
       }
 
+      const qs = new URLSearchParams({
+        doctorId: docId,
+        doctorName: doctorRecord.name,
+        department: doctorRecord.department,
+        role: 'doctor',
+      }).toString();
+
       return NextResponse.json({
         success: true,
         role: 'doctor',
         user: doctorRecord,
-        redirectUrl: doctorUrl,
+        redirectUrl: `${doctorUrl}?${qs}`,
         message: `Doctor successfully registered with ID ${docId}!`,
       });
     }
@@ -90,11 +97,19 @@ export async function POST(request: Request) {
         }
       }
 
+      const qs = new URLSearchParams({
+        crtId: crtId,
+        name: crtRecord.name,
+        email: crtRecord.email,
+        phone: crtRecord.phone,
+        role: 'careteam',
+      }).toString();
+
       return NextResponse.json({
         success: true,
         role: 'careteam',
         user: { ...crtRecord, id: `crt-${Date.now()}` },
-        redirectUrl: careteamUrl,
+        redirectUrl: `${careteamUrl}?${qs}`,
         message: `Care Team Fieldworker successfully registered with ID ${crtId}!`,
       });
     }
@@ -125,11 +140,16 @@ export async function POST(request: Request) {
         }
       }
 
+      const qs = new URLSearchParams({
+        name: pharmacyRecord.full_name,
+        role: 'pharmacy',
+      }).toString();
+
       return NextResponse.json({
         success: true,
         role: 'pharmacy',
         user: pharmacyRecord,
-        redirectUrl: pharmacyUrl,
+        redirectUrl: `${pharmacyUrl}?${qs}`,
         message: `Pharmacist successfully registered!`,
       });
     }

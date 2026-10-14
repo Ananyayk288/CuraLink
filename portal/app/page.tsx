@@ -53,7 +53,7 @@ const PORTALS: Record<RoleType, PortalRoleConfig> = {
     subtitle: 'Clinical Consultation & Prescription Desk',
     badge: 'Clinical Specialist',
     port: 3001,
-    url: DOCTOR_URL,
+    url: `${DOCTOR_URL}?doctorId=DOC84920&doctorName=Dr.+Suresh+Sharma%2C+MD&department=Internal+Medicine+%26+Chronic+Care&role=doctor`,
     icon: Stethoscope,
     color: 'text-blue-600',
     bgLight: 'bg-blue-50',
@@ -70,7 +70,7 @@ const PORTALS: Record<RoleType, PortalRoleConfig> = {
     subtitle: 'Fieldworker Triage & Patient Onboarding',
     badge: 'Frontline ASHA Worker',
     port: 3002,
-    url: CARETEAM_URL,
+    url: `${CARETEAM_URL}?crtId=CRT10001&name=Meenakshi+Gowda&role=careteam`,
     icon: Users,
     color: 'text-amber-600',
     bgLight: 'bg-amber-50',
@@ -87,7 +87,7 @@ const PORTALS: Record<RoleType, PortalRoleConfig> = {
     subtitle: 'Visual Sticker & Dispensing Counter',
     badge: 'Licensed Pharmacist',
     port: 3003,
-    url: PHARMACY_URL,
+    url: `${PHARMACY_URL}?name=Rajiv+Sharma&role=pharmacy`,
     icon: Pill,
     color: 'text-emerald-600',
     bgLight: 'bg-emerald-50',
@@ -257,14 +257,35 @@ export default function UnifiedGateway() {
   };
 
   const handleLaunchRegisteredPortal = () => {
+    let launchUrl = activePortal.url;
     if (selectedRole === 'doctor') {
       localStorage.setItem('curalink_doctor_user', JSON.stringify(registeredUser));
+      const qs = new URLSearchParams({
+        doctorId: registeredUser?.id || 'DOC84920',
+        doctorName: registeredUser?.name || 'Dr. Suresh Sharma, MD',
+        department: registeredUser?.department || 'Internal Medicine & Chronic Care',
+        role: 'doctor',
+      }).toString();
+      launchUrl = `${activePortal.url}?${qs}`;
     } else if (selectedRole === 'careteam') {
       localStorage.setItem('curalink_careteam_user', JSON.stringify(registeredUser));
+      const qs = new URLSearchParams({
+        crtId: registeredUser?.crt_id || registeredUser?.crtId || registeredUser?.id || 'CRT10001',
+        name: registeredUser?.name || 'Lead ASHA Coordinator',
+        email: registeredUser?.email || '',
+        phone: registeredUser?.phone || '',
+        role: 'careteam',
+      }).toString();
+      launchUrl = `${activePortal.url}?${qs}`;
     } else if (selectedRole === 'pharmacy') {
       localStorage.setItem('curalink_pharmacy_user', JSON.stringify(registeredUser));
+      const qs = new URLSearchParams({
+        name: registeredUser?.full_name || registeredUser?.name || 'Rajiv Sharma',
+        role: 'pharmacy',
+      }).toString();
+      launchUrl = `${activePortal.url}?${qs}`;
     }
-    window.location.href = activePortal.url;
+    window.location.href = launchUrl;
   };
 
   const copyToClipboard = (text: string) => {
@@ -698,7 +719,7 @@ export default function UnifiedGateway() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1: Doctor */}
             <a
-              href={DOCTOR_URL}
+              href={PORTALS.doctor.url}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group"
@@ -722,7 +743,7 @@ export default function UnifiedGateway() {
 
             {/* Card 2: Care Team */}
             <a
-              href={CARETEAM_URL}
+              href={PORTALS.careteam.url}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all group"
@@ -746,7 +767,7 @@ export default function UnifiedGateway() {
 
             {/* Card 3: Pharmacy */}
             <a
-              href={PHARMACY_URL}
+              href={PORTALS.pharmacy.url}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all group"

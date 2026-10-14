@@ -56,13 +56,31 @@ export async function POST(request: Request) {
     const careteamUrl = process.env.NEXT_PUBLIC_CARETEAM_URL || 'http://localhost:3002';
     const pharmacyUrl = (process.env.NEXT_PUBLIC_PHARMACY_URL || 'http://localhost:3003') + '/pharmacy/dashboard';
 
+    const user = authResult.user || {};
     let redirectUrl = doctorUrl;
     if (role === 'doctor') {
-      redirectUrl = doctorUrl;
+      const qs = new URLSearchParams({
+        doctorId: user.id || 'DOC84920',
+        doctorName: user.name || 'Dr. Suresh Sharma, MD',
+        department: user.department || 'Internal Medicine & Chronic Care',
+        role: 'doctor',
+      }).toString();
+      redirectUrl = `${doctorUrl}?${qs}`;
     } else if (role === 'careteam') {
-      redirectUrl = careteamUrl;
+      const qs = new URLSearchParams({
+        crtId: user.crt_id || user.crtId || user.id || 'CRT10001',
+        name: user.name || user.fullName || 'Meenakshi Gowda',
+        email: user.email || '',
+        phone: user.phone || '',
+        role: 'careteam',
+      }).toString();
+      redirectUrl = `${careteamUrl}?${qs}`;
     } else if (role === 'pharmacy') {
-      redirectUrl = pharmacyUrl;
+      const qs = new URLSearchParams({
+        name: user.full_name || user.fullName || user.name || 'Rajiv Sharma',
+        role: 'pharmacy',
+      }).toString();
+      redirectUrl = `${pharmacyUrl}?${qs}`;
     }
 
     const response = NextResponse.json({

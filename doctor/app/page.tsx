@@ -90,9 +90,22 @@ interface DiagnosticRow {
 }
 
 export default function DoctorPortal() {
-  // Active Doctor Session & Authentication Window State
-  const [currentDoctor, setCurrentDoctor] = useState<DoctorUser | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(true);
+  // Active Doctor Session & Authentication Window State (default authenticated)
+  const [currentDoctor, setCurrentDoctor] = useState<DoctorUser | null>({
+    id: 'DOC84920',
+    name: 'Dr. Suresh Sharma, MD',
+    phone: '+91 98450 11223',
+    email: 'dr.suresh@curalink.health',
+    age: 48,
+    pin: '123456',
+    isVerified: true,
+    department: 'Internal Medicine & Chronic Care',
+    license: 'KMC-84920/MD',
+    licenseNo: 'KMC-84920/MD',
+    role: 'doctor',
+    createdAt: new Date().toISOString(),
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<'command' | 'prescription' | 'architecture' | 'supabase'>('command');
@@ -222,14 +235,40 @@ export default function DoctorPortal() {
 
   useEffect(() => {
     loadInitialData();
-    // Clinical session security: require credential verification on initial load
-    setCurrentDoctor(null);
-    setIsAuthModalOpen(true);
+
+    // Check query params if redirected from Unified Gateway or restore from session
     try {
-      localStorage.removeItem('curalink_doctor_session');
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const docId = params.get('doctorId') || params.get('docId');
+        if (docId) {
+          const docUser: DoctorUser = {
+            id: docId,
+            name: params.get('doctorName') || params.get('docName') || 'Dr. Suresh Sharma, MD',
+            department: params.get('department') || params.get('docDept') || 'Internal Medicine & Chronic Care',
+            email: params.get('email') || `${docId.toLowerCase()}@curalink.health`,
+            phone: params.get('phone') || '+91 98450 11223',
+            age: 48,
+            pin: '123456',
+            isVerified: true,
+            license: 'KMC-84920/MD',
+            licenseNo: 'KMC-84920/MD',
+            role: 'doctor',
+            createdAt: new Date().toISOString(),
+          };
+          setCurrentDoctor(docUser);
+          localStorage.setItem('curalink_doctor_session', JSON.stringify(docUser));
+        } else {
+          const saved = localStorage.getItem('curalink_doctor_session') || localStorage.getItem('curalink_doctor_user');
+          if (saved) {
+            setCurrentDoctor(JSON.parse(saved));
+          }
+        }
+      }
     } catch (e) {
-      // ignore
+      // fallback to pre-set doctor
     }
+    setIsAuthModalOpen(false);
   }, []);
 
   // Doctor Auth Handlers
@@ -3389,15 +3428,13 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
 
       {/* Professional Doctor Authentication Window */}
       <DoctorAuthModal
-        isOpen={isAuthModalOpen || !currentDoctor}
+        isOpen={isAuthModalOpen}
         onClose={() => {
-          if (currentDoctor) {
-            setIsAuthModalOpen(false);
-          }
+          setIsAuthModalOpen(false);
         }}
         onLoginSuccess={handleLoginSuccess}
         currentDoctor={currentDoctor}
-        canDismiss={Boolean(currentDoctor)}
+        canDismiss={true}
       />
     </div>
   );

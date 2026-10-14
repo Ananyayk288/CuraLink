@@ -18,6 +18,25 @@ export function Navbar() {
   const [userName, setUserName] = useState("Rajiv Sharma, R.Ph");
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const qName = params.get("name") || params.get("pharmacistName");
+      if (qName) {
+        setUserName(decodeURIComponent(qName));
+        try {
+          localStorage.setItem("curalink_pharmacist_name", decodeURIComponent(qName));
+        } catch {}
+        return;
+      }
+      try {
+        const saved = localStorage.getItem("curalink_pharmacist_name");
+        if (saved) {
+          setUserName(saved);
+          return;
+        }
+      } catch {}
+    }
+
     fetch("/api/v1/auth/me")
       .then((res) => res.json())
       .then((data) => {
