@@ -52,13 +52,17 @@ export async function POST(request: Request) {
     }
 
     // Determine target portal redirect URL
-    let redirectUrl = 'http://localhost:3001';
+    const doctorUrl = process.env.NEXT_PUBLIC_DOCTOR_URL || 'http://localhost:3001';
+    const careteamUrl = process.env.NEXT_PUBLIC_CARETEAM_URL || 'http://localhost:3002';
+    const pharmacyUrl = (process.env.NEXT_PUBLIC_PHARMACY_URL || 'http://localhost:3003') + '/pharmacy/dashboard';
+
+    let redirectUrl = doctorUrl;
     if (role === 'doctor') {
-      redirectUrl = 'http://localhost:3001';
+      redirectUrl = doctorUrl;
     } else if (role === 'careteam') {
-      redirectUrl = 'http://localhost:3002';
+      redirectUrl = careteamUrl;
     } else if (role === 'pharmacy') {
-      redirectUrl = 'http://localhost:3003/pharmacy/dashboard';
+      redirectUrl = pharmacyUrl;
     }
 
     const response = NextResponse.json({

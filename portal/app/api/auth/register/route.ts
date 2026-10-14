@@ -11,6 +11,9 @@ export async function POST(request: Request) {
     }
 
     const client = getSupabaseClient();
+    const doctorUrl = process.env.NEXT_PUBLIC_DOCTOR_URL || 'http://localhost:3001';
+    const careteamUrl = process.env.NEXT_PUBLIC_CARETEAM_URL || 'http://localhost:3002';
+    const pharmacyUrl = (process.env.NEXT_PUBLIC_PHARMACY_URL || 'http://localhost:3003') + '/pharmacy/dashboard';
 
     // 1. REGISTER DOCTOR
     if (role === 'doctor') {
@@ -50,7 +53,7 @@ export async function POST(request: Request) {
         success: true,
         role: 'doctor',
         user: doctorRecord,
-        redirectUrl: 'http://localhost:3001',
+        redirectUrl: doctorUrl,
         message: `Doctor successfully registered with ID ${docId}!`,
       });
     }
@@ -91,7 +94,7 @@ export async function POST(request: Request) {
         success: true,
         role: 'careteam',
         user: { ...crtRecord, id: `crt-${Date.now()}` },
-        redirectUrl: 'http://localhost:3002',
+        redirectUrl: careteamUrl,
         message: `Care Team Fieldworker successfully registered with ID ${crtId}!`,
       });
     }
@@ -126,7 +129,7 @@ export async function POST(request: Request) {
         success: true,
         role: 'pharmacy',
         user: pharmacyRecord,
-        redirectUrl: 'http://localhost:3003/pharmacy/dashboard',
+        redirectUrl: pharmacyUrl,
         message: `Pharmacist successfully registered!`,
       });
     }

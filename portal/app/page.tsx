@@ -42,6 +42,10 @@ interface PortalRoleConfig {
   pinPlaceholder: string;
 }
 
+const DOCTOR_URL = process.env.NEXT_PUBLIC_DOCTOR_URL || 'http://localhost:3001';
+const CARETEAM_URL = process.env.NEXT_PUBLIC_CARETEAM_URL || 'http://localhost:3002';
+const PHARMACY_URL = (process.env.NEXT_PUBLIC_PHARMACY_URL || 'http://localhost:3003') + '/pharmacy/dashboard';
+
 const PORTALS: Record<RoleType, PortalRoleConfig> = {
   doctor: {
     id: 'doctor',
@@ -49,7 +53,7 @@ const PORTALS: Record<RoleType, PortalRoleConfig> = {
     subtitle: 'Clinical Consultation & Prescription Desk',
     badge: 'Clinical Specialist',
     port: 3001,
-    url: 'http://localhost:3001',
+    url: DOCTOR_URL,
     icon: Stethoscope,
     color: 'text-blue-600',
     bgLight: 'bg-blue-50',
@@ -66,7 +70,7 @@ const PORTALS: Record<RoleType, PortalRoleConfig> = {
     subtitle: 'Fieldworker Triage & Patient Onboarding',
     badge: 'Frontline ASHA Worker',
     port: 3002,
-    url: 'http://localhost:3002',
+    url: CARETEAM_URL,
     icon: Users,
     color: 'text-amber-600',
     bgLight: 'bg-amber-50',
@@ -83,7 +87,7 @@ const PORTALS: Record<RoleType, PortalRoleConfig> = {
     subtitle: 'Visual Sticker & Dispensing Counter',
     badge: 'Licensed Pharmacist',
     port: 3003,
-    url: 'http://localhost:3003/pharmacy/dashboard',
+    url: PHARMACY_URL,
     icon: Pill,
     color: 'text-emerald-600',
     bgLight: 'bg-emerald-50',
@@ -704,7 +708,7 @@ export default function UnifiedGateway() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1: Doctor */}
             <a
-              href="http://localhost:3001"
+              href={DOCTOR_URL}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group"
@@ -714,7 +718,7 @@ export default function UnifiedGateway() {
                   <Stethoscope className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-700">
-                  :3001 ↗
+                  Doctor Desk ↗
                 </span>
               </div>
               <h4 className="font-bold text-slate-900 text-sm mb-1">Doctor Portal</h4>
@@ -728,7 +732,7 @@ export default function UnifiedGateway() {
 
             {/* Card 2: Care Team */}
             <a
-              href="http://localhost:3002"
+              href={CARETEAM_URL}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all group"
@@ -738,7 +742,7 @@ export default function UnifiedGateway() {
                   <Users className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 group-hover:bg-amber-50 group-hover:text-amber-700">
-                  :3002 ↗
+                  Care Team ↗
                 </span>
               </div>
               <h4 className="font-bold text-slate-900 text-sm mb-1">Care Team Portal</h4>
@@ -752,7 +756,7 @@ export default function UnifiedGateway() {
 
             {/* Card 3: Pharmacy */}
             <a
-              href="http://localhost:3003/pharmacy/dashboard"
+              href={PHARMACY_URL}
               target="_blank"
               rel="noreferrer"
               className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all group"
@@ -762,7 +766,7 @@ export default function UnifiedGateway() {
                   <Pill className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 group-hover:bg-emerald-50 group-hover:text-emerald-700">
-                  :3003 ↗
+                  Pharmacy ↗
                 </span>
               </div>
               <h4 className="font-bold text-slate-900 text-sm mb-1">Pharmacy Portal</h4>
