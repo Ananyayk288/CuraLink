@@ -2056,13 +2056,13 @@ export default function DoctorPortal() {
                               <div className="flex items-center gap-3 sm:gap-4 mt-1 text-[11px] sm:text-xs font-bold text-slate-600 flex-wrap">
                                 <span className="text-slate-400">Tablet Timing:</span>
                                 <span className="inline-flex items-center gap-1.5">
-                                  <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> Morning
+                                  <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span> Morning (Red)
                                 </span>
                                 <span className="inline-flex items-center gap-1.5">
-                                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Afternoon
+                                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Afternoon (Green)
                                 </span>
                                 <span className="inline-flex items-center gap-1.5">
-                                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Night
+                                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Evening (Blue)
                                 </span>
                               </div>
                             </div>
@@ -2318,13 +2318,13 @@ export default function DoctorPortal() {
                                         onChange={e => updateMedicine(row.id, 'frequency', e.target.value)}
                                         className="w-full text-xs font-semibold p-2.5 rounded-xl border border-slate-200 bg-white"
                                       >
-                                        <option value="1-0-1">1-0-1 (Twice Daily - Morn &amp; Night)</option>
+                                        <option value="1-0-1">1-0-1 (Twice Daily - Morning &amp; Evening)</option>
                                         <option value="1-0-0">1-0-0 (Once Daily - Morning Only)</option>
                                         <option value="0-1-0">0-1-0 (Once Daily - Afternoon Only)</option>
-                                        <option value="0-0-1">0-0-1 (Once Daily - Night Only)</option>
-                                        <option value="1-1-1">1-1-1 (Thrice Daily - Morn, Aft &amp; Night)</option>
-                                        <option value="1-1-0">1-1-0 (Twice Daily - Morn &amp; Aft)</option>
-                                        <option value="0-1-1">0-1-1 (Twice Daily - Aft &amp; Night)</option>
+                                        <option value="0-0-1">0-0-1 (Once Daily - Evening Only)</option>
+                                        <option value="1-1-1">1-1-1 (Thrice Daily - Morning, Afternoon &amp; Evening)</option>
+                                        <option value="1-1-0">1-1-0 (Twice Daily - Morning &amp; Afternoon)</option>
+                                        <option value="0-1-1">0-1-1 (Twice Daily - Afternoon &amp; Evening)</option>
                                         <option value="SOS">SOS (As Needed)</option>
                                       </select>
                                       <div className="flex items-center gap-1.5 pt-1.5">
@@ -2461,13 +2461,13 @@ export default function DoctorPortal() {
                                             onChange={e => updateMedicine(row.id, 'frequency', e.target.value)}
                                             className="w-full text-sm font-semibold p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                           >
-                                            <option value="1-0-1">1-0-1 (Twice Daily - Morn &amp; Night)</option>
+                                            <option value="1-0-1">1-0-1 (Twice Daily - Morning &amp; Evening)</option>
                                             <option value="1-0-0">1-0-0 (Once Daily - Morning Only)</option>
                                             <option value="0-1-0">0-1-0 (Once Daily - Afternoon Only)</option>
-                                            <option value="0-0-1">0-0-1 (Once Daily - Night Only)</option>
-                                            <option value="1-1-1">1-1-1 (Thrice Daily - Morn, Aft &amp; Night)</option>
-                                            <option value="1-1-0">1-1-0 (Twice Daily - Morn &amp; Aft)</option>
-                                            <option value="0-1-1">0-1-1 (Twice Daily - Aft &amp; Night)</option>
+                                            <option value="0-0-1">0-0-1 (Once Daily - Evening Only)</option>
+                                            <option value="1-1-1">1-1-1 (Thrice Daily - Morning, Afternoon &amp; Evening)</option>
+                                            <option value="1-1-0">1-1-0 (Twice Daily - Morning &amp; Afternoon)</option>
+                                            <option value="0-1-1">0-1-1 (Twice Daily - Afternoon &amp; Evening)</option>
                                             <option value="SOS">SOS (As Needed)</option>
                                           </select>
 
@@ -3095,7 +3095,7 @@ AI CALLING AGENT & SMS TRIGGER ARCHITECTURE SPECIFICATION
         "days": 30,
         "frequency": "1-0-1",
         "meal": "After Food",
-        "timing_colors": ["Red (Morning)", "Blue (Night)"]
+        "timing_colors": ["Red (Morning)", "Blue (Evening)"]
       }
     ],
     "diagnostics": [

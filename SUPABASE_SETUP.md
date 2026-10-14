@@ -86,12 +86,12 @@ The script pre-populates all essential entities so you can immediately demo ever
 ### 6. Active Prescriptions & Color-Coded Medicines (`prescriptions` & `prescription_medicines` tables)
 | Rx ID | Patient | Doctor | Medicines Prescribed | Timing Slots | Color Tag Rule | Meal Relation |
 |---|---|---|---|---|---|---|
-| **`rx-ramesh-v1`** | Ramesh Gowda | Dr. Suresh Sharma | **Metformin 500mg** | `1-0-1` (Morning & Night) | **Red** (Morning), **Blue** (Night) | After Food |
+| **`rx-ramesh-v1`** | Ramesh Gowda | Dr. Suresh Sharma | **Metformin 500mg** | `1-0-1` (Morning & Evening) | **Red** (Morning), **Blue** (Evening) | After Food |
 | | | | **Glimepiride 1mg** | `1-0-0` (Morning) | **Red** (Morning Before Food) | Before Food (15m prior) |
 | **`rx-savitha-v1`** | Savitha Devi | Dr. Suresh Sharma | **Amlodipine 10mg** | `1-0-0` (Morning) | **Red** (Morning) | After Food |
-| | | | **Atorvastatin 10mg** | `0-0-1` (Night) | **Blue** (Night) | After Food |
+| | | | **Atorvastatin 10mg** | `0-0-1` (Evening) | **Blue** (Evening) | After Food |
 | **`rx-anand-v1`** | Anand Kumar | Dr. Suresh Sharma | **Metformin 500mg** | `1-0-0` (Morning) | **Red** (Morning) | After Food |
-| | | | **Atorvastatin 20mg** | `0-0-1` (Night) | **Blue** (Night) | After Food |
+| | | | **Atorvastatin 20mg** | `0-0-1` (Evening) | **Blue** (Evening) | After Food |
 
 ---
 

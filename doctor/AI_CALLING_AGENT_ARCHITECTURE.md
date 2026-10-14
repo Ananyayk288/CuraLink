@@ -185,7 +185,7 @@ Scheduled by your worker **24 to 48 hours prior to `follow_up_date`**:
 Your voice synthesis engine (ElevenLabs, Google Cloud TTS, or Azure Speech) **must branch based on literacy status**:
 
 ### A. For Low-Literacy / Rural Patients (`literacy_status == "ILLITERATE"`)
-1. **Never read complex chemical drug names.** Refer strictly to the **physical color sticker** and **timing code**: **Red** (Morning), **Green** (Afternoon), **Blue** (Night).
+1. **Never read complex chemical drug names.** Refer strictly to the **physical color sticker** and **timing code**: **Red** (Morning), **Green** (Afternoon), **Blue** (Evening).
 2. Use simple vernacular instructions with meal relations (*"ಖಾಲಿ ಹೊಟ್ಟೆಯಲ್ಲಿ"* for before food, *"ಊಟದ ನಂತರ"* for after food).
 3. If diagnostic tests are ordered, clearly state the test name and fasting requirement (*"ಖಾಲಿ ಹೊಟ್ಟೆಯಲ್ಲಿ ಲ್ಯಾಬ್‌ಗೆ ಭೇಟಿ ನೀಡಿ"*).
 

@@ -334,7 +334,7 @@
                     <span class="text-slate-300">•</span>
                     <span class="inline-flex items-center gap-1 text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Afternoon: Green</span>
                     <span class="text-slate-300">•</span>
-                    <span class="inline-flex items-center gap-1 text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Night: Blue</span>
+                    <span class="inline-flex items-center gap-1 text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Evening: Blue</span>
                   </div>
                 </div>
                 <button type="button" onclick="addMedicationRegimenRow()" class="px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1 transition-all self-start sm:self-auto">
@@ -676,7 +676,7 @@
 
         <p class="font-bold text-slate-900 font-sans text-sm mt-3">🎙️ Voice Prompt Construction Rules:</p>
         <ul class="list-disc pl-5 space-y-1 font-sans text-xs">
-          <li><strong>For Low-Literacy Patients:</strong> Voice MUST refer to the physical color sticker and timing code (Red for Morning, Green for Afternoon, Blue for Night) in patient's preferred language:
+          <li><strong>For Low-Literacy Patients:</strong> Voice MUST refer to the physical color sticker and timing code (Red for Morning, Green for Afternoon, Blue for Evening) in patient's preferred language:
             <br><em>"ನಮಸ್ಕಾರ ರಮೇಶ್ ಅವರೇ. ಕೆಂಪು ಬಣ್ಣದ (RED / ಬೆಳಗಿನ) ಸ್ಟಿಕ್ಕರ್ ಇರುವ ಮಾತ್ರೆ ತಗೊಳ್ಳಿ. ತೆಗೆದುಕೊಂಡಿದ್ದರೆ 1 ಒತ್ತಿ. ಸಹಾಯ ಬೇಕಿದ್ದರೆ 2 ಒತ್ತಿ."</em>
           </li>
           <li><strong>Keypad DTMF Webhook Callback:</strong> Post result back to <code>POST /api/v1/telephony/adherence-gather</code> with digits:

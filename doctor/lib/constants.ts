@@ -94,7 +94,7 @@ export interface TimingSlot {
   pillEmoji: string;
 }
 
-// Tablet timing color codes: Morning: Red, Afternoon: Green, Night: Blue
+// Tablet timing color codes: Morning: Red, Afternoon: Green, Evening: Blue (RGB)
 export const TIMING_COLORS: Record<string, TimingSlot> = {
   MORNING: {
     key: "morning",
@@ -118,8 +118,18 @@ export const TIMING_COLORS: Record<string, TimingSlot> = {
   },
   NIGHT: {
     key: "night",
-    label: "Night (Blue)",
-    short: "Night",
+    label: "Evening (Blue)",
+    short: "Eve",
+    colorName: "Blue",
+    badgeClass: "bg-blue-100 text-blue-700 border-blue-300 ring-blue-200",
+    dotClass: "bg-blue-500",
+    dotHex: "#3b82f6",
+    pillEmoji: "🔵",
+  },
+  EVENING: {
+    key: "evening",
+    label: "Evening (Blue)",
+    short: "Eve",
     colorName: "Blue",
     badgeClass: "bg-blue-100 text-blue-700 border-blue-300 ring-blue-200",
     dotClass: "bg-blue-500",

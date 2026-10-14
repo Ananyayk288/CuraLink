@@ -35,7 +35,7 @@ const PRE_EXISTING_PATIENTS = [
     requiresStickers: true,
     colorHighlights: [
       { label: "Red (Morning)", colorClass: "bg-red-500 text-white", dot: "🔴" },
-      { label: "Blue (Night)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
+      { label: "Blue (Evening)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
       { label: "Before Food", colorClass: "bg-amber-400 text-amber-950 font-bold", dot: "🟡" },
     ],
   },
@@ -49,7 +49,7 @@ const PRE_EXISTING_PATIENTS = [
     requiresStickers: true,
     colorHighlights: [
       { label: "Red (Morning)", colorClass: "bg-red-500 text-white", dot: "🔴" },
-      { label: "Blue (Night)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
+      { label: "Blue (Evening)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
     ],
   },
   {
@@ -62,7 +62,7 @@ const PRE_EXISTING_PATIENTS = [
     requiresStickers: false,
     colorHighlights: [
       { label: "Red (Morning)", colorClass: "bg-red-500 text-white", dot: "🔴" },
-      { label: "Blue (Night)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
+      { label: "Blue (Evening)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
     ],
   },
   {
@@ -75,7 +75,7 @@ const PRE_EXISTING_PATIENTS = [
     requiresStickers: true,
     colorHighlights: [
       { label: "Red (Morning)", colorClass: "bg-red-500 text-white", dot: "🔴" },
-      { label: "Blue (Night)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
+      { label: "Blue (Evening)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
       { label: "Before Food", colorClass: "bg-amber-400 text-amber-950 font-bold", dot: "🟡" },
     ],
   },
@@ -90,7 +90,7 @@ const PRE_EXISTING_PATIENTS = [
     colorHighlights: [
       { label: "Red (Morning)", colorClass: "bg-red-500 text-white", dot: "🔴" },
       { label: "Green (Afternoon)", colorClass: "bg-emerald-500 text-white", dot: "🟢" },
-      { label: "Blue (Night)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
+      { label: "Blue (Evening)", colorClass: "bg-blue-600 text-white", dot: "🔵" },
     ],
   },
   {
@@ -116,7 +116,7 @@ function getSlotColorBadges(slots: string[] = [], beforeFood: boolean = false) {
     badges.push({ name: "Green (Afternoon)", bg: "bg-emerald-500 text-white", dot: "🟢" });
   }
   if (slots.includes("NIGHT")) {
-    badges.push({ name: "Blue (Night)", bg: "bg-blue-600 text-white", dot: "🔵" });
+    badges.push({ name: "Blue (Evening)", bg: "bg-blue-600 text-white", dot: "🔵" });
   }
   if (beforeFood) {
     badges.push({ name: "Before Food", bg: "bg-amber-400 text-amber-950 font-bold border border-amber-500", dot: "🟡" });
@@ -479,7 +479,7 @@ export default function PharmacyDashboardPage() {
                 🟢 Afternoon (Green)
               </span>
               <span className="px-2.5 py-1 rounded-full bg-blue-600 text-white shadow-xs">
-                🔵 Night (Blue)
+                🔵 Evening (Blue)
               </span>
               <span className="px-2.5 py-1 rounded-full bg-amber-400 text-amber-950 border border-amber-500 shadow-xs">
                 🟡 Before Food

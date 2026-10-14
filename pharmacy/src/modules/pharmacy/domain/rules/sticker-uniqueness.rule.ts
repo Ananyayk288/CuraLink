@@ -17,7 +17,7 @@ export function validateStickerSlots(params: ValidateStickerSlotsParams): void {
   const { slots } = params;
 
   if (!slots || slots.length === 0) {
-    throw new ValidationError("At least one time-of-day dose slot (Morning, Afternoon, or Night) must be selected.");
+    throw new ValidationError("At least one time-of-day dose slot (Morning, Afternoon, or Evening) must be selected.");
   }
 
   // Validate no duplicate slots in the same assignment

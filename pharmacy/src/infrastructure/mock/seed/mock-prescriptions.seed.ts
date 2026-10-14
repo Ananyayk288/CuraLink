@@ -71,7 +71,7 @@ export const SEED_PRESCRIPTIONS: DoctorPrescriptionRecord[] = [
         prescriptionId: "c0000001-0000-0000-0000-000000000001",
         medicineName: "Atorvastatin 10mg",
         dosage: "10 mg",
-        frequency: "Once daily at night",
+        frequency: "Once daily in evening",
         duration: "30 days",
         doseSlots: [DoseSlot.NIGHT], // Blue
         beforeFood: false,
@@ -190,7 +190,7 @@ export const SEED_PRESCRIPTIONS: DoctorPrescriptionRecord[] = [
         prescriptionId: "c0000001-0000-0000-0000-000000000006",
         medicineName: "Cetirizine 10mg",
         dosage: "10 mg",
-        frequency: "Once daily at night",
+        frequency: "Once daily in evening",
         duration: "10 days",
         doseSlots: [DoseSlot.NIGHT],
         beforeFood: false,

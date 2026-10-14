@@ -15,7 +15,7 @@ The **Doctor Portal** serves as the clinical authority in the Arogyavani ecosyst
    - **Tab 1: New Prescription & Medication Regimen ("Medical Thing")**:
      - Attending doctor attribution (`Dr. Suresh Sharma, MD`).
      - Diagnosis & Patient Symptoms notes with **strict word-limit enforcement** (max 300 words).
-     - **Pre-fed Medication Regimen Table** with autocomplete for 40+ common Indian medicines, No. of Days, How Many Times (frequency), Meal Relation (Before/After Food), and assigned physical Color Sticker code (Morning: Red, Afternoon: Green, Night: Blue).
+     - **Pre-fed Medication Regimen Table** with autocomplete for 40+ common Indian medicines, No. of Days, How Many Times (frequency), Meal Relation (Before/After Food), and assigned physical Color Sticker code (Morning: Red, Afternoon: Green, Evening: Blue).
      - **AI Voice Reminder & SMS Trigger Toggle** (Supabase Realtime / Webhook activator).
      - Atomic submission: symptoms, notes, medicines, and doctor name are sealed together into the database.
    - **Tab 2: Prescription History (Read-Only)**:

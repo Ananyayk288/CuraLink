@@ -21,8 +21,8 @@ const PREFED_MEDICINES = [
   { name: "Amlodipine Besylate", dosage: "10mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Telmisartan", dosage: "40mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Telmisartan", dosage: "80mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
-  { name: "Atorvastatin", dosage: "10mg", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "After Food" },
-  { name: "Atorvastatin", dosage: "20mg", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "After Food" },
+  { name: "Atorvastatin", dosage: "10mg", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "After Food" },
+  { name: "Atorvastatin", dosage: "20mg", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "After Food" },
   { name: "Glimepiride", dosage: "1mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "Before Food" },
   { name: "Glimepiride", dosage: "2mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "Before Food" },
   { name: "Pantoprazole Gastro-Resistant", dosage: "40mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "Empty Stomach" },
@@ -30,16 +30,16 @@ const PREFED_MEDICINES = [
   { name: "Losartan Potassium", dosage: "50mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Paracetamol", dosage: "650mg", defaultFreq: "SOS (As Needed)", defaultMeal: "After Food" },
   { name: "Diclofenac Sodium", dosage: "50mg", defaultFreq: "1-0-1 (Twice Daily)", defaultMeal: "After Food" },
-  { name: "Aspirin (Enteric Coated)", dosage: "75mg", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "After Food" },
+  { name: "Aspirin (Enteric Coated)", dosage: "75mg", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "After Food" },
   { name: "Clopidogrel", dosage: "75mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Voglibose", dosage: "0.2mg", defaultFreq: "1-0-1 (Twice Daily)", defaultMeal: "Before Food" },
   { name: "Teneligliptin", dosage: "20mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
-  { name: "Insulin Glargine (Basal)", dosage: "10 Units", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "Before Bed" },
-  { name: "Montelukast Sodium", dosage: "10mg", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "After Food" },
-  { name: "Levocetirizine Dihydrochloride", dosage: "5mg", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "After Food" },
+  { name: "Insulin Glargine (Basal)", dosage: "10 Units", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "Before Bed" },
+  { name: "Montelukast Sodium", dosage: "10mg", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "After Food" },
+  { name: "Levocetirizine Dihydrochloride", dosage: "5mg", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "After Food" },
   { name: "Azithromycin", dosage: "500mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Amoxicillin and Potassium Clavulanate", dosage: "625mg", defaultFreq: "1-0-1 (Twice Daily)", defaultMeal: "After Food" },
-  { name: "Rosuvastatin", dosage: "10mg", defaultFreq: "0-0-1 (Night Only)", defaultMeal: "After Food" },
+  { name: "Rosuvastatin", dosage: "10mg", defaultFreq: "0-0-1 (Evening Only)", defaultMeal: "After Food" },
   { name: "Enalapril Maleate", dosage: "5mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Hydrochlorothiazide", dosage: "12.5mg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "After Food" },
   { name: "Thyroxine Sodium", dosage: "50mcg", defaultFreq: "1-0-0 (Morning Only)", defaultMeal: "Empty Stomach" },
@@ -86,7 +86,7 @@ const PREFED_DIAGNOSTICS = [
 let currentRxMode = "NORMAL";
 let orderedDiagnostics = [];
 
-// Timing Color Codes for Tablets: Morning: Red, Afternoon: Green, Night: Blue
+// Timing Color Codes for Tablets: Morning: Red, Afternoon: Green, Evening: Blue (RGB)
 const TIMING_COLORS = {
   MORNING: {
     label: "Morning (Red)",
@@ -105,8 +105,16 @@ const TIMING_COLORS = {
     pill: "🟢"
   },
   NIGHT: {
-    label: "Night (Blue)",
-    short: "Night",
+    label: "Evening (Blue)",
+    short: "Eve",
+    color: "Blue",
+    badge: "bg-blue-100 text-blue-700 border-blue-300",
+    dot: "bg-blue-500",
+    pill: "🔵"
+  },
+  EVENING: {
+    label: "Evening (Blue)",
+    short: "Eve",
     color: "Blue",
     badge: "bg-blue-100 text-blue-700 border-blue-300",
     dot: "bg-blue-500",
@@ -168,7 +176,7 @@ function getTimingCodeString(frequency) {
 const SIMPLE_COLORS = [
   { name: "RED", symbol: "CIRCLE", bg: "bg-rose-100", text: "text-rose-800", dot: "bg-rose-500", border: "border-rose-300", label: "Red (Morning)" },
   { name: "GREEN", symbol: "SQUARE", bg: "bg-emerald-100", text: "text-emerald-800", dot: "bg-emerald-500", border: "border-emerald-300", label: "Green (Afternoon)" },
-  { name: "BLUE", symbol: "TRIANGLE", bg: "bg-blue-100", text: "text-blue-800", dot: "bg-blue-500", border: "border-blue-300", label: "Blue (Night)" }
+  { name: "BLUE", symbol: "TRIANGLE", bg: "bg-blue-100", text: "text-blue-800", dot: "bg-blue-500", border: "border-blue-300", label: "Blue (Evening)" }
 ];
 const COLOR_PALETTE = SIMPLE_COLORS;
 
@@ -444,7 +452,7 @@ function setupNewPrescriptionForm(patient, appointmentId) {
   // Clear Regimen table and add initial starter rows
   document.getElementById("medication-regimen-tbody").innerHTML = "";
   regimenRowCount = 0;
-  addMedicationRegimenRow("Metformin Hydrochloride", "500mg", 30, "1-0-1 (Morning & Night)", "After Food");
+  addMedicationRegimenRow("Metformin Hydrochloride", "500mg", 30, "1-0-1 (Morning & Evening)", "After Food");
   addMedicationRegimenRow("", "5mg", 30, "1-0-0 (Morning Only)", "After Food");
 }
 
@@ -682,7 +690,7 @@ function updateWordCount(text) {
   }
 }
 
-function addMedicationRegimenRow(defaultName = "", defaultDose = "", defaultDays = 30, defaultFreq = "1-0-1 (Morning & Night)", defaultMeal = "After Food") {
+function addMedicationRegimenRow(defaultName = "", defaultDose = "", defaultDays = 30, defaultFreq = "1-0-1 (Morning & Evening)", defaultMeal = "After Food") {
   regimenRowCount++;
   const tbody = document.getElementById("medication-regimen-tbody");
 
@@ -714,13 +722,13 @@ function addMedicationRegimenRow(defaultName = "", defaultDose = "", defaultDays
     <!-- Col 3: How Many Times (Frequency) -->
     <td class="py-2.5 px-3">
       <select name="reg_frequency[]" onchange="updateRowTimingColors(${regimenRowCount})" class="w-full px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 bg-white font-medium">
-        <option value="1-0-1 (Morning & Night)" ${defaultFreq.includes('1-0-1') ? 'selected' : ''}>1-0-1 (Morning & Night)</option>
+        <option value="1-0-1 (Morning & Evening)" ${defaultFreq.includes('1-0-1') ? 'selected' : ''}>1-0-1 (Morning & Evening)</option>
         <option value="1-0-0 (Morning Only)" ${defaultFreq.includes('1-0-0') ? 'selected' : ''}>1-0-0 (Morning Only)</option>
         <option value="0-1-0 (Afternoon Only)" ${defaultFreq.includes('0-1-0') ? 'selected' : ''}>0-1-0 (Afternoon Only)</option>
-        <option value="0-0-1 (Night Only)" ${defaultFreq.includes('0-0-1') ? 'selected' : ''}>0-0-1 (Night Only)</option>
-        <option value="1-1-1 (Morning, Afternoon & Night)" ${defaultFreq.includes('1-1-1') ? 'selected' : ''}>1-1-1 (Morning, Aft & Night)</option>
+        <option value="0-0-1 (Evening Only)" ${defaultFreq.includes('0-0-1') ? 'selected' : ''}>0-0-1 (Evening Only)</option>
+        <option value="1-1-1 (Morning, Afternoon & Evening)" ${defaultFreq.includes('1-1-1') ? 'selected' : ''}>1-1-1 (Morning, Aft & Evening)</option>
         <option value="1-1-0 (Morning & Afternoon)" ${defaultFreq.includes('1-1-0') ? 'selected' : ''}>1-1-0 (Morn & Aft)</option>
-        <option value="0-1-1 (Afternoon & Night)" ${defaultFreq.includes('0-1-1') ? 'selected' : ''}>0-1-1 (Aft & Night)</option>
+        <option value="0-1-1 (Afternoon & Evening)" ${defaultFreq.includes('0-1-1') ? 'selected' : ''}>0-1-1 (Aft & Evening)</option>
         <option value="SOS (As Needed)" ${defaultFreq.includes('SOS') ? 'selected' : ''}>SOS (As Needed)</option>
       </select>
     </td>
@@ -735,7 +743,7 @@ function addMedicationRegimenRow(defaultName = "", defaultDose = "", defaultDays
       </select>
     </td>
 
-    <!-- Col 5: Tablet Timing Color Code Badge (Morning: Red, Afternoon: Green, Night: Blue) -->
+    <!-- Col 5: Tablet Timing Color Code Badge (Morning: Red, Afternoon: Green, Evening: Blue) -->
     <td id="reg-color-cell-${regimenRowCount}" class="py-2.5 px-3 text-center">
       ${getTimingColorsHtml(defaultFreq)}
       <input type="hidden" name="reg_color_sticker[]" id="reg-color-input-${regimenRowCount}" value="${getTimingCodeString(defaultFreq)}">

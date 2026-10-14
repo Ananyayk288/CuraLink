@@ -5,7 +5,7 @@ export interface SlotConfig {
   colorName: string; // "Red", "Green", "Blue"
   hex: string;
   label: string;     // e.g. "Day (Morning)"
-  period: string;    // "Morning", "Afternoon", "Night"
+  period: string;    // "Morning", "Afternoon", "Evening"
   badgeClasses: string;
 }
 
@@ -14,7 +14,7 @@ export const DOSE_SLOT_CONFIG: Record<DoseSlot, SlotConfig> = {
     slot: DoseSlot.MORNING,
     colorName: "Red",
     hex: "#EF4444",
-    label: "Day (Morning)",
+    label: "Morning (Red)",
     period: "Morning",
     badgeClasses: "bg-red-500 text-white border-red-600",
   },
@@ -22,7 +22,7 @@ export const DOSE_SLOT_CONFIG: Record<DoseSlot, SlotConfig> = {
     slot: DoseSlot.AFTERNOON,
     colorName: "Green",
     hex: "#10B981",
-    label: "Afternoon",
+    label: "Afternoon (Green)",
     period: "Afternoon",
     badgeClasses: "bg-emerald-500 text-white border-emerald-600",
   },
@@ -30,8 +30,8 @@ export const DOSE_SLOT_CONFIG: Record<DoseSlot, SlotConfig> = {
     slot: DoseSlot.NIGHT,
     colorName: "Blue",
     hex: "#3B82F6",
-    label: "Night",
-    period: "Night",
+    label: "Evening (Blue)",
+    period: "Evening",
     badgeClasses: "bg-blue-600 text-white border-blue-700",
   },
 };
@@ -69,7 +69,7 @@ export interface PhysicalStickerItem {
  * getPhysicalStickersForMedicine
  * Returns all physical stickers that must be attached to a single medicine packet.
  * A single medicine packet can receive MULTIPLE physical stickers:
- * - One per assigned dose slot (e.g. Red for Morning + Blue for Night)
+ * - One per assigned dose slot (e.g. Red for Morning + Blue for Evening)
  * - Plus one Mini badge if before_food is true (e.g. "Before Food").
  */
 export function getPhysicalStickersForMedicine(
@@ -111,7 +111,7 @@ export function getPhysicalStickersForMedicine(
 /**
  * formatMedicineStickersSummary
  * Renders a human-readable list of all physical stickers attached to a single medicine packet.
- * Example: "Red (Morning) + Blue (Night) + Before Food"
+ * Example: "Red (Morning) + Blue (Evening) + Before Food"
  */
 export function formatMedicineStickersSummary(
   slots: DoseSlot[] = [],

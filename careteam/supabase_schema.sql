@@ -590,8 +590,8 @@ ON CONFLICT (id) DO NOTHING;
 -- 10. Demo Telephony Triggers (AI Voice Calling & Multilingual SMS Queue)
 INSERT INTO telephony_triggers (id, prescription_id, patient_id, patient_phone, preferred_language, trigger_type, voice_call_status, sms_status, payload)
 VALUES
-    ('tel-ramesh-001', 'rx-ramesh-v1', 'pt-ramesh-001', '+91 98801 12345', 'Kannada', 'MEDICATION_ADHERENCE', 'QUEUED', 'QUEUED', '{"patient_name": "Ramesh Gowda", "medicines": ["Metformin 500mg", "Glimepiride 1mg"], "scheduled_time": "08:00 AM", "color_codes": {"Metformin 500mg": "RED (Morning) & BLUE (Night)", "Glimepiride 1mg": "RED (Morning Before Food)"}}'::JSONB),
-    ('tel-savitha-001', 'rx-savitha-v1', 'pt-savitha-002', '+91 94481 67890', 'Kannada', 'MEDICATION_ADHERENCE', 'QUEUED', 'QUEUED', '{"patient_name": "Savitha Devi", "medicines": ["Amlodipine 10mg", "Atorvastatin 10mg"], "scheduled_time": "08:00 AM", "color_codes": {"Amlodipine 10mg": "RED (Morning)", "Atorvastatin 10mg": "BLUE (Night)"}}'::JSONB)
+    ('tel-ramesh-001', 'rx-ramesh-v1', 'pt-ramesh-001', '+91 98801 12345', 'Kannada', 'MEDICATION_ADHERENCE', 'QUEUED', 'QUEUED', '{"patient_name": "Ramesh Gowda", "medicines": ["Metformin 500mg", "Glimepiride 1mg"], "scheduled_time": "08:00 AM", "color_codes": {"Metformin 500mg": "RED (Morning) & BLUE (Evening)", "Glimepiride 1mg": "RED (Morning Before Food)"}}'::JSONB),
+    ('tel-savitha-001', 'rx-savitha-v1', 'pt-savitha-002', '+91 94481 67890', 'Kannada', 'MEDICATION_ADHERENCE', 'QUEUED', 'QUEUED', '{"patient_name": "Savitha Devi", "medicines": ["Amlodipine 10mg", "Atorvastatin 10mg"], "scheduled_time": "08:00 AM", "color_codes": {"Amlodipine 10mg": "RED (Morning)", "Atorvastatin 10mg": "BLUE (Evening)"}}'::JSONB)
 ON CONFLICT (id) DO NOTHING;
 
 -- 11. Demo Field Escalations (Care Team Emergency Alerts)

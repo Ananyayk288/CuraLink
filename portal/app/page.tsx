@@ -779,7 +779,7 @@ export default function UnifiedGateway() {
               </div>
               <h4 className="font-bold text-slate-900 text-sm mb-1">Pharmacy Portal</h4>
               <p className="text-xs text-slate-500 mb-3">
-                Patient lookup, visual sticker adherence (Morning/Night/Food), batch deduction, and atomic receipts.
+                Patient lookup, visual sticker adherence (Morning: Red, Afternoon: Green, Evening: Blue), batch deduction, and atomic receipts.
               </p>
               <span className="text-xs font-semibold text-emerald-600 group-hover:underline flex items-center gap-1">
                 Open Dispensing Counter &rarr;

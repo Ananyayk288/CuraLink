@@ -297,11 +297,11 @@ class DoctorUseCases:
             ) VALUES (?, ?, ?, 1, 'DRAFT', ?, ?, ?, ?)
             """, (rx_id, patient_id, doctor_id, diagnosis_notes, clinical_instructions, follow_up_date, created_at))
 
-        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Night)
+        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Evening)
         sticker_palette = [
             ("RED", "CIRCLE"),       # Morning
             ("GREEN", "SQUARE"),     # Afternoon
-            ("BLUE", "TRIANGLE")     # Night
+            ("BLUE", "TRIANGLE")     # Evening
         ]
 
         for i, m in enumerate(medicines):
@@ -399,11 +399,11 @@ class DoctorUseCases:
             parent_prescription_id, new_revision_num, notes, instr, f_up, committed_at, created_at
         ))
 
-        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Night)
+        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Evening)
         sticker_palette = [
             ("RED", "CIRCLE"),       # Morning
             ("GREEN", "SQUARE"),     # Afternoon
-            ("BLUE", "TRIANGLE")     # Night
+            ("BLUE", "TRIANGLE")     # Evening
         ]
 
         for i, m in enumerate(medicines):
@@ -935,11 +935,11 @@ class DoctorUseCases:
             committed_at, now
         ))
 
-        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Night)
+        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Evening)
         sticker_palette = [
             ("RED", "CIRCLE"),       # Morning
             ("GREEN", "SQUARE"),     # Afternoon
-            ("BLUE", "TRIANGLE")     # Night
+            ("BLUE", "TRIANGLE")     # Evening
         ]
 
         if rx_type in ("NORMAL", "COMPREHENSIVE"):

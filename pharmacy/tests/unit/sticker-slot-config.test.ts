@@ -9,7 +9,7 @@ import {
 import { DoseSlot } from "@/modules/pharmacy/domain/enums/dose-slot.enum";
 
 describe("Sticker Slot Config", () => {
-  it("should have exact color mappings for Morning (Red), Afternoon (Green), and Night (Blue)", () => {
+  it("should have exact color mappings for Morning (Red), Afternoon (Green), and Evening (Blue)", () => {
     expect(DOSE_SLOT_CONFIG[DoseSlot.MORNING].colorName).toBe("Red");
     expect(DOSE_SLOT_CONFIG[DoseSlot.MORNING].period).toBe("Morning");
 
@@ -17,7 +17,7 @@ describe("Sticker Slot Config", () => {
     expect(DOSE_SLOT_CONFIG[DoseSlot.AFTERNOON].period).toBe("Afternoon");
 
     expect(DOSE_SLOT_CONFIG[DoseSlot.NIGHT].colorName).toBe("Blue");
-    expect(DOSE_SLOT_CONFIG[DoseSlot.NIGHT].period).toBe("Night");
+    expect(DOSE_SLOT_CONFIG[DoseSlot.NIGHT].period).toBe("Evening");
   });
 
   it("should define before-food mini badge config", () => {
@@ -28,20 +28,20 @@ describe("Sticker Slot Config", () => {
   it("should format dose slot names clearly", () => {
     expect(formatDoseSlotName(DoseSlot.MORNING)).toBe("Red (Morning)");
     expect(formatDoseSlotName(DoseSlot.AFTERNOON)).toBe("Green (Afternoon)");
-    expect(formatDoseSlotName(DoseSlot.NIGHT)).toBe("Blue (Night)");
+    expect(formatDoseSlotName(DoseSlot.NIGHT)).toBe("Blue (Evening)");
   });
 
   it("should correctly handle multiple physical stickers assigned to a single medicine", () => {
-    // Scenario 1: Medicine taken Morning + Night (Twice daily) -> 2 physical stickers
+    // Scenario 1: Medicine taken Morning + Evening (Twice daily) -> 2 physical stickers
     const stickersBds = getPhysicalStickersForMedicine([DoseSlot.MORNING, DoseSlot.NIGHT], false);
     expect(stickersBds).toHaveLength(2);
     expect(stickersBds[0].colorName).toBe("Red");
     expect(stickersBds[1].colorName).toBe("Blue");
     expect(formatMedicineStickersSummary([DoseSlot.MORNING, DoseSlot.NIGHT], false)).toBe(
-      "Red (Morning) + Blue (Night)"
+      "Red (Morning) + Blue (Evening)"
     );
 
-    // Scenario 2: Medicine taken Morning + Night before food -> 3 physical stickers (Red, Blue, Before Food)
+    // Scenario 2: Medicine taken Morning + Evening before food -> 3 physical stickers (Red, Blue, Before Food)
     const stickersWithMini = getPhysicalStickersForMedicine(
       [DoseSlot.MORNING, DoseSlot.NIGHT],
       true
@@ -52,7 +52,7 @@ describe("Sticker Slot Config", () => {
     expect(stickersWithMini[2].colorName).toBe("Before Food");
     expect(stickersWithMini[2].text).toBe("Before Food");
     expect(formatMedicineStickersSummary([DoseSlot.MORNING, DoseSlot.NIGHT], true)).toBe(
-      "Red (Morning) + Blue (Night) + Before Food"
+      "Red (Morning) + Blue (Evening) + Before Food"
     );
 
     // Scenario 3: Medicine taken Three times daily before food -> 4 physical stickers (Red, Green, Blue, Before Food)
@@ -67,6 +67,6 @@ describe("Sticker Slot Config", () => {
         [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT],
         true
       )
-    ).toBe("Red (Morning) + Green (Afternoon) + Blue (Night) + Before Food");
+    ).toBe("Red (Morning) + Green (Afternoon) + Blue (Evening) + Before Food");
   });
 });
