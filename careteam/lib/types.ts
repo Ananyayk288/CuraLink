@@ -66,3 +66,23 @@ export interface CareTeamUser {
   role?: string;
   createdAt?: string;
 }
+
+export interface AppointmentData {
+  id?: string;
+  patientId: string;
+  patientName: string;
+  patientPhone: string;
+  uhid?: string;
+  doctorId?: string | null;
+  doctorName?: string;
+  tokenNumber: string;
+  reasonForVisit: string;
+  appointmentTime: string;
+  bookingChannel: 'CARE_TEAM_FIELD' | 'WALK_IN' | 'TELE_CONSULT';
+  status: 'PENDING' | 'COMPLETED' | 'CANCELLED';
+  priority?: 'ROUTINE' | 'URGENT' | 'CRITICAL';
+  vitalsNotes?: string;
+  bookedBy?: string;
+  createdAt?: string;
+}
+

@@ -35,19 +35,75 @@ import {
   Mail,
   UserCheck,
   User,
+  HeartPulse,
+  Activity,
+  Stethoscope,
+  Printer,
+  Ticket,
 } from 'lucide-react';
-import { PatientData, EscalationData, EscalationPriority, EscalationCategory, CareTeamUser } from '@/lib/types';
+import { PatientData, EscalationData, EscalationPriority, EscalationCategory, CareTeamUser, AppointmentData } from '@/lib/types';
 import { careTeamStore, HARDCODED_OTP } from '@/lib/store';
 import {
   testSupabaseConnection,
   getSupabaseConfig,
   subscribeToEscalations,
   subscribeToPatients,
+  subscribeToAppointments,
 } from '@/lib/supabase';
 
+// Available clinical doctors for appointment booking
+const AVAILABLE_DOCTORS = [
+  {
+    id: 'DOC84920',
+    name: 'Dr. Suresh Sharma, MD',
+    department: 'Internal Medicine & Chronic Care',
+    room: 'OPD Room 101',
+    availableTime: '09:00 AM - 01:30 PM',
+  },
+  {
+    id: 'DOC74921',
+    name: 'Dr. K. R. Nambiar, MS',
+    department: 'Orthopedics & Joint Care',
+    room: 'OPD Room 204',
+    availableTime: '10:00 AM - 02:00 PM',
+  },
+  {
+    id: 'DOC61034',
+    name: 'Dr. Anita Sen, MD',
+    department: 'Nephrology & Renal Medicine',
+    room: 'OPD Room 108',
+    availableTime: '11:00 AM - 03:00 PM',
+  },
+  {
+    id: 'GENERAL_TRIAGE',
+    name: 'General PHC Triage Desk',
+    department: 'Primary Health Centre Walk-in',
+    room: 'Triage Station A',
+    availableTime: 'All Day (Walk-in Queue)',
+  },
+];
+
+const REASON_PRESETS = [
+  'Routine Chronic Care Checkup',
+  'Blood Pressure Spike & Dizziness Evaluation',
+  'Diabetes & High Blood Sugar Glycemic Review',
+  'Medication Refill & Side-Effect Assessment',
+  'Post-Discharge Surgical / Wound Follow-up',
+  'Bilateral Knee Joint Pain & Mobility Review',
+];
+
+const TIME_SLOT_PRESETS = [
+  'Today • 09:30 AM',
+  'Today • 10:30 AM',
+  'Today • 11:45 AM',
+  'Today • 02:00 PM',
+  'Tomorrow • 10:00 AM',
+  'Tomorrow • 11:30 AM',
+];
+
 export default function CareTeamPortal() {
-  // Navigation Tabs: 'register' | 'escalate'
-  const [activeTab, setActiveTab] = useState<'register' | 'escalate'>('register');
+  // Navigation Tabs: 'register' | 'appointments' | 'escalate'
+  const [activeTab, setActiveTab] = useState<'register' | 'appointments' | 'escalate'>('register');
 
   // Supabase Status & Settings
   const [supabaseConnected, setSupabaseConnected] = useState<boolean>(false);
@@ -60,6 +116,7 @@ export default function CareTeamPortal() {
   // Store data
   const [patients, setPatients] = useState<PatientData[]>([]);
   const [escalations, setEscalations] = useState<EscalationData[]>([]);
+  const [appointments, setAppointments] = useState<AppointmentData[]>([]);
 
   // -------------------------------------------------------------
   // CARE TEAM AUTHENTICATION STATE
@@ -143,11 +200,37 @@ export default function CareTeamPortal() {
   const [escalationSuccessMsg, setEscalationSuccessMsg] = useState<string | null>(null);
 
   // -------------------------------------------------------------
+  // FORM 3: Book Appointment State
+  // -------------------------------------------------------------
+  const [aptPatientId, setAptPatientId] = useState<string>('');
+  const [aptPatientSearchQuery, setAptPatientSearchQuery] = useState<string>('');
+  const [aptDoctorId, setAptDoctorId] = useState<string>('DOC84920');
+  const [aptReason, setAptReason] = useState<string>('Routine Chronic Care Checkup');
+  const [aptReasonDetails, setAptReasonDetails] = useState<string>('');
+  const [aptTimeSlot, setAptTimeSlot] = useState<string>('Today • 10:30 AM');
+  const [aptCustomTime, setAptCustomTime] = useState<string>('');
+  const [aptBookingChannel, setAptBookingChannel] = useState<'CARE_TEAM_FIELD' | 'WALK_IN' | 'TELE_CONSULT'>('CARE_TEAM_FIELD');
+  const [aptPriority, setAptPriority] = useState<'ROUTINE' | 'URGENT' | 'CRITICAL'>('ROUTINE');
+  const [aptVitalsBp, setAptVitalsBp] = useState<string>('');
+  const [aptVitalsSugar, setAptVitalsSugar] = useState<string>('');
+  const [aptVitalsPulse, setAptVitalsPulse] = useState<string>('');
+  const [aptVitalsTemp, setAptVitalsTemp] = useState<string>('');
+  const [isSubmittingApt, setIsSubmittingApt] = useState<boolean>(false);
+  const [aptSuccessData, setAptSuccessData] = useState<AppointmentData | null>(null);
+  const [showAptSuccessModal, setShowAptSuccessModal] = useState<boolean>(false);
+  const [selectedPassAppointment, setSelectedPassAppointment] = useState<AppointmentData | null>(null);
+  const [showPassModal, setShowPassModal] = useState<boolean>(false);
+  const [aptFilterStatus, setAptFilterStatus] = useState<'ALL' | 'PENDING' | 'COMPLETED'>('ALL');
+  const [aptListSearchQuery, setAptListSearchQuery] = useState<string>('');
+  const [copiedToken, setCopiedToken] = useState<boolean>(false);
+
+  // -------------------------------------------------------------
   // Initial Load & Refresh
   // -------------------------------------------------------------
   const reloadData = () => {
     setPatients(careTeamStore.getPatients());
     setEscalations(careTeamStore.getEscalations());
+    setAppointments(careTeamStore.getAppointments());
   };
 
   const checkConnection = async () => {
@@ -215,9 +298,16 @@ export default function CareTeamPortal() {
       });
     });
 
+    const unsubAppointments = subscribeToAppointments(() => {
+      careTeamStore.syncFromSupabase().then(() => {
+        reloadData();
+      });
+    });
+
     return () => {
       if (unsubEscalations) unsubEscalations();
       if (unsubPatients) unsubPatients();
+      if (unsubAppointments) unsubAppointments();
     };
   }, [supabaseConnected]);
 
@@ -363,6 +453,116 @@ export default function CareTeamPortal() {
   const currentlySelectedPatient = useMemo(() => {
     return patients.find((p) => p.id === selectedPatientId || p.uhid === selectedPatientId);
   }, [patients, selectedPatientId]);
+
+  // Filtered patients for dropdown/search in Book Appointment tab
+  const aptFilteredPatients = useMemo(() => {
+    if (!aptPatientSearchQuery.trim()) return patients;
+    const q = aptPatientSearchQuery.toLowerCase();
+    return patients.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.uhid?.toLowerCase().includes(q) ||
+        p.phone.includes(q)
+    );
+  }, [patients, aptPatientSearchQuery]);
+
+  const currentlySelectedAptPatient = useMemo(() => {
+    return patients.find((p) => p.id === aptPatientId || p.uhid === aptPatientId) || null;
+  }, [patients, aptPatientId]);
+
+  // Filtered appointments for live appointment list
+  const filteredAppointmentsList = useMemo(() => {
+    return appointments.filter((apt) => {
+      const matchesStatus =
+        aptFilterStatus === 'ALL' ||
+        (aptFilterStatus === 'PENDING' && apt.status === 'PENDING') ||
+        (aptFilterStatus === 'COMPLETED' && apt.status === 'COMPLETED');
+      if (!matchesStatus) return false;
+
+      if (!aptListSearchQuery.trim()) return true;
+      const q = aptListSearchQuery.toLowerCase().trim();
+      return (
+        apt.patientName.toLowerCase().includes(q) ||
+        (apt.uhid && apt.uhid.toLowerCase().includes(q)) ||
+        apt.tokenNumber.toLowerCase().includes(q) ||
+        apt.reasonForVisit.toLowerCase().includes(q) ||
+        (apt.doctorName && apt.doctorName.toLowerCase().includes(q))
+      );
+    });
+  }, [appointments, aptFilterStatus, aptListSearchQuery]);
+
+  // Handle Book Appointment Submission
+  const handleBookAppointment = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!aptPatientId) {
+      alert('Please select a patient to book an appointment.');
+      return;
+    }
+
+    const patient = currentlySelectedAptPatient;
+    if (!patient) {
+      alert('Selected patient not found.');
+      return;
+    }
+
+    const finalReason = aptReason || 'Routine Clinical Review';
+    const reasonWithDetails = aptReasonDetails.trim()
+      ? `${finalReason} — ${aptReasonDetails.trim()}`
+      : finalReason;
+    const finalTime = (aptTimeSlot === 'CUSTOM' ? aptCustomTime : aptTimeSlot) || 'Today • Walk-in';
+
+    setIsSubmittingApt(true);
+    try {
+      const selectedDoc = AVAILABLE_DOCTORS.find((d) => d.id === aptDoctorId);
+      const currentApts = careTeamStore.getAppointments();
+      const tokenNumber = `TOKEN-${String(currentApts.length + 1).padStart(2, '0')}`;
+
+      // Build vitals summary if entered
+      let vitalsStr = '';
+      const vitalsParts = [];
+      if (aptVitalsBp) vitalsParts.push(`BP: ${aptVitalsBp} mmHg`);
+      if (aptVitalsSugar) vitalsParts.push(`Sugar: ${aptVitalsSugar} mg/dL`);
+      if (aptVitalsPulse) vitalsParts.push(`Pulse: ${aptVitalsPulse} bpm`);
+      if (aptVitalsTemp) vitalsParts.push(`Temp: ${aptVitalsTemp}°F`);
+      if (vitalsParts.length > 0) vitalsStr = vitalsParts.join(' | ');
+
+      const payload: Omit<AppointmentData, 'id' | 'createdAt'> = {
+        patientId: patient.id || patient.uhid || 'pt-unknown',
+        patientName: patient.name,
+        patientPhone: patient.phone,
+        uhid: patient.uhid,
+        doctorId: aptDoctorId === 'GENERAL_TRIAGE' ? null : aptDoctorId,
+        doctorName: selectedDoc?.name || 'Dr. Suresh Sharma, MD',
+        tokenNumber,
+        reasonForVisit: vitalsStr ? `${reasonWithDetails} (${vitalsStr})` : reasonWithDetails,
+        appointmentTime: finalTime,
+        bookingChannel: aptBookingChannel,
+        status: 'PENDING',
+        priority: aptPriority,
+        vitalsNotes: vitalsStr,
+        bookedBy: currentUser ? `${currentUser.name} (${currentUser.crtId})` : 'Care Team Fieldworker',
+      };
+
+      const res = await careTeamStore.bookAppointment(payload);
+      await careTeamStore.syncFromSupabase();
+      reloadData();
+      setIsSubmittingApt(false);
+      setAptSuccessData(res.appointment);
+      setShowAptSuccessModal(true);
+
+      // Reset specific fields
+      setAptReasonDetails('');
+      setAptCustomTime('');
+      setAptVitalsBp('');
+      setAptVitalsSugar('');
+      setAptVitalsPulse('');
+      setAptVitalsTemp('');
+    } catch (err: any) {
+      setIsSubmittingApt(false);
+      alert('Failed to book appointment: ' + err.message);
+    }
+  };
 
   // Copy address to guardian
   const handleCopyPatientAddress = () => {
@@ -763,6 +963,25 @@ END $$;`;
                   }`}>
                     {patients.length}
                   </span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('appointments')}
+                  className={`flex items-center space-x-2 py-2.5 px-5 sm:px-7 rounded-full font-bold text-sm sm:text-base transition-all whitespace-nowrap ${
+                    activeTab === 'appointments'
+                      ? 'bg-[#1D64F2] text-white shadow-md'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-white/60'
+                  }`}
+                >
+                  <Calendar className="w-4.5 h-4.5 flex-shrink-0" />
+                  <span>Book Appointment</span>
+                  {appointments.length > 0 && (
+                    <span className={`text-xs sm:text-sm py-0.5 px-2.5 rounded-full font-black ${
+                      activeTab === 'appointments' ? 'bg-white/20 text-white' : 'bg-blue-100 text-[#1D64F2]'
+                    }`}>
+                      {appointments.length}
+                    </span>
+                  )}
                 </button>
 
                 <button
@@ -1923,6 +2142,470 @@ END $$;`;
             </div>
           </div>
         )}
+
+        {/* ========================================================= */}
+        {/* TAB 3: BOOK CLINICAL APPOINTMENT & QUEUE DISPATCH */}
+        {/* ========================================================= */}
+        {activeTab === 'appointments' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            {/* Left 7 Cols: Appointment Booking Form */}
+            <div className="lg:col-span-7 space-y-6">
+              <form
+                onSubmit={handleBookAppointment}
+                className="bg-white rounded-3xl border border-[#EAE4D9] shadow-sm overflow-hidden"
+              >
+                <div className="bg-blue-50/70 px-6 sm:px-8 py-5 border-b border-blue-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-100 text-[#1D64F2] flex items-center justify-center font-bold">
+                      <Calendar className="w-5 h-5 flex-shrink-0" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-black text-slate-900">
+                        Book Clinical OPD Appointment
+                      </h2>
+                      <p className="text-xs text-slate-500 font-medium">
+                        Direct scheduling into Doctor Desk consultation queue
+                      </p>
+                    </div>
+                  </div>
+                  <span className="self-start sm:self-auto text-xs sm:text-sm font-black px-3.5 py-1 rounded-full bg-blue-100 text-[#1D64F2] border border-blue-200">
+                    OPD Queue Dispatch
+                  </span>
+                </div>
+
+                <div className="p-6 sm:p-8 space-y-6">
+                  {/* Step 1: Select Registered Patient */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-bold tracking-wide text-slate-800 flex items-center space-x-1">
+                        <span>1. Select Patient</span>
+                        <span className="text-rose-500">*</span>
+                      </label>
+                      <span className="text-xs text-slate-500 font-medium">
+                        {patients.length} registered
+                      </span>
+                    </div>
+
+                    {/* Patient Search Input */}
+                    <div className="relative">
+                      <Search className="w-4.5 h-4.5 absolute left-3.5 top-3.5 text-slate-400" />
+                      <input
+                        type="text"
+                        placeholder="Search patient by name, UHID, or phone..."
+                        value={aptPatientSearchQuery}
+                        onChange={(e) => setAptPatientSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[#E5DFD4] bg-[#FAF8F5]/50 focus:bg-white focus:border-[#1D64F2] focus:ring-2 focus:ring-blue-100 outline-none text-sm transition"
+                      />
+                    </div>
+
+                    {/* Filtered Patient Select Grid */}
+                    <div className="max-h-48 overflow-y-auto space-y-2 pr-1 border border-[#E5DFD4] rounded-2xl p-2 bg-[#FAF8F5]/30">
+                      {aptFilteredPatients.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-slate-500">
+                          No registered patients match your search.
+                        </div>
+                      ) : (
+                        aptFilteredPatients.map((pt) => {
+                          const isSelected = aptPatientId === (pt.id || pt.uhid);
+                          return (
+                            <div
+                              key={pt.id || pt.uhid}
+                              onClick={() => setAptPatientId(pt.id || pt.uhid || '')}
+                              className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between ${
+                                isSelected
+                                  ? 'bg-blue-50/80 border-[#1D64F2] shadow-xs'
+                                  : 'bg-white hover:bg-slate-50 border-[#E5DFD4]'
+                              }`}
+                            >
+                              <div className="flex items-center space-x-3 min-w-0">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 ${
+                                  isSelected ? 'bg-[#1D64F2] text-white' : 'bg-slate-100 text-slate-700'
+                                }`}>
+                                  {pt.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="flex items-center space-x-2">
+                                    <p className="font-bold text-sm text-slate-900 truncate">{pt.name}</p>
+                                    <span className="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
+                                      {pt.uhid}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-slate-500 truncate">
+                                    Age {pt.age} • {pt.gender} • +91 {pt.phone}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex-shrink-0 ml-2">
+                                {isSelected ? (
+                                  <span className="w-5 h-5 rounded-full bg-[#1D64F2] text-white flex items-center justify-center">
+                                    <Check className="w-3.5 h-3.5" />
+                                  </span>
+                                ) : (
+                                  <span className="w-5 h-5 rounded-full border border-slate-300" />
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+
+                    {/* Selected Patient Banner */}
+                    {currentlySelectedAptPatient && (
+                      <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-9 h-9 rounded-full bg-[#1D64F2] text-white flex items-center justify-center font-bold text-sm">
+                            {currentlySelectedAptPatient.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-black text-slate-900 text-sm">
+                              {currentlySelectedAptPatient.name} ({currentlySelectedAptPatient.uhid})
+                            </p>
+                            <p className="text-xs text-slate-600 font-medium">
+                              +91 {currentlySelectedAptPatient.phone} • {currentlySelectedAptPatient.address}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-xs font-bold text-[#1D64F2] bg-white px-2.5 py-1 rounded-full border border-blue-200">
+                          Selected
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Step 2: Assign Doctor & Room */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold tracking-wide text-slate-800 flex items-center space-x-1">
+                      <span>2. Assign Physician / Department</span>
+                      <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {AVAILABLE_DOCTORS.map((doc) => {
+                        const isDocSelected = aptDoctorId === doc.id;
+                        return (
+                          <div
+                            key={doc.id}
+                            onClick={() => setAptDoctorId(doc.id)}
+                            className={`p-3.5 rounded-2xl border cursor-pointer transition flex flex-col justify-between ${
+                              isDocSelected
+                                ? 'bg-blue-50/70 border-[#1D64F2] shadow-xs'
+                                : 'bg-white hover:bg-[#FAF8F5] border-[#E5DFD4]'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center space-x-2">
+                                <Stethoscope className={`w-4 h-4 ${isDocSelected ? 'text-[#1D64F2]' : 'text-slate-400'}`} />
+                                <span className="font-bold text-sm text-slate-900">{doc.name}</span>
+                              </div>
+                              <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
+                                isDocSelected ? 'bg-[#1D64F2] text-white font-bold' : 'border border-slate-300'
+                              }`}>
+                                {isDocSelected && '✓'}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-600 font-medium mt-1.5">{doc.department}</p>
+                            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                              <span>{doc.room}</span>
+                              <span className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">{doc.id}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Step 3: Reason for Consultation */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-bold tracking-wide text-slate-800 flex items-center space-x-1">
+                      <span>3. Reason for Consultation</span>
+                      <span className="text-rose-500">*</span>
+                    </label>
+                    {/* Reason Presets */}
+                    <div className="flex flex-wrap gap-2">
+                      {REASON_PRESETS.map((preset) => {
+                        const isSelected = aptReason === preset;
+                        return (
+                          <button
+                            key={preset}
+                            type="button"
+                            onClick={() => setAptReason(preset)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold transition ${
+                              isSelected
+                                ? 'bg-[#1D64F2] text-white shadow-xs'
+                                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                            }`}
+                          >
+                            {preset}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {/* Additional Clinical Notes */}
+                    <input
+                      type="text"
+                      placeholder="Add specific symptoms, duration, or fieldworker observations..."
+                      value={aptReasonDetails}
+                      onChange={(e) => setAptReasonDetails(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-2xl border border-[#E5DFD4] bg-[#FAF8F5]/40 focus:bg-white focus:border-[#1D64F2] focus:ring-2 focus:ring-blue-100 outline-none text-sm transition"
+                    />
+                  </div>
+
+                  {/* Step 4: Time Slot & Booking Channel */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Time Slot Presets */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold tracking-wide text-slate-800">
+                        Appointment Slot
+                      </label>
+                      <select
+                        value={aptTimeSlot}
+                        onChange={(e) => setAptTimeSlot(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-[#E5DFD4] bg-[#FAF8F5]/40 focus:bg-white focus:border-[#1D64F2] focus:ring-2 focus:ring-blue-100 outline-none text-sm font-semibold text-slate-800"
+                      >
+                        {TIME_SLOT_PRESETS.map((slot) => (
+                          <option key={slot} value={slot}>
+                            {slot}
+                          </option>
+                        ))}
+                        <option value="CUSTOM">Custom Slot / Date Time</option>
+                      </select>
+                      {aptTimeSlot === 'CUSTOM' && (
+                        <input
+                          type="text"
+                          placeholder="e.g. Friday • 03:00 PM"
+                          value={aptCustomTime}
+                          onChange={(e) => setAptCustomTime(e.target.value)}
+                          className="w-full mt-2 px-3.5 py-2 rounded-xl border border-[#E5DFD4] text-xs font-semibold"
+                        />
+                      )}
+                    </div>
+
+                    {/* Booking Channel & Priority */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold tracking-wide text-slate-800">
+                        Booking Channel & Priority
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <select
+                          value={aptBookingChannel}
+                          onChange={(e: any) => setAptBookingChannel(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-[#E5DFD4] bg-[#FAF8F5]/40 focus:bg-white text-xs font-bold text-slate-800"
+                        >
+                          <option value="CARE_TEAM_FIELD">Care Team Field</option>
+                          <option value="WALK_IN">Walk-in Triage</option>
+                          <option value="TELE_CONSULT">Tele-Consult</option>
+                        </select>
+                        <select
+                          value={aptPriority}
+                          onChange={(e: any) => setAptPriority(e.target.value)}
+                          className={`w-full px-3 py-2 rounded-xl border border-[#E5DFD4] text-xs font-bold ${
+                            aptPriority === 'CRITICAL'
+                              ? 'bg-rose-50 text-rose-700 border-rose-300'
+                              : aptPriority === 'URGENT'
+                              ? 'bg-amber-50 text-amber-700 border-amber-300'
+                              : 'bg-blue-50 text-[#1D64F2] border-blue-200'
+                          }`}
+                        >
+                          <option value="ROUTINE">Routine</option>
+                          <option value="URGENT">Urgent</option>
+                          <option value="CRITICAL">Critical</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Step 5: Optional Fieldworker Measured Vitals */}
+                  <div className="p-4 bg-[#FAF8F5] rounded-2xl border border-[#E5DFD4] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <HeartPulse className="w-4 h-4 text-rose-500" />
+                        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                          Fieldworker Vitals (Optional)
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-slate-500 font-medium">Forwarded to Doctor Desk</span>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-600 block mb-1">BP (mmHg)</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 130/85"
+                          value={aptVitalsBp}
+                          onChange={(e) => setAptVitalsBp(e.target.value)}
+                          className="w-full px-2.5 py-1.5 rounded-xl border border-[#E5DFD4] bg-white text-xs font-semibold text-slate-800 focus:border-[#1D64F2] outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-600 block mb-1">Blood Sugar</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 142 mg/dL"
+                          value={aptVitalsSugar}
+                          onChange={(e) => setAptVitalsSugar(e.target.value)}
+                          className="w-full px-2.5 py-1.5 rounded-xl border border-[#E5DFD4] bg-white text-xs font-semibold text-slate-800 focus:border-[#1D64F2] outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-600 block mb-1">Pulse (bpm)</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 78 bpm"
+                          value={aptVitalsPulse}
+                          onChange={(e) => setAptVitalsPulse(e.target.value)}
+                          className="w-full px-2.5 py-1.5 rounded-xl border border-[#E5DFD4] bg-white text-xs font-semibold text-slate-800 focus:border-[#1D64F2] outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-600 block mb-1">Temp (°F)</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 98.6"
+                          value={aptVitalsTemp}
+                          onChange={(e) => setAptVitalsTemp(e.target.value)}
+                          className="w-full px-2.5 py-1.5 rounded-xl border border-[#E5DFD4] bg-white text-xs font-semibold text-slate-800 focus:border-[#1D64F2] outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Submit Action */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmittingApt}
+                      className="w-full py-4 px-6 bg-[#1D64F2] hover:bg-[#1554D6] text-white font-black text-base rounded-2xl sm:rounded-full shadow-lg shadow-blue-500/25 transition flex items-center justify-center space-x-2 active:scale-[0.99] disabled:opacity-50"
+                    >
+                      {isSubmittingApt ? (
+                        <span>Issuing Appointment Token & Syncing...</span>
+                      ) : (
+                        <>
+                          <Ticket className="w-5 h-5" />
+                          <span>Generate Appointment Token & Dispatch</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Right 5 Cols: Clinic Live Schedule & Queue */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="bg-white rounded-3xl border border-[#EAE4D9] shadow-sm p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2.5">
+                    <Clock className="w-5 h-5 text-[#1D64F2]" />
+                    <h3 className="text-base font-black text-slate-900">
+                      Clinic Consultation Queue
+                    </h3>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-[#1D64F2] border border-blue-200">
+                    {filteredAppointmentsList.length} Appointments
+                  </span>
+                </div>
+
+                {/* Filter & Search Bar */}
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Filter appointments..."
+                      value={aptListSearchQuery}
+                      onChange={(e) => setAptListSearchQuery(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 rounded-xl border border-[#E5DFD4] text-xs font-medium bg-[#FAF8F5]/50 focus:bg-white focus:border-[#1D64F2] outline-none"
+                    />
+                  </div>
+                  {/* Status Pills */}
+                  <div className="flex items-center space-x-2">
+                    {(['ALL', 'PENDING', 'COMPLETED'] as const).map((status) => (
+                      <button
+                        key={status}
+                        type="button"
+                        onClick={() => setAptFilterStatus(status)}
+                        className={`px-3 py-1 rounded-full text-xs font-bold transition ${
+                          aptFilterStatus === status
+                            ? 'bg-slate-900 text-white'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {status}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Appointments Queue List */}
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                  {filteredAppointmentsList.length === 0 ? (
+                    <div className="p-8 text-center bg-[#FAF8F5] rounded-2xl border border-dashed border-[#E5DFD4] space-y-2">
+                      <Calendar className="w-8 h-8 mx-auto text-slate-400" />
+                      <p className="text-sm font-bold text-slate-700">No appointments scheduled</p>
+                      <p className="text-xs text-slate-500">
+                        Book an appointment on the left to generate an OPD Token.
+                      </p>
+                    </div>
+                  ) : (
+                    filteredAppointmentsList.map((apt) => (
+                      <div
+                        key={apt.id}
+                        className="p-4 rounded-2xl border border-[#E5DFD4] hover:border-blue-300 bg-white transition space-y-2.5 shadow-2xs"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-mono font-black text-sm text-[#1D64F2] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                                {apt.tokenNumber}
+                              </span>
+                              <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                                apt.status === 'COMPLETED'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}>
+                                {apt.status}
+                              </span>
+                            </div>
+                            <h4 className="font-bold text-sm text-slate-900 mt-1">
+                              {apt.patientName}
+                            </h4>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedPassAppointment(apt);
+                              setShowPassModal(true);
+                            }}
+                            className="px-2.5 py-1 bg-slate-100 hover:bg-[#1D64F2] hover:text-white text-slate-700 rounded-lg text-xs font-bold transition flex items-center space-x-1"
+                            title="View / Print Token Pass"
+                          >
+                            <Ticket className="w-3.5 h-3.5" />
+                            <span>Pass</span>
+                          </button>
+                        </div>
+
+                        <div className="text-xs text-slate-600 space-y-0.5">
+                          <p className="flex items-center space-x-1.5">
+                            <Stethoscope className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                            <span>{apt.doctorName || 'Dr. Suresh Sharma, MD'}</span>
+                          </p>
+                          <p className="flex items-center space-x-1.5">
+                            <Clock className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                            <span>{apt.appointmentTime}</span>
+                          </p>
+                          <p className="text-[11px] text-slate-500 font-medium truncate pt-1">
+                            Reason: {apt.reasonForVisit}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       )}
 
@@ -2368,6 +3051,209 @@ END $$;`;
       )}
 
       {/* ------------------------------------------------------------- */}
+      {/* APPOINTMENT BOOKED SUCCESS MODAL WITH TOKEN NUMBER */}
+      {/* ------------------------------------------------------------- */}
+      {showAptSuccessModal && aptSuccessData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-md p-3 sm:p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#EAE4D9] text-center relative max-h-[92dvh] overflow-y-auto">
+            {/* Top Close Button */}
+            <button
+              onClick={() => setShowAptSuccessModal(false)}
+              className="absolute top-4 sm:top-5 right-4 sm:right-5 text-slate-400 hover:text-slate-700 bg-[#FAF8F5] hover:bg-slate-200 p-2 rounded-full transition"
+              title="Close Modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Icon / Brand Badge */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-3xl bg-blue-50 text-[#1D64F2] p-1.5 shadow-md border border-blue-200 flex items-center justify-center mb-3">
+              <Ticket className="w-10 h-10" />
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Appointment Confirmed!
+            </h2>
+            <p className="text-sm text-slate-600 mt-1.5 font-medium">
+              Token dispatched directly to Doctor Desk consultation queue
+            </p>
+
+            {/* Prominent Generated Token Card */}
+            <div className="mt-5 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-blue-900/40">
+              <p className="text-xs sm:text-sm uppercase tracking-widest text-blue-300 font-bold">
+                CONSULTATION TOKEN NUMBER
+              </p>
+              <div className="mt-2.5 flex items-center justify-center space-x-2 sm:space-x-3">
+                <span className="font-mono text-4xl sm:text-5xl md:text-6xl font-black tracking-wider text-blue-200">
+                  {aptSuccessData.tokenNumber}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (aptSuccessData.tokenNumber) {
+                      navigator.clipboard.writeText(aptSuccessData.tokenNumber);
+                      setCopiedToken(true);
+                      setTimeout(() => setCopiedToken(false), 2500);
+                    }
+                  }}
+                  className="p-2.5 sm:p-3 rounded-2xl bg-[#1D64F2] hover:bg-[#1554D6] text-white transition shadow-sm border border-blue-400/30 flex-shrink-0"
+                  title="Copy Token Number"
+                >
+                  {copiedToken ? <Check className="w-5 h-5 sm:w-6 sm:h-6 text-white" /> : <Copy className="w-5 h-5 sm:w-6 sm:h-6" />}
+                </button>
+              </div>
+              {copiedToken && (
+                <p className="text-xs text-blue-300 font-semibold mt-1.5">
+                  ✓ Copied Token to clipboard!
+                </p>
+              )}
+            </div>
+
+            {/* Appointment Details Summary */}
+            <div className="mt-6 bg-[#FAF8F5] rounded-2xl p-4 sm:p-5 border border-[#E5DFD4] text-left text-xs sm:text-sm space-y-2.5">
+              <div className="flex items-center justify-between border-b border-[#E5DFD4]/70 pb-2">
+                <span className="text-slate-500 font-medium">Patient Name:</span>
+                <span className="font-bold text-slate-900">{aptSuccessData.patientName}</span>
+              </div>
+              {aptSuccessData.uhid && (
+                <div className="flex items-center justify-between border-b border-[#E5DFD4]/70 pb-2">
+                  <span className="text-slate-500 font-medium">Patient UHID:</span>
+                  <span className="font-mono font-bold text-slate-900">{aptSuccessData.uhid}</span>
+                </div>
+              )}
+              <div className="flex items-center justify-between border-b border-[#E5DFD4]/70 pb-2">
+                <span className="text-slate-500 font-medium">Physician:</span>
+                <span className="font-bold text-slate-900">{aptSuccessData.doctorName || 'Dr. Suresh Sharma, MD'}</span>
+              </div>
+              <div className="flex items-center justify-between border-b border-[#E5DFD4]/70 pb-2">
+                <span className="text-slate-500 font-medium">Scheduled Slot:</span>
+                <span className="font-bold text-[#1D64F2]">{aptSuccessData.appointmentTime}</span>
+              </div>
+              <div className="flex items-start justify-between pt-0.5">
+                <span className="text-slate-500 font-medium">Reason for Visit:</span>
+                <span className="font-semibold text-slate-800 text-right max-w-[60%]">{aptSuccessData.reasonForVisit}</span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="mt-6 flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedPassAppointment(aptSuccessData);
+                  setShowAptSuccessModal(false);
+                  setShowPassModal(true);
+                }}
+                className="flex-1 py-3.5 px-4 rounded-2xl bg-blue-50 hover:bg-blue-100 text-[#1D64F2] font-black text-sm transition flex items-center justify-center space-x-2 border border-blue-200"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Print Clinic Pass</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAptSuccessModal(false)}
+                className="flex-1 py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-sm shadow-md transition"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* APPOINTMENT TOKEN PASS / CLINIC SLIP MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {showPassModal && selectedPassAppointment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-md p-3 sm:p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#EAE4D9] text-center relative max-h-[92dvh] overflow-y-auto">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowPassModal(false)}
+              className="absolute top-4 sm:top-5 right-4 sm:right-5 text-slate-400 hover:text-slate-700 bg-[#FAF8F5] hover:bg-slate-200 p-2 rounded-full transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header pass preview */}
+            <div className="border-b-2 border-dashed border-[#E5DFD4] pb-5 mb-5 text-left">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-7 h-7 rounded-lg bg-[#1D64F2] text-white flex items-center justify-center font-bold text-xs">
+                    CL
+                  </div>
+                  <span className="font-black text-slate-900 text-base">CuraLink Clinic</span>
+                </div>
+                <span className="text-[10px] uppercase tracking-wider font-black px-2 py-0.5 rounded bg-blue-100 text-[#1D64F2]">
+                  OPD Pass
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 font-medium">
+                Care Team Field & Triage Appointment Slip
+              </p>
+            </div>
+
+            {/* Token Badge */}
+            <div className="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 text-center">
+              <p className="text-[11px] uppercase tracking-widest font-bold text-[#1D64F2]">
+                QUEUE TOKEN
+              </p>
+              <p className="font-mono text-4xl sm:text-5xl font-black text-slate-900 mt-1">
+                {selectedPassAppointment.tokenNumber}
+              </p>
+              <p className="text-xs text-slate-600 font-semibold mt-1">
+                {selectedPassAppointment.appointmentTime}
+              </p>
+            </div>
+
+            {/* Patient & Doctor Meta */}
+            <div className="mt-4 text-left space-y-2 text-xs">
+              <div className="flex justify-between py-1 border-b border-slate-100">
+                <span className="text-slate-500">Patient:</span>
+                <span className="font-bold text-slate-900">{selectedPassAppointment.patientName}</span>
+              </div>
+              {selectedPassAppointment.uhid && (
+                <div className="flex justify-between py-1 border-b border-slate-100">
+                  <span className="text-slate-500">UHID:</span>
+                  <span className="font-mono font-bold text-slate-900">{selectedPassAppointment.uhid}</span>
+                </div>
+              )}
+              <div className="flex justify-between py-1 border-b border-slate-100">
+                <span className="text-slate-500">Doctor:</span>
+                <span className="font-bold text-slate-900">{selectedPassAppointment.doctorName || 'Dr. Suresh Sharma, MD'}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-100">
+                <span className="text-slate-500">Status:</span>
+                <span className="font-bold text-emerald-600">{selectedPassAppointment.status}</span>
+              </div>
+              <div className="py-1">
+                <span className="text-slate-500 block mb-0.5">Clinical Reason:</span>
+                <span className="font-medium text-slate-800">{selectedPassAppointment.reasonForVisit}</span>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="mt-6 flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="flex-1 py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Print Slip</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowPassModal(false)}
+                className="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
       {/* SUPABASE SETTINGS & SQL SCHEMA DRAWER/MODAL */}
       {/* ------------------------------------------------------------- */}
       {showConfigModal && (
@@ -2515,6 +3401,23 @@ END $$;`;
             >
               <UserPlus className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
               <span>Register</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('appointments')}
+              className={`flex items-center space-x-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+                activeTab === 'appointments'
+                  ? 'bg-[#1D64F2] text-white shadow-md'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#FAF8F5]'
+              }`}
+            >
+              <Calendar className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <span>Appointments</span>
+              {appointments.length > 0 && (
+                <span className="bg-[#1D64F2] text-white text-xs px-2 py-0.5 rounded-full font-black">
+                  {appointments.length}
+                </span>
+              )}
             </button>
 
             <button

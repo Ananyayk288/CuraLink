@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { PatientData, EscalationData, CareTeamUser } from './types';
+import { PatientData, EscalationData, CareTeamUser, AppointmentData } from './types';
 
 let cachedClient: SupabaseClient | null = null;
 let cachedConfigKey = '';
@@ -738,5 +738,138 @@ export function subscribeToPatients(
     return null;
   }
 }
+
+// -------------------------------------------------------------
+// Appointments (Care Team Booking & Schedule Management)
+// -------------------------------------------------------------
+export async function saveAppointmentToSupabase(appointment: AppointmentData): Promise<{
+  success: boolean;
+  supabaseId?: string;
+  tokenNumber?: string;
+  error?: string;
+}> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return { success: false, error: 'Supabase client not configured' };
+  }
+
+  try {
+    const payload = {
+      id: appointment.id || `apt-${Date.now()}`,
+      patient_id: appointment.patientId,
+      doctor_id: appointment.doctorId || null,
+      token_number: appointment.tokenNumber,
+      reason_for_visit: appointment.reasonForVisit,
+      appointment_time: appointment.appointmentTime,
+      booking_channel: appointment.bookingChannel || 'CARE_TEAM_FIELD',
+      status: appointment.status || 'PENDING',
+    };
+
+    const { data, error } = await client
+      .from('appointments')
+      .upsert([payload], { onConflict: 'id' })
+      .select();
+
+    if (error) {
+      console.error('Supabase appointment insert error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return {
+      success: true,
+      supabaseId: data?.[0]?.id || payload.id,
+      tokenNumber: payload.token_number,
+    };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function getSupabaseAppointments(): Promise<AppointmentData[] | null> {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const { data, error } = await client
+      .from('appointments')
+      .select('*, patients(*), doctors(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      const fallback = await client
+        .from('appointments')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (fallback.error || !fallback.data) return null;
+      return fallback.data.map((row: any) => ({
+        id: row.id,
+        patientId: row.patient_id,
+        patientName: row.patient_name || 'Patient',
+        patientPhone: row.patient_phone || '',
+        uhid: row.uhid || '',
+        doctorId: row.doctor_id,
+        doctorName: row.doctor_name || (row.doctor_id ? 'Dr. Suresh Sharma, MD' : 'General Triage Desk'),
+        tokenNumber: row.token_number || 'TOKEN-01',
+        reasonForVisit: row.reason_for_visit || 'Care Team Consultation',
+        appointmentTime: row.appointment_time || 'Today • Walk-in',
+        bookingChannel: row.booking_channel || 'CARE_TEAM_FIELD',
+        status: row.status || 'PENDING',
+        createdAt: row.created_at,
+      }));
+    }
+
+    if (!data) return [];
+
+    return data.map((row: any) => ({
+      id: row.id,
+      patientId: row.patient_id,
+      patientName: row.patients?.name || row.patient_name || 'Patient',
+      patientPhone: row.patients?.phone || row.patient_phone || '',
+      uhid: row.patients?.uhid || row.uhid || '',
+      doctorId: row.doctor_id,
+      doctorName: row.doctors?.name || (row.doctor_id === 'DOC84920' ? 'Dr. Suresh Sharma, MD' : 'General Triage Desk'),
+      tokenNumber: row.token_number || 'TOKEN-01',
+      reasonForVisit: row.reason_for_visit || 'Care Team Consultation',
+      appointmentTime: row.appointment_time || 'Today • Walk-in',
+      bookingChannel: row.booking_channel || 'CARE_TEAM_FIELD',
+      status: row.status || 'PENDING',
+      createdAt: row.created_at,
+    }));
+  } catch {
+    return null;
+  }
+}
+
+export function subscribeToAppointments(
+  onChange: (payload: { eventType: string; new: any; old: any }) => void
+): (() => void) | null {
+  const client = getSupabaseClient();
+  if (!client) return null;
+
+  try {
+    const channel = client
+      .channel('realtime_appointments_feed')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'appointments' },
+        (payload) => {
+          onChange({
+            eventType: payload.eventType,
+            new: payload.new,
+            old: payload.old,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      client.removeChannel(channel);
+    };
+  } catch (err) {
+    console.error('Failed to subscribe to appointments realtime channel:', err);
+    return null;
+  }
+}
+
 
 

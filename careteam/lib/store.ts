@@ -1,4 +1,4 @@
-import { PatientData, EscalationData, CareTeamUser } from './types';
+import { PatientData, EscalationData, CareTeamUser, AppointmentData } from './types';
 import {
   savePatientToSupabase,
   saveEscalationToSupabase,
@@ -7,6 +7,8 @@ import {
   updateEscalationStatusInSupabase,
   saveCareTeamUserToSupabase,
   authenticateCareTeamUserFromSupabase,
+  saveAppointmentToSupabase,
+  getSupabaseAppointments,
 } from './supabase';
 
 export const HARDCODED_OTP = '123456';
@@ -116,10 +118,48 @@ const INITIAL_ESCALATIONS: EscalationData[] = [
   },
 ];
 
+const INITIAL_APPOINTMENTS: AppointmentData[] = [
+  {
+    id: 'apt-001',
+    patientId: 'pt-ramesh-001',
+    patientName: 'Ramesh Gowda',
+    patientPhone: '+91 98451 23456',
+    uhid: 'PAT10001',
+    doctorId: 'DOC84920',
+    doctorName: 'Dr. Suresh Sharma, MD',
+    tokenNumber: 'TOKEN-01',
+    reasonForVisit: 'Diabetes Follow-up & High Fasting Blood Sugar (192 mg/dL)',
+    appointmentTime: 'Today • 09:30 AM',
+    bookingChannel: 'CARE_TEAM_FIELD',
+    status: 'PENDING',
+    priority: 'ROUTINE',
+    bookedBy: 'Meenakshi Gowda (ASHA Lead)',
+    createdAt: new Date(Date.now() - 3600000 * 3).toISOString(),
+  },
+  {
+    id: 'apt-002',
+    patientId: 'pt-savitha-002',
+    patientName: 'Savitha Devi',
+    patientPhone: '+91 94481 67890',
+    uhid: 'PAT10002',
+    doctorId: 'DOC84920',
+    doctorName: 'Dr. Suresh Sharma, MD',
+    tokenNumber: 'TOKEN-02',
+    reasonForVisit: 'BP Spike (164/98 mmHg) & Morning Dizziness',
+    appointmentTime: 'Today • 10:00 AM',
+    bookingChannel: 'CARE_TEAM_FIELD',
+    status: 'PENDING',
+    priority: 'URGENT',
+    bookedBy: 'Meenakshi Gowda (ASHA Lead)',
+    createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+  },
+];
+
 // In-Memory & LocalStorage state store
 class CareTeamStore {
   private patients: PatientData[] = [...INITIAL_PATIENTS];
   private escalations: EscalationData[] = [...INITIAL_ESCALATIONS];
+  private appointments: AppointmentData[] = [...INITIAL_APPOINTMENTS];
   private users: CareTeamUser[] = [...INITIAL_CARE_TEAM_USERS];
   private currentUser: CareTeamUser | null = null;
   private isBrowser: boolean = typeof window !== 'undefined';
@@ -140,6 +180,10 @@ class CareTeamStore {
       if (savedEscalations) {
         this.escalations = JSON.parse(savedEscalations);
       }
+      const savedAppointments = localStorage.getItem('curalink_appointments') || localStorage.getItem('careteam_appointments');
+      if (savedAppointments) {
+        this.appointments = JSON.parse(savedAppointments);
+      }
       const savedUsers = localStorage.getItem('curalink_users') || localStorage.getItem('careteam_users');
       if (savedUsers) {
         this.users = JSON.parse(savedUsers);
@@ -158,6 +202,7 @@ class CareTeamStore {
     try {
       localStorage.setItem('curalink_patients', JSON.stringify(this.patients));
       localStorage.setItem('curalink_escalations', JSON.stringify(this.escalations));
+      localStorage.setItem('curalink_appointments', JSON.stringify(this.appointments));
       localStorage.setItem('curalink_users', JSON.stringify(this.users));
       if (this.currentUser) {
         localStorage.setItem('curalink_current_user', JSON.stringify(this.currentUser));
@@ -274,6 +319,10 @@ class CareTeamStore {
     return [...this.escalations];
   }
 
+  public getAppointments(): AppointmentData[] {
+    return [...this.appointments];
+  }
+
   public async registerPatient(data: PatientData): Promise<{
     patient: PatientData;
     supabaseSynced: boolean;
@@ -349,7 +398,43 @@ class CareTeamStore {
     return supabaseRes;
   }
 
-  public async syncFromSupabase(): Promise<{ patientsCount: number; escalationsCount: number }> {
+  public async bookAppointment(data: Omit<AppointmentData, 'id' | 'createdAt' | 'status'> & {
+    id?: string;
+    status?: 'PENDING' | 'COMPLETED' | 'CANCELLED';
+  }): Promise<{
+    appointment: AppointmentData;
+    supabaseSynced: boolean;
+    error?: string;
+  }> {
+    const id = data.id || `apt-${Date.now()}`;
+    const tokenNumber = data.tokenNumber || `TOKEN-${String(this.appointments.length + 1).padStart(2, '0')}`;
+
+    const newAppointment: AppointmentData = {
+      ...data,
+      id,
+      tokenNumber,
+      status: data.status || 'PENDING',
+      createdAt: new Date().toISOString(),
+    };
+
+    this.appointments.unshift(newAppointment);
+    this.saveToStorage();
+
+    // Sync to Supabase
+    const supabaseRes = await saveAppointmentToSupabase(newAppointment);
+
+    return {
+      appointment: newAppointment,
+      supabaseSynced: supabaseRes.success,
+      error: supabaseRes.error,
+    };
+  }
+
+  public async syncFromSupabase(): Promise<{
+    patientsCount: number;
+    escalationsCount: number;
+    appointmentsCount: number;
+  }> {
     const remotePatients = await getSupabasePatients();
     if (remotePatients && remotePatients.length > 0) {
       this.patients = remotePatients;
@@ -362,9 +447,16 @@ class CareTeamStore {
       this.saveToStorage();
     }
 
+    const remoteAppointments = await getSupabaseAppointments();
+    if (remoteAppointments && remoteAppointments.length > 0) {
+      this.appointments = remoteAppointments;
+      this.saveToStorage();
+    }
+
     return {
       patientsCount: this.patients.length,
       escalationsCount: this.escalations.length,
+      appointmentsCount: this.appointments.length,
     };
   }
 }
