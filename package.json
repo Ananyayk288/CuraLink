@@ -4,7 +4,8 @@
   "private": true,
   "description": "CuraLink Ecosystem: Care Team Portal, Doctor Consultation Desk, and Pharmacy Dispensing Counter",
   "scripts": {
-    "dev": "npm run dev:portal",
+    "dev": "concurrently -n \"portal,doctor,careteam,pharmacy\" -c \"cyan,blue,green,magenta\" \"npm run dev:portal\" \"npm run dev:doctor\" \"npm run dev:careteam\" \"npm run dev:pharmacy\"",
+    "dev:all": "npm run dev",
     "dev:portal": "cd portal && npm run dev",
     "dev:doctor": "cd doctor && npm run dev",
     "dev:careteam": "cd careteam && npm run dev",
@@ -15,5 +16,8 @@
     "build:doctor": "cd doctor && npm run build",
     "build:careteam": "cd careteam && npm run build",
     "build:pharmacy": "cd pharmacy && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
   }
 }
