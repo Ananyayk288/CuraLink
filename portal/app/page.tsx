@@ -291,16 +291,6 @@ export default function UnifiedGateway() {
             <p className="text-xs text-slate-500 hidden sm:block">Connected Care Team • Doctor • Pharmacy</p>
           </div>
         </div>
-
-        <div className="flex items-center gap-2 sm:gap-3 text-xs">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            Supabase PostgreSQL Ready
-          </div>
-          <div className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-mono text-[11px] font-semibold border border-slate-200">
-            Gateway :3000
-          </div>
-        </div>
       </header>
 
       {/* MAIN CONTAINER */}
