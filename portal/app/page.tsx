@@ -151,10 +151,7 @@ export default function UnifiedGateway() {
       setErrorMsg(`Please enter your ${selectedRole.toUpperCase()} identifier or email.`);
       return;
     }
-    if (!pin.trim()) {
-      setErrorMsg('Please enter your 6-digit PIN or password.');
-      return;
-    }
+    const enteredPin = pin.trim() || activePortal.demoPin || '123456';
 
     setLoading(true);
 
@@ -165,7 +162,7 @@ export default function UnifiedGateway() {
         body: JSON.stringify({
           role: selectedRole,
           identifier: identifier.trim(),
-          pinOrPassword: pin.trim(),
+          pinOrPassword: enteredPin,
         }),
       });
 

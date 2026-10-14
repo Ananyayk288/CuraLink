@@ -130,37 +130,41 @@ export async function getDoctorFromSupabase(loginId: string): Promise<DoctorUser
   if (!client) return null;
 
   try {
-    const term = loginId.trim();
-    let query = client.from('doctors').select('*');
+    const term = loginId.trim().toLowerCase();
+    const cleanId = term.replace(/[^a-z0-9]/g, '');
+    const digits = term.replace(/\D/g, '');
 
-    if (term.toUpperCase().startsWith('DOC')) {
-      query = query.eq('id', term.toUpperCase());
-    } else if (term.includes('@')) {
-      query = query.ilike('email', term);
-    } else {
-      const digits = term.replace(/\D/g, '');
-      if (digits.length >= 6) {
-        query = query.or(`phone.ilike.%${digits}%,id.ilike.${term},email.ilike.${term}`);
-      } else {
-        query = query.or(`id.ilike.${term},email.ilike.${term}`);
-      }
-    }
+    const { data, error } = await client.from('doctors').select('*');
 
-    const { data, error } = await query.limit(1).maybeSingle();
+    if (error || !data || data.length === 0) return null;
 
-    if (error || !data) return null;
+    const matched = data.find((d: any) => {
+      const dId = (d.id || '').toLowerCase();
+      const dCleanId = dId.replace(/[^a-z0-9]/g, '');
+      const dEmail = (d.email || '').toLowerCase();
+      const dName = (d.name || '').toLowerCase();
+      const dDigits = (d.phone || '').replace(/\D/g, '');
+
+      if (dId === term || dCleanId === cleanId) return true;
+      if (dEmail === term || dEmail.includes(term)) return true;
+      if (dName.includes(term) || (term.length >= 3 && dName.includes(term))) return true;
+      if (digits.length >= 6 && dDigits.includes(digits)) return true;
+      return false;
+    });
+
+    if (!matched) return null;
 
     return {
-      id: data.id,
-      name: data.name,
-      phone: data.phone,
-      email: data.email,
-      age: data.age,
-      pin: data.pin,
-      isVerified: data.is_verified ?? true,
-      department: data.department,
-      license: data.license,
-      createdAt: data.created_at,
+      id: matched.id,
+      name: matched.name,
+      phone: matched.phone,
+      email: matched.email,
+      age: matched.age,
+      pin: matched.pin,
+      isVerified: matched.is_verified ?? true,
+      department: matched.department,
+      license: matched.license,
+      createdAt: matched.created_at,
     };
   } catch (err) {
     console.error('getDoctorFromSupabase error:', err);
