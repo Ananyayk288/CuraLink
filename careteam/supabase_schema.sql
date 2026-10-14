@@ -608,12 +608,12 @@ VALUES
     ('e0000001-0000-0000-0000-000000000001', 'Metformin 500mg', 'Glyciphage (Generic Metformin)', 'dist-med-india-01', 120, 30),
     ('e0000001-0000-0000-0000-000000000002', 'Glimepiride 1mg', 'Amaryl (Glimepiride)', 'dist-med-india-01', 60, 20),
     ('e0000001-0000-0000-0000-000000000003', 'Atorvastatin 10mg', 'Atorva (Atorvastatin)', 'dist-med-india-02', 45, 15),
-    ('e0000001-0000-0000-0000-000000000004', 'Atorvastatin 20mg', 'Atorva 20 (Atorvastatin)', 'dist-med-india-02', 40, 15),
-    ('e0000001-0000-0000-0000-000000000005', 'Amoxicillin 500mg', 'Mox 500', 'dist-med-india-01', 80, 25),
-    ('e0000001-0000-0000-0000-000000000006', 'Amlodipine 10mg', 'Norvasc / Amlong', 'dist-med-india-02', 50, 15),
-    ('e0000001-0000-0000-0000-000000000007', 'Paracetamol 650mg', 'Dolo 650', 'dist-med-india-01', 150, 40),
-    ('e0000001-0000-0000-0000-000000000008', 'Torsemide 10mg', 'Dytor 10', 'dist-med-india-02', 40, 15)
-ON CONFLICT (medicine_name) DO UPDATE SET
+    ('e0000001-0000-0000-0000-000000000004', 'Amoxicillin 500mg', 'Mox 500', 'dist-med-india-01', 80, 25),
+    ('e0000001-0000-0000-0000-000000000005', 'Amlodipine 10mg', 'Norvasc / Amlong', 'dist-med-india-02', 50, 15),
+    ('e0000001-0000-0000-0000-000000000006', 'Paracetamol 650mg', 'Dolo 650', 'dist-med-india-01', 150, 40),
+    ('e0000001-0000-0000-0000-000000000007', 'Torsemide 10mg', 'Dytor 10', 'dist-med-india-02', 40, 15),
+    ('e0000001-0000-0000-0000-000000000008', 'Atorvastatin 20mg', 'Atorva 20 (Atorvastatin)', 'dist-med-india-02', 40, 15)
+ON CONFLICT (id) DO UPDATE SET
     stock_quantity = EXCLUDED.stock_quantity;
 
 -- 13. Demo Pharmacy Inventory Batches
@@ -622,12 +622,14 @@ VALUES
     ('e0000001-0000-0000-0000-000000000001', 'Metformin 500mg', 'BTH-MET-2026-01', CURRENT_DATE + INTERVAL '365 days', 120),
     ('e0000001-0000-0000-0000-000000000002', 'Glimepiride 1mg', 'BTH-GLI-2026-01', CURRENT_DATE + INTERVAL '240 days', 60),
     ('e0000001-0000-0000-0000-000000000003', 'Atorvastatin 10mg', 'BTH-ATO-2026-01', CURRENT_DATE + INTERVAL '180 days', 45),
-    ('e0000001-0000-0000-0000-000000000004', 'Atorvastatin 20mg', 'BTH-ATO-2026-02', CURRENT_DATE + INTERVAL '210 days', 40),
-    ('e0000001-0000-0000-0000-000000000005', 'Amoxicillin 500mg', 'BTH-AMX-2026-01', CURRENT_DATE + INTERVAL '300 days', 80),
-    ('e0000001-0000-0000-0000-000000000006', 'Amlodipine 10mg', 'BTH-AML-2026-01', CURRENT_DATE + INTERVAL '320 days', 50),
-    ('e0000001-0000-0000-0000-000000000007', 'Paracetamol 650mg', 'BTH-PCM-2026-01', CURRENT_DATE + INTERVAL '400 days', 150),
-    ('e0000001-0000-0000-0000-000000000008', 'Torsemide 10mg', 'BTH-TOR-2026-01', CURRENT_DATE + INTERVAL '280 days', 40)
-ON CONFLICT (batch_number) DO NOTHING;
+    ('e0000001-0000-0000-0000-000000000004', 'Amoxicillin 500mg', 'BTH-AMX-2026-01', CURRENT_DATE + INTERVAL '300 days', 80),
+    ('e0000001-0000-0000-0000-000000000005', 'Amlodipine 10mg', 'BTH-AML-2026-01', CURRENT_DATE + INTERVAL '320 days', 50),
+    ('e0000001-0000-0000-0000-000000000006', 'Paracetamol 650mg', 'BTH-PCM-2026-01', CURRENT_DATE + INTERVAL '400 days', 150),
+    ('e0000001-0000-0000-0000-000000000007', 'Torsemide 10mg', 'BTH-TOR-2026-01', CURRENT_DATE + INTERVAL '280 days', 40),
+    ('e0000001-0000-0000-0000-000000000008', 'Atorvastatin 20mg', 'BTH-ATO-2026-02', CURRENT_DATE + INTERVAL '210 days', 40)
+ON CONFLICT (batch_number) DO UPDATE SET
+    inventory_item_id = EXCLUDED.inventory_item_id,
+    stock_quantity = EXCLUDED.stock_quantity;
 
 -- 14. Demo Audit Logs
 INSERT INTO audit_logs (actor_id, actor_role, action_type, target_entity, target_id, metadata)
