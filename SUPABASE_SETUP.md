@@ -1,146 +1,149 @@
-# 🚀 CuraLink: Complete Supabase Setup Guide
+# 🚀 CuraLink: Complete Supabase Setup Guide & Predefined Test Data
 
-Follow these exact steps to set up Supabase and connect the entire **Care Team**, **Doctor**, and **Pharmacy** ecosystem.
-
----
-
-## 📌 Step 1: Create a Free Project on Supabase
-
-1. Go to [https://supabase.com](https://supabase.com) and sign in.
-2. Click **New Project** and select your organization.
-3. Fill in:
-   - **Name**: `CuraLink` (or any name you prefer)
-   - **Database Password**: Set a strong password (save it safely)
-   - **Region**: Choose the region closest to you (e.g., `South Asia (Mumbai)` / `ap-south-1`)
-4. Click **Create new project** and wait ~1-2 minutes for the database to provision.
+Follow these exact steps to set up Supabase and immediately run the entire **Care Team**, **Doctor**, and **Pharmacy** ecosystem with pre-loaded demo records.
 
 ---
 
-## 📌 Step 2: Run the Master PostgreSQL Schema
+## 📌 What You Have To Do in Supabase (3 Simple Steps)
 
-1. In your Supabase project dashboard, click on the **SQL Editor** icon in the left navigation sidebar (or press `g` then `s`).
+### Step 1: Open Your Supabase Project
+1. Log in to your [Supabase Dashboard](https://supabase.com/dashboard).
+2. Select your existing project (or click **New Project** and name it `CuraLink`).
+
+### Step 2: Run the Master PostgreSQL Script
+1. In the left-hand navigation sidebar, click on **SQL Editor** (icon `>_` or press `g` then `s`).
 2. Click **+ New query**.
-3. Open the file [`supabase_master_schema.sql`](file:///home/anijois/Documents/SEM%203/HACKATHONS/mockmerge2/supabase_master_schema.sql) in this repository.
-4. Copy the entire contents of `supabase_master_schema.sql` and paste it into the Supabase SQL Editor.
-5. Click **RUN** (or press `Ctrl + Enter` / `Cmd + Enter`).
-6. You will see: `Success. No rows returned`.
+3. Open [`supabase_master_schema.sql`](file:///home/anijois/Documents/SEM%203/HACKATHONS/mockmerge2/supabase_master_schema.sql) in this repository.
+4. Copy the entire contents of [`supabase_master_schema.sql`](file:///home/anijois/Documents/SEM%203/HACKATHONS/mockmerge2/supabase_master_schema.sql) and paste it into the Supabase SQL Editor.
+5. Click **RUN** (green button at bottom-right or press `Ctrl + Enter` / `Cmd + Enter`).
+6. You will see: **`Success. No rows returned`**.
 
-> [!NOTE]
-> This single master schema automatically creates:
-> - All 15 core tables (`doctors`, `care_team_users`, `users`, `patients`, `guardians`, `appointments`, `prescriptions`, `prescription_medicines`, `prescription_diagnostics`, `telephony_triggers`, `escalations`, `inventory_items`, `inventory_batches`, `inventory_movements`, `sticker_confirmations`, `dispense_events`, `audit_logs`).
-> - The `pharmacy_active_prescriptions` view that links Doctor prescriptions directly to the Pharmacist desk.
-> - PostgreSQL triggers that calculate sticker slots (`Morning`, `Afternoon`, `Night`, `Before Food`) and enforce legal prescription immutability.
-> - Pre-seeded demo doctors, fieldworkers, patients (`PAT10001`), pending appointments, and pharmacy inventory batches!
+> [!TIP]
+> That's it! Running this single script automatically:
+> - Creates all 15 relational tables with primary keys, foreign keys, and indexes.
+> - Configures Row-Level Security (RLS) permissive demo policies.
+> - Enables live Realtime WebSocket synchronization on tables (`patients`, `appointments`, `escalations`, `prescriptions`, `dispense_events`).
+> - Installs automated triggers for sticker dose slot calculation (`Morning`, `Afternoon`, `Night`) and prescription immutability.
+> - **Pre-populates rich predefined test data** for doctors, care team workers, patients, queue tokens, prescriptions, diagnostics, AI voice triggers, escalations, and pharmacy inventory!
 
----
-
-## 📌 Step 3: Enable Realtime Broadcasts (Verify)
-
-The SQL script already runs `ALTER PUBLICATION supabase_realtime ADD TABLE ...`, but you can verify it in the dashboard:
-
-1. Click on **Database** in the left sidebar, then click **Replication**.
-2. Under **supabase_realtime**, make sure the following tables have Realtime enabled (toggle switch is ON):
-   - `patients`
-   - `appointments`
-   - `prescriptions`
-   - `escalations`
-   - `dispense_events`
+### Step 3: Verify Your Project URL & Key in `.env.local`
+Your project `.env.local` files in each portal folder already point to the live database (`https://dynlezhahqxpcmavvqqe.supabase.co`).
+If you are using a new personal Supabase project:
+1. Go to **Project Settings** (gear icon at the bottom left) $\rightarrow$ **API**.
+2. Copy your **Project URL** (`https://xyzcompany.supabase.co`) and **`anon` / `public` API key**.
+3. Paste them into `.env.local` in `portal/`, `doctor/`, `careteam/`, and `pharmacy/`.
 
 ---
 
-## 📌 Step 4: Copy API Credentials
+## 🧪 Predefined Test Data in Your Database
 
-1. In the Supabase sidebar, click on **Project Settings** (the gear icon at the bottom left).
-2. Click on **API** (under Configuration).
-3. Under **Project API keys**, you will see:
-   - **Project URL** (e.g., `https://xyzcompany.supabase.co`)
-   - **Project API keys -> `anon` / `public`** (starts with `eyJh...`)
-4. Keep these two values ready.
+The script pre-populates all essential entities so you can immediately demo every portal without entering manual records from scratch:
 
----
-
-## 📌 Step 5: Configure `.env.local` for All Portals
-
-Create or update `.env.local` in each of the three portal folders:
-
-### 1. Doctor Portal (`doctor/.env.local`)
-Create file `/doctor/.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-PORT=3000
-```
-
-### 1. Unified Gateway Portal (`portal/.env.local`)
-Create file `/portal/.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-PORT=3000
-```
-
-### 2. Doctor Portal (`doctor/.env.local`)
-Create file `/doctor/.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-PORT=3001
-```
-
-### 3. Care Team Portal (`careteam/.env.local`)
-Create file `/careteam/.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-PORT=3002
-```
-
-### 4. Pharmacy Portal (`pharmacy/.env.local`)
-Create file `/pharmacy/.env.local`:
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-DATA_PROVIDER=supabase
-PORT=3003
-```
+### 1. Doctors & Clinical Staff (`doctors` table)
+| Doctor ID | Full Name | Department | License | Login PIN |
+|---|---|---|---|---|
+| **`DOC84920`** | Dr. Suresh Sharma, MD | Internal Medicine & Chronic Care | KMC-84920/MD | **`123456`** |
+| **`DOC74921`** | Dr. K. R. Nambiar, MS | Orthopedics & Joint Care | KMC-74921/MS | **`123456`** |
+| **`DOC61034`** | Dr. Anita Sen, MD | Nephrology & Renal Medicine | KMC-61034/MD | **`123456`** |
 
 ---
 
-## 📌 Step 6: Start All Next.js Portals
+### 2. Care Team Fieldworkers (`care_team_users` table)
+| CRT ID | Full Name | Role | Phone | Login PIN |
+|---|---|---|---|---|
+| **`CRT10001`** | Meenakshi Gowda | Lead ASHA Field Coordinator | `+91 98451 00001` | **`123456`** |
+| **`CRT10002`** | Rajesh Patil | Care Team Fieldworker | `+91 98451 00002` | **`123456`** |
 
-From the repository root:
+---
+
+### 3. Pharmacy Counter Staff (`users` table)
+| User ID | Full Name | Role | Email | Facility ID |
+|---|---|---|---|---|
+| `c0a80101-0000-0000-0000-000000000001` | Pharmacist Rajiv | `PHARMACY` | `rajiv.pharmacy@curalink.health` | `fac-city-general` |
+
+---
+
+### 4. Registered Patients & Relational Guardians (`patients` & `guardians` tables)
+| UHID / ID | Patient Name | Age/Gender | Language / Device | Conditions | Literacy / Sticker Rule | Guardian Contact |
+|---|---|---|---|---|---|---|
+| **`PAT10001`** (`pt-ramesh-001`) | **Ramesh Gowda** | 58 / M | Kannada / Feature Phone | Type 2 Diabetes, Diabetic Neuropathy | **Illiterate** (Requires Visual Stickers) | Suresh Gowda (Son) `+91 98801 54321` |
+| **`PAT10002`** (`pt-savitha-002`) | **Savitha Devi** | 62 / F | Kannada / Feature Phone | Essential Hypertension Stage II | **Illiterate** (Requires Visual Stickers) | Anitha Devi (Daughter) `+91 94481 99887` |
+| **`PAT10003`** (`pt-anand-003`) | **Anand Kumar** | 45 / M | English / Smartphone | Pre-Diabetes, Dyslipidemia | **Literate** (Standard instructions) | Self |
+| **`PAT10004`** (`pt-laxmi-004`) | **Laxmamma Bai** | 70 / F | Kannada / Feature Phone | Osteoarthritis, Chronic Joint Pain | **Illiterate** (Requires Visual Stickers) | Manjunath (Son) `+91 98455 33221` |
+
+---
+
+### 5. Appointments & Doctor Queue Tokens (`appointments` table)
+| Token | Appointment ID | Patient | Doctor Assigned | Scheduled Time Slot | Reason for Visit | Status |
+|---|---|---|---|---|---|---|
+| **`TOKEN-01`** | `apt-001` | Ramesh Gowda | Dr. Suresh Sharma | Today • 09:30 AM | Diabetes Follow-up & High Fasting Blood Sugar (192 mg/dL) | `PENDING` |
+| **`TOKEN-02`** | `apt-002` | Savitha Devi | Dr. Suresh Sharma | Today • 10:00 AM | BP Spike (164/98 mmHg) & Morning Dizziness | `PENDING` |
+| **`TOKEN-03`** | `apt-003` | Anand Kumar | Dr. Suresh Sharma | Today • 11:30 AM | Lipid Profile & Metformin Dose Review | `PENDING` |
+| **`TOKEN-04`** | `apt-004` | Laxmamma Bai | Dr. K. R. Nambiar | Today • 02:30 PM | Bilateral Knee Stiffness & Mobility Evaluation | `PENDING` |
+
+---
+
+### 6. Active Prescriptions & Color-Coded Medicines (`prescriptions` & `prescription_medicines` tables)
+| Rx ID | Patient | Doctor | Medicines Prescribed | Timing Slots | Color Tag Rule | Meal Relation |
+|---|---|---|---|---|---|---|
+| **`rx-ramesh-v1`** | Ramesh Gowda | Dr. Suresh Sharma | **Metformin 500mg** | `1-0-1` (Morning & Night) | **Red** (Morning), **Blue** (Night) | After Food |
+| | | | **Glimepiride 1mg** | `1-0-0` (Morning) | **Red** (Morning Before Food) | Before Food (15m prior) |
+| **`rx-savitha-v1`** | Savitha Devi | Dr. Suresh Sharma | **Amlodipine 10mg** | `1-0-0` (Morning) | **Red** (Morning) | After Food |
+| | | | **Atorvastatin 10mg** | `0-0-1` (Night) | **Blue** (Night) | After Food |
+| **`rx-anand-v1`** | Anand Kumar | Dr. Suresh Sharma | **Metformin 500mg** | `1-0-0` (Morning) | **Red** (Morning) | After Food |
+| | | | **Atorvastatin 20mg** | `0-0-1` (Night) | **Blue** (Night) | After Food |
+
+---
+
+### 7. Diagnostics & Lab Tests (`prescription_diagnostics` table)
+| Test ID | Rx ID | Test Name | Urgency | Clinical Instructions | Status |
+|---|---|---|---|---|---|
+| `diag-001` | `rx-ramesh-v1` | Fasting Blood Sugar & HbA1c | `ROUTINE` | 10-hour overnight fasting required before sample collection | `PENDING` |
+| `diag-002` | `rx-savitha-v1` | Lipid Profile & Serum Creatinine | `ROUTINE` | Early morning sample preferred | `PENDING` |
+| `diag-003` | `rx-ramesh-v1` | Diabetic Foot Sensory Nerve Exam | `URGENT` | Screen for peripheral neuropathy progression | `PENDING` |
+
+---
+
+### 8. AI Voice Adherence Call Triggers (`telephony_triggers` table)
+| Trigger ID | Patient | Phone Number | Language | Trigger Event | Call Status | SMS Status |
+|---|---|---|---|---|---|---|
+| `tel-ramesh-001` | Ramesh Gowda | `+91 98801 12345` | Kannada | Daily Medication Adherence | `QUEUED` | `QUEUED` |
+| `tel-savitha-001` | Savitha Devi | `+91 94481 67890` | Kannada | Daily Medication Adherence | `QUEUED` | `QUEUED` |
+
+---
+
+### 9. Emergency Triage Escalations (`escalations` table)
+| Escalation ID | Patient | Priority | Category | Escalated To | Clinical Note | Status |
+|---|---|---|---|---|---|---|
+| `PAT10001` | Ramesh Gowda | **`CRITICAL`** | `ABNORMAL_VITALS` | Dr. Suresh Sharma, MD | Severe systolic spike (185/110 mmHg) recorded during field visit. Blurred vision reported. | `PENDING` |
+| `PAT10002` | Savitha Devi | **`URGENT`** | `MEDICATION_STOCK_OUT` | Dr. Suresh Sharma, MD | Missed BP medication for 2 days due to village supply disruption. | `PENDING` |
+| `PAT10004` | Laxmamma Bai | **`URGENT`** | `SEVERE_SYMPTOMS` | Dr. K. R. Nambiar, MS | Acute knee joint swelling and severe pain preventing ambulation. | `PENDING` |
+
+---
+
+### 10. Pharmacy Inventory & Batches (`inventory_items` & `inventory_batches` tables)
+| Medicine Name | Generic / Brand | Batch Number | Expiry Date | Stock | Low Stock Alert |
+|---|---|---|---|---|---|
+| **Metformin 500mg** | Glyciphage | `BTH-MET-2026-01` | +365 days | 120 tabs | $\le$ 30 tabs |
+| **Glimepiride 1mg** | Amaryl | `BTH-GLI-2026-01` | +240 days | 60 tabs | $\le$ 20 tabs |
+| **Atorvastatin 10mg** | Atorva | `BTH-ATO-2026-01` | +180 days | 45 tabs | $\le$ 15 tabs |
+| **Atorvastatin 20mg** | Atorva 20 | `BTH-ATO-2026-02` | +210 days | 40 tabs | $\le$ 15 tabs |
+| **Amoxicillin 500mg** | Mox 500 | `BTH-AMX-2026-01` | +300 days | 80 tabs | $\le$ 25 tabs |
+| **Amlodipine 10mg** | Norvasc | `BTH-AML-2026-01` | +320 days | 50 tabs | $\le$ 15 tabs |
+| **Paracetamol 650mg** | Dolo 650 | `BTH-PCM-2026-01` | +400 days | 150 tabs | $\le$ 40 tabs |
+| **Torsemide 10mg** | Dytor 10 | `BTH-TOR-2026-01` | +280 days | 40 tabs | $\le$ 15 tabs |
+
+---
+
+## 🏃 Running All Ecosystem Portals
 
 ```bash
-# Terminal 1: Unified Gateway (Port 3000) — Login / Register for all roles!
+# Starts all 4 portals concurrently in a single terminal
 npm run dev
-# Or: npm run dev:portal -> http://localhost:3000
-
-# Terminal 2: Doctor Portal (Port 3001)
-npm run dev:doctor -> http://localhost:3001
-
-# Terminal 3: Care Team Portal (Port 3002)
-npm run dev:careteam -> http://localhost:3002
-
-# Terminal 4: Pharmacy Portal (Port 3003)
-npm run dev:pharmacy -> http://localhost:3003
 ```
 
----
+- **Unified Gateway Portal**: [http://localhost:3000](http://localhost:3000)
+- **Doctor Consultation Desk**: [http://localhost:3001](http://localhost:3001)
+- **Care Team Field Portal**: [http://localhost:3002](http://localhost:3002)
+- **Pharmacy Dispensing & Sticker Desk**: [http://localhost:3003](http://localhost:3003)
 
-## 🧪 Testing the Complete Flow Live
-
-| Step | Action | Portal / URL | Credentials / Inputs |
-|---|---|---|---|
-| **0. Unified Gateway** | Unified Sign In & Role Routing | `http://localhost:3000` | Select role or use **1-Click Demo Login** for Doctor, Care Team, or Pharmacy $\rightarrow$ auto-routes to that portal! |
-| **1. Care Team** | Sign in as fieldworker | `http://localhost:3002` | Use `CRT10001` / PIN `123456` (or register new worker). |
-| | Register a new patient | "Register Patient" tab | Enter Name: `Sunil Rao`, Age: `55`, Literacy: `No` (Illiterate), Phone: `9845111222`, PIN: `123456`. Verify with OTP: `123456`. |
-| | **Patient ID Generated** | Modal appears | An ID like `PAT54321` is generated. The system automatically queues a **Pending Appointment** in Supabase! |
-| **2. Doctor Desk** | Sign in as doctor | `http://localhost:3001` | ID `DOC84920` / PIN `123456`. |
-| | Check Pending Appointments | "Appointments" Queue | You will immediately see `Sunil Rao` (`PAT54321`) with Token Number! |
-| | Prescribe Medication | Click "Prescribe" | Select medicines (e.g. `Metformin 500mg`, frequency `1-0-1`, meal `After Food`). |
-| | Sign & Submit Prescription | Click "Sign & Submit" | Prescription commits to Supabase. Appointment automatically marks `COMPLETED`. |
-| **3. Pharmacy** | Sign in as pharmacist | `http://localhost:3003` | `rajiv.pharmacy@curalink.health` / `pharmacy123` (or click Quick Login). |
-| | Patient Lookup | Search Bar / Scanner | Enter patient UHID: `PAT54321` (or scan barcode). |
-| | Visual Sticker Guide | Active Prescription Screen | Illiterate patient warning triggers: **"Requires Visual Sticker Guidance"**. Morning (Red), Afternoon (Green), and Night (Blue) sticker tags are displayed! |
-| | Confirm Stickers & Dispense | Dispensing Desk | Click "Confirm Sticker" on each medicine line, check batch stock, and click **"Dispense All Medicines"**. |
-| | Dispense Receipt & Labels | Confirmation Screen | Receipt `RCP-YYYYMMDD-XXXX` is generated, inventory decremented, and sticker labels ready for printing! |

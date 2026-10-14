@@ -498,10 +498,10 @@ BEGIN
 END $$;
 
 -- ============================================================================
--- 22. RICH SEED DATA FOR IMMEDIATE DEMO TESTING
+-- 22. RICH PREDEFINED TEST DATA FOR IMMEDIATE DEMO & EVALUATION
 -- ============================================================================
 
--- 1. Demo Doctors
+-- 1. Demo Doctors (Login PIN: 123456)
 INSERT INTO doctors (id, name, phone, email, age, pin, is_verified, department, license)
 VALUES
     ('DOC84920', 'Dr. Suresh Sharma, MD', '+91 98450 11223', 'dr.suresh@curalink.health', 48, '123456', true, 'Internal Medicine & Chronic Care', 'KMC-84920/MD'),
@@ -509,81 +509,129 @@ VALUES
     ('DOC61034', 'Dr. Anita Sen, MD', '+91 98450 77889', 'dr.anita@curalink.health', 44, '123456', true, 'Nephrology & Renal Medicine', 'KMC-61034/MD')
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
-    pin = EXCLUDED.pin;
+    pin = EXCLUDED.pin,
+    department = EXCLUDED.department;
 
--- 2. Demo Care Team Users
+-- 2. Demo Care Team Users (Login PIN: 123456)
 INSERT INTO care_team_users (crt_id, name, age, phone, email, pin, role)
 VALUES 
-    ('CRT10001', 'Meenakshi Gowda', 32, '+91 98451 00001', 'meenakshi@curalink.health', '123456', 'Lead ASHA Field Coordinator')
-ON CONFLICT (crt_id) DO NOTHING;
+    ('CRT10001', 'Meenakshi Gowda', 32, '+91 98451 00001', 'meenakshi@curalink.health', '123456', 'Lead ASHA Field Coordinator'),
+    ('CRT10002', 'Rajesh Patil', 29, '+91 98451 00002', 'rajesh@curalink.health', '123456', 'Care Team Fieldworker')
+ON CONFLICT (crt_id) DO UPDATE SET
+    name = EXCLUDED.name,
+    pin = EXCLUDED.pin;
 
--- 3. Demo Pharmacist User
+-- 3. Demo Pharmacist User (Facility: fac-city-general)
 INSERT INTO users (id, role, full_name, phone_number, email, facility_id)
 VALUES
     ('c0a80101-0000-0000-0000-000000000001', 'PHARMACY', 'Pharmacist Rajiv', '+91 98451 99999', 'rajiv.pharmacy@curalink.health', 'fac-city-general')
 ON CONFLICT (id) DO NOTHING;
 
--- 4. Demo Patients
-INSERT INTO patients (id, uhid, name, age, gender, phone, language, device_type, chronic_conditions, literacy, address, guardian_name, guardian_phone, guardian_consent)
+-- 4. Demo Patients (Rich demographics, literacy flags & chronic conditions)
+INSERT INTO patients (id, uhid, name, age, gender, phone, language, device_type, chronic_conditions, literacy, address, pin, guardian_name, guardian_phone, guardian_consent)
 VALUES
-    ('pt-ramesh-001', 'PAT10001', 'Ramesh Gowda', 58, 'Male', '+91 98801 12345', 'Kannada', 'FEATURE_PHONE', ARRAY['Type 2 Diabetes Mellitus', 'Diabetic Neuropathy'], false, 'Near Maramma Temple, Ramanagara District, Karnataka', 'Suresh Gowda (Son)', '+91 98801 54321', true),
-    ('pt-savitha-002', 'PAT10002', 'Savitha Devi', 62, 'Female', '+91 94481 67890', 'Kannada', 'FEATURE_PHONE', ARRAY['Essential Hypertension Stage II'], false, 'House #42, Doddaballapura Rural, Karnataka', 'Anitha Devi (Daughter)', '+91 94481 99887', true),
-    ('pt-anand-003', 'PAT10003', 'Anand Kumar', 45, 'Male', '+91 98450 23456', 'English', 'SMARTPHONE', ARRAY['Pre-Diabetes / Metabolic Syndrome', 'Dyslipidemia'], true, 'Indiranagar 100ft Road, Bengaluru, Karnataka', NULL, NULL, false)
+    ('pt-ramesh-001', 'PAT10001', 'Ramesh Gowda', 58, 'Male', '+91 98801 12345', 'Kannada', 'FEATURE_PHONE', ARRAY['Type 2 Diabetes Mellitus', 'Diabetic Neuropathy'], false, 'Near Maramma Temple, Ramanagara District, Karnataka', '123456', 'Suresh Gowda (Son)', '+91 98801 54321', true),
+    ('pt-savitha-002', 'PAT10002', 'Savitha Devi', 62, 'Female', '+91 94481 67890', 'Kannada', 'FEATURE_PHONE', ARRAY['Essential Hypertension Stage II'], false, 'House #42, Doddaballapura Rural, Karnataka', '123456', 'Anitha Devi (Daughter)', '+91 94481 99887', true),
+    ('pt-anand-003', 'PAT10003', 'Anand Kumar', 45, 'Male', '+91 98450 23456', 'English', 'SMARTPHONE', ARRAY['Pre-Diabetes / Metabolic Syndrome', 'Dyslipidemia'], true, 'Indiranagar 100ft Road, Bengaluru, Karnataka', '123456', NULL, NULL, false),
+    ('pt-laxmi-004', 'PAT10004', 'Laxmamma Bai', 70, 'Female', '+91 98455 33221', 'Kannada', 'FEATURE_PHONE', ARRAY['Osteoarthritis', 'Chronic Joint Pain'], false, 'Village Center, Magadi Taluk, Karnataka', '123456', 'Manjunath (Son)', '+91 98455 33221', true)
 ON CONFLICT (id) DO UPDATE SET
     uhid = EXCLUDED.uhid,
     name = EXCLUDED.name,
     literacy = EXCLUDED.literacy;
 
--- 5. Demo Appointments (Pending in Doctor Desk)
+-- 5. Relational Guardians
+INSERT INTO guardians (patient_id, name, age, phone, literacy, address, relationship)
+VALUES
+    ('pt-ramesh-001', 'Suresh Gowda', 32, '+91 98801 54321', true, 'Near Maramma Temple, Ramanagara District, Karnataka', 'Son'),
+    ('pt-savitha-002', 'Anitha Devi', 28, '+91 94481 99887', true, 'House #42, Doddaballapura Rural, Karnataka', 'Daughter'),
+    ('pt-laxmi-004', 'Manjunath', 42, '+91 98455 33221', true, 'Village Center, Magadi Taluk, Karnataka', 'Son')
+ON CONFLICT DO NOTHING;
+
+-- 6. Demo Appointments (Directly visible in Doctor Desk Consultation Queue)
 INSERT INTO appointments (id, patient_id, doctor_id, token_number, reason_for_visit, appointment_time, booking_channel, status)
 VALUES
     ('apt-001', 'pt-ramesh-001', 'DOC84920', 'TOKEN-01', 'Diabetes Follow-up & High Fasting Blood Sugar (192 mg/dL)', 'Today • 09:30 AM', 'CARE_TEAM_FIELD', 'PENDING'),
-    ('apt-002', 'pt-savitha-002', 'DOC84920', 'TOKEN-02', 'BP Spike (164/98 mmHg) & Morning Dizziness', 'Today • 10:00 AM', 'CARE_TEAM_FIELD', 'PENDING')
+    ('apt-002', 'pt-savitha-002', 'DOC84920', 'TOKEN-02', 'BP Spike (164/98 mmHg) & Morning Dizziness', 'Today • 10:00 AM', 'CARE_TEAM_FIELD', 'PENDING'),
+    ('apt-003', 'pt-anand-003', 'DOC84920', 'TOKEN-03', 'Lipid Profile & Metformin Dose Review', 'Today • 11:30 AM', 'CARE_TEAM_FIELD', 'PENDING'),
+    ('apt-004', 'pt-laxmi-004', 'DOC74921', 'TOKEN-04', 'Bilateral Knee Stiffness & Mobility Evaluation', 'Today • 02:30 PM', 'CARE_TEAM_FIELD', 'PENDING')
 ON CONFLICT (id) DO UPDATE SET
-    status = EXCLUDED.status;
+    status = EXCLUDED.status,
+    reason_for_visit = EXCLUDED.reason_for_visit;
 
--- 6. Demo Prescriptions
+-- 7. Demo Prescriptions (Committed Clinical Records)
 INSERT INTO prescriptions (id, patient_id, doctor_id, doctor_name, prescription_type, symptoms_notes, follow_up_date, follow_up_notes, telephony_trigger_enabled, status, revision, committed_at)
 VALUES
-    ('rx-ramesh-v1', 'pt-ramesh-001', 'DOC84920', 'Dr. Suresh Sharma, MD', 'NORMAL', 'Excessive thirst and afternoon fatigue. Fasting sugar 192 mg/dL.', '2026-11-12', 'Review HbA1c in 30 days', true, 'COMMITTED', 1, NOW() - INTERVAL '1 day')
+    ('rx-ramesh-v1', 'pt-ramesh-001', 'DOC84920', 'Dr. Suresh Sharma, MD', 'NORMAL', 'Excessive thirst, numbness in toes, and afternoon fatigue. Fasting sugar 192 mg/dL.', '2026-11-12', 'Review HbA1c and sensory response in 30 days', true, 'COMMITTED', 1, NOW() - INTERVAL '1 day'),
+    ('rx-savitha-v1', 'pt-savitha-002', 'DOC84920', 'Dr. Suresh Sharma, MD', 'NORMAL', 'Elevated systolic blood pressure (164/98 mmHg) and occipital headaches.', '2026-11-15', 'Weekly BP monitoring by ASHA worker', true, 'COMMITTED', 1, NOW() - INTERVAL '2 days'),
+    ('rx-anand-v1', 'pt-anand-003', 'DOC84920', 'Dr. Suresh Sharma, MD', 'NORMAL', 'Borderline elevated fasting glucose (118 mg/dL) and total cholesterol 240 mg/dL.', '2026-11-20', 'Dietary modifications and repeat lipid panel in 60 days', true, 'COMMITTED', 1, NOW() - INTERVAL '3 days')
 ON CONFLICT (id) DO NOTHING;
 
--- 7. Demo Prescription Medicines
+-- 8. Demo Prescription Medicines (With Color Timing & Food Rules)
 INSERT INTO prescription_medicines (id, prescription_id, medicine_name, dosage, frequency, no_of_days, meal_relation, instructions, dispense_status, dose_slots, before_food, quantity_prescribed)
 VALUES
     ('med-metformin-001', 'rx-ramesh-v1', 'Metformin 500mg', '500mg', '1-0-1', 30, 'After Food', 'Take with warm water after breakfast and dinner', 'PRESCRIBED', ARRAY['MORNING', 'NIGHT'], false, 60),
-    ('med-glimepiride-001', 'rx-ramesh-v1', 'Glimepiride 1mg', '1mg', '1-0-0', 15, 'Before Food', 'Take 15 minutes before breakfast', 'PRESCRIBED', ARRAY['MORNING'], true, 15)
+    ('med-glimepiride-001', 'rx-ramesh-v1', 'Glimepiride 1mg', '1mg', '1-0-0', 15, 'Before Food', 'Take 15 minutes before breakfast', 'PRESCRIBED', ARRAY['MORNING'], true, 15),
+    ('med-amlodipine-001', 'rx-savitha-v1', 'Amlodipine 10mg', '10mg', '1-0-0', 30, 'After Food', 'Take every morning after breakfast', 'PRESCRIBED', ARRAY['MORNING'], false, 30),
+    ('med-atorvastatin-001', 'rx-savitha-v1', 'Atorvastatin 10mg', '10mg', '0-0-1', 30, 'After Food', 'Take at bedtime after food', 'PRESCRIBED', ARRAY['NIGHT'], false, 30),
+    ('med-atorvastatin-002', 'rx-anand-v1', 'Atorvastatin 20mg', '20mg', '0-0-1', 30, 'After Food', 'Take at bedtime after light meal', 'PRESCRIBED', ARRAY['NIGHT'], false, 30),
+    ('med-metformin-002', 'rx-anand-v1', 'Metformin 500mg', '500mg', '1-0-0', 30, 'After Food', 'Take after breakfast', 'PRESCRIBED', ARRAY['MORNING'], false, 30)
 ON CONFLICT (id) DO UPDATE SET
     medicine_name = EXCLUDED.medicine_name,
     frequency = EXCLUDED.frequency;
 
--- 8. Demo Pharmacy Inventory Items
+-- 9. Demo Prescription Diagnostics (Scans & Lab Tests)
+INSERT INTO prescription_diagnostics (id, prescription_id, test_type, test_name, instructions, urgency, status)
+VALUES
+    ('diag-001', 'rx-ramesh-v1', 'LAB_TEST', 'Fasting Blood Sugar & HbA1c', '10-hour overnight fasting required before sample collection', 'ROUTINE', 'PENDING'),
+    ('diag-002', 'rx-savitha-v1', 'LAB_TEST', 'Lipid Profile & Serum Creatinine', 'Early morning sample preferred', 'ROUTINE', 'PENDING'),
+    ('diag-003', 'rx-ramesh-v1', 'SCAN', 'Diabetic Foot Sensory Nerve Monofilament Exam', 'Screen for peripheral neuropathy progression', 'URGENT', 'PENDING')
+ON CONFLICT (id) DO NOTHING;
+
+-- 10. Demo Telephony Triggers (AI Voice Calling & Multilingual SMS Queue)
+INSERT INTO telephony_triggers (id, prescription_id, patient_id, patient_phone, preferred_language, trigger_type, voice_call_status, sms_status, payload)
+VALUES
+    ('tel-ramesh-001', 'rx-ramesh-v1', 'pt-ramesh-001', '+91 98801 12345', 'Kannada', 'MEDICATION_ADHERENCE', 'QUEUED', 'QUEUED', '{"patient_name": "Ramesh Gowda", "medicines": ["Metformin 500mg", "Glimepiride 1mg"], "scheduled_time": "08:00 AM", "color_codes": {"Metformin 500mg": "RED (Morning) & BLUE (Night)", "Glimepiride 1mg": "RED (Morning Before Food)"}}'::JSONB),
+    ('tel-savitha-001', 'rx-savitha-v1', 'pt-savitha-002', '+91 94481 67890', 'Kannada', 'MEDICATION_ADHERENCE', 'QUEUED', 'QUEUED', '{"patient_name": "Savitha Devi", "medicines": ["Amlodipine 10mg", "Atorvastatin 10mg"], "scheduled_time": "08:00 AM", "color_codes": {"Amlodipine 10mg": "RED (Morning)", "Atorvastatin 10mg": "BLUE (Night)"}}'::JSONB)
+ON CONFLICT (id) DO NOTHING;
+
+-- 11. Demo Field Escalations (Care Team Emergency Alerts)
+INSERT INTO escalations (patient_id, patient_name, patient_phone, category, priority, target, notes, status, escalated_by)
+VALUES
+    ('PAT10001', 'Ramesh Gowda', '+91 98801 12345', 'ABNORMAL_VITALS', 'CRITICAL', 'Dr. Suresh Sharma, MD', 'Severe systolic spike (185/110 mmHg) recorded during field visit. Blurred vision reported.', 'PENDING', 'Meenakshi (ASHA Lead)'),
+    ('PAT10002', 'Savitha Devi', '+91 94481 67890', 'MEDICATION_STOCK_OUT', 'URGENT', 'Dr. Suresh Sharma, MD', 'Missed BP medication for 2 days due to village supply disruption.', 'PENDING', 'Meenakshi (ASHA Lead)'),
+    ('PAT10004', 'Laxmamma Bai', '+91 98455 33221', 'SEVERE_SYMPTOMS', 'URGENT', 'Dr. K. R. Nambiar, MS', 'Acute knee joint swelling and severe pain preventing ambulation.', 'PENDING', 'Rajesh Patil (Care Team Fieldworker)')
+ON CONFLICT DO NOTHING;
+
+-- 12. Demo Pharmacy Inventory Items
 INSERT INTO inventory_items (id, medicine_name, brand_or_generic, distributor_id, stock_quantity, low_stock_threshold)
 VALUES
     ('e0000001-0000-0000-0000-000000000001', 'Metformin 500mg', 'Glyciphage (Generic Metformin)', 'dist-med-india-01', 120, 30),
     ('e0000001-0000-0000-0000-000000000002', 'Glimepiride 1mg', 'Amaryl (Glimepiride)', 'dist-med-india-01', 60, 20),
     ('e0000001-0000-0000-0000-000000000003', 'Atorvastatin 10mg', 'Atorva (Atorvastatin)', 'dist-med-india-02', 45, 15),
-    ('e0000001-0000-0000-0000-000000000004', 'Amoxicillin 500mg', 'Mox 500', 'dist-med-india-01', 80, 25),
-    ('e0000001-0000-0000-0000-000000000005', 'Amlodipine 10mg', 'Norvasc / Amlong', 'dist-med-india-02', 50, 15),
-    ('e0000001-0000-0000-0000-000000000006', 'Paracetamol 650mg', 'Dolo 650', 'dist-med-india-01', 150, 40),
-    ('e0000001-0000-0000-0000-000000000007', 'Torsemide 10mg', 'Dytor 10', 'dist-med-india-02', 40, 15)
+    ('e0000001-0000-0000-0000-000000000004', 'Atorvastatin 20mg', 'Atorva 20 (Atorvastatin)', 'dist-med-india-02', 40, 15),
+    ('e0000001-0000-0000-0000-000000000005', 'Amoxicillin 500mg', 'Mox 500', 'dist-med-india-01', 80, 25),
+    ('e0000001-0000-0000-0000-000000000006', 'Amlodipine 10mg', 'Norvasc / Amlong', 'dist-med-india-02', 50, 15),
+    ('e0000001-0000-0000-0000-000000000007', 'Paracetamol 650mg', 'Dolo 650', 'dist-med-india-01', 150, 40),
+    ('e0000001-0000-0000-0000-000000000008', 'Torsemide 10mg', 'Dytor 10', 'dist-med-india-02', 40, 15)
 ON CONFLICT (medicine_name) DO UPDATE SET
     stock_quantity = EXCLUDED.stock_quantity;
 
--- 9. Demo Pharmacy Inventory Batches
+-- 13. Demo Pharmacy Inventory Batches
 INSERT INTO inventory_batches (inventory_item_id, medicine_name, batch_number, expiry_date, stock_quantity)
 VALUES
     ('e0000001-0000-0000-0000-000000000001', 'Metformin 500mg', 'BTH-MET-2026-01', CURRENT_DATE + INTERVAL '365 days', 120),
     ('e0000001-0000-0000-0000-000000000002', 'Glimepiride 1mg', 'BTH-GLI-2026-01', CURRENT_DATE + INTERVAL '240 days', 60),
     ('e0000001-0000-0000-0000-000000000003', 'Atorvastatin 10mg', 'BTH-ATO-2026-01', CURRENT_DATE + INTERVAL '180 days', 45),
-    ('e0000001-0000-0000-0000-000000000004', 'Amoxicillin 500mg', 'BTH-AMX-2026-01', CURRENT_DATE + INTERVAL '300 days', 80),
-    ('e0000001-0000-0000-0000-000000000005', 'Amlodipine 10mg', 'BTH-AML-2026-01', CURRENT_DATE + INTERVAL '320 days', 50),
-    ('e0000001-0000-0000-0000-000000000006', 'Paracetamol 650mg', 'BTH-PCM-2026-01', CURRENT_DATE + INTERVAL '400 days', 150),
-    ('e0000001-0000-0000-0000-000000000007', 'Torsemide 10mg', 'BTH-TOR-2026-01', CURRENT_DATE + INTERVAL '280 days', 40)
+    ('e0000001-0000-0000-0000-000000000004', 'Atorvastatin 20mg', 'BTH-ATO-2026-02', CURRENT_DATE + INTERVAL '210 days', 40),
+    ('e0000001-0000-0000-0000-000000000005', 'Amoxicillin 500mg', 'BTH-AMX-2026-01', CURRENT_DATE + INTERVAL '300 days', 80),
+    ('e0000001-0000-0000-0000-000000000006', 'Amlodipine 10mg', 'BTH-AML-2026-01', CURRENT_DATE + INTERVAL '320 days', 50),
+    ('e0000001-0000-0000-0000-000000000007', 'Paracetamol 650mg', 'BTH-PCM-2026-01', CURRENT_DATE + INTERVAL '400 days', 150),
+    ('e0000001-0000-0000-0000-000000000008', 'Torsemide 10mg', 'BTH-TOR-2026-01', CURRENT_DATE + INTERVAL '280 days', 40)
 ON CONFLICT (batch_number) DO NOTHING;
 
--- 10. Demo Field Escalations
-INSERT INTO escalations (patient_id, patient_name, patient_phone, category, priority, target, notes, status, escalated_by)
+-- 14. Demo Audit Logs
+INSERT INTO audit_logs (actor_id, actor_role, action_type, target_entity, target_id, metadata)
 VALUES
-    ('PAT10001', 'Ramesh Gowda', '+91 98801 12345', 'ABNORMAL_VITALS', 'CRITICAL', 'Dr. Suresh Sharma, MD', 'Severe systolic spike (185/110 mmHg) recorded during field visit. Blurred vision reported.', 'PENDING', 'Meenakshi (ASHA Lead)')
+    ('DOC84920', 'DOCTOR', 'INITIALIZE_SYSTEM', 'CLINICAL_SYSTEM', 'SYS-001', '{"status": "READY", "version": "2.4.0"}'::JSONB),
+    ('CRT10001', 'CARE_TEAM', 'REGISTER_PATIENT', 'PATIENT', 'PAT10001', '{"uhid": "PAT10001", "name": "Ramesh Gowda"}'::JSONB)
 ON CONFLICT DO NOTHING;

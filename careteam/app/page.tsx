@@ -751,8 +751,12 @@ export default function CareTeamPortal() {
     await checkConnection();
   };
 
-  const sqlSchemaText = `-- CURALINK SQL SCHEMA FOR SUPABASE
--- Run this in your Supabase SQL Editor (https://supabase.com/dashboard)
+  const sqlSchemaText = `-- ============================================================================
+-- CURALINK MASTER POSTGRESQL DATABASE SCHEMA
+-- Run this in your Supabase SQL Editor: https://supabase.com/dashboard/project/_/sql
+-- ============================================================================
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. Care Team Users Table
 CREATE TABLE IF NOT EXISTS care_team_users (
@@ -770,24 +774,27 @@ CREATE TABLE IF NOT EXISTS care_team_users (
 
 -- 2. Patients Table
 CREATE TABLE IF NOT EXISTS patients (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  uhid TEXT UNIQUE NOT NULL,
-  name TEXT NOT NULL,
-  age INTEGER NOT NULL,
-  phone TEXT NOT NULL,
+  id VARCHAR(50) PRIMARY KEY DEFAULT ('pt-' || substr(md5(random()::text), 1, 8)),
+  uhid VARCHAR(50) UNIQUE NOT NULL,
+  name VARCHAR(150) NOT NULL,
+  age INT NOT NULL,
+  gender VARCHAR(20) NOT NULL DEFAULT 'Unspecified',
+  phone VARCHAR(50) NOT NULL,
+  language VARCHAR(50) NOT NULL DEFAULT 'Kannada',
+  device_type VARCHAR(50) NOT NULL DEFAULT 'FEATURE_PHONE',
+  chronic_conditions TEXT[] DEFAULT '{}',
   literacy BOOLEAN NOT NULL DEFAULT true,
-  address TEXT NOT NULL,
-  gender TEXT DEFAULT 'Unspecified',
-  language TEXT DEFAULT 'Kannada',
-  pin VARCHAR(6) DEFAULT '123456',
-  guardian_name TEXT,
-  guardian_age INTEGER,
-  guardian_phone TEXT,
+  address TEXT DEFAULT 'Karnataka, India',
+  pin VARCHAR(20) DEFAULT '123456',
+  guardian_name VARCHAR(150),
+  guardian_age INT,
+  guardian_phone VARCHAR(50),
+  guardian_consent BOOLEAN DEFAULT false,
   guardian_literacy BOOLEAN DEFAULT true,
   guardian_address TEXT,
-  guardian_relationship TEXT,
+  guardian_relationship VARCHAR(100),
   otp_verified BOOLEAN DEFAULT true,
-  registered_by TEXT DEFAULT 'Care Team Fieldworker',
+  registered_by VARCHAR(100) DEFAULT 'Care Team Fieldworker',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -795,7 +802,7 @@ CREATE TABLE IF NOT EXISTS patients (
 -- 3. Guardians Table
 CREATE TABLE IF NOT EXISTS guardians (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  patient_id UUID REFERENCES patients(id) ON DELETE CASCADE,
+  patient_id VARCHAR(50) REFERENCES patients(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   age INTEGER NOT NULL,
   phone TEXT NOT NULL,
@@ -805,7 +812,20 @@ CREATE TABLE IF NOT EXISTS guardians (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Escalations Table
+-- 4. Appointments Table (Doctor Consultation & Care Team Queue)
+CREATE TABLE IF NOT EXISTS appointments (
+  id VARCHAR(50) PRIMARY KEY,
+  patient_id VARCHAR(50) NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+  doctor_id VARCHAR(50),
+  token_number VARCHAR(50),
+  reason_for_visit TEXT,
+  appointment_time VARCHAR(100) NOT NULL,
+  booking_channel VARCHAR(50) NOT NULL DEFAULT 'CARE_TEAM_FIELD',
+  status VARCHAR(50) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'COMPLETED', 'CANCELLED')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 5. Escalations Table
 CREATE TABLE IF NOT EXISTS escalations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   patient_id TEXT,
@@ -821,48 +841,62 @@ CREATE TABLE IF NOT EXISTS escalations (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Enable RLS and Permissive Policies
 ALTER TABLE care_team_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE patients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE guardians ENABLE ROW LEVEL SECURITY;
+ALTER TABLE appointments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE escalations ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Allow anon all care_team_users" ON care_team_users;
-CREATE POLICY "Allow anon all care_team_users" ON care_team_users FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow anon all patients" ON patients;
-CREATE POLICY "Allow anon all patients" ON patients FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow anon all guardians" ON guardians;
-CREATE POLICY "Allow anon all guardians" ON guardians FOR ALL USING (true) WITH CHECK (true);
-
-DROP POLICY IF EXISTS "Allow anon all escalations" ON escalations;
-CREATE POLICY "Allow anon all escalations" ON escalations FOR ALL USING (true) WITH CHECK (true);
-
--- 6. Automatic Timestamp Maintenance Triggers
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.updated_at = NOW();
-   RETURN NEW;
-END;
-$$ LANGUAGE 'plpgsql';
-
-DROP TRIGGER IF EXISTS trg_patients_updated_at ON patients;
-CREATE TRIGGER trg_patients_updated_at BEFORE UPDATE ON patients FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-DROP TRIGGER IF EXISTS trg_escalations_updated_at ON escalations;
-CREATE TRIGGER trg_escalations_updated_at BEFORE UPDATE ON escalations FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-DROP TRIGGER IF EXISTS trg_care_team_users_updated_at ON care_team_users;
-CREATE TRIGGER trg_care_team_users_updated_at BEFORE UPDATE ON care_team_users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
--- 7. Enable Realtime Broadcasting
 DO $$
+DECLARE
+  tbl TEXT;
 BEGIN
-  BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE patients; EXCEPTION WHEN duplicate_object THEN END;
-  BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE escalations; EXCEPTION WHEN duplicate_object THEN END;
-  BEGIN ALTER PUBLICATION supabase_realtime ADD TABLE care_team_users; EXCEPTION WHEN duplicate_object THEN END;
-END $$;`;
+  FOR tbl IN SELECT unnest(ARRAY['care_team_users', 'patients', 'guardians', 'appointments', 'escalations'])
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS "Allow anon all on %I" ON %I;', tbl, tbl);
+    EXECUTE format('CREATE POLICY "Allow anon all on %I" ON %I FOR ALL USING (true) WITH CHECK (true);', tbl, tbl);
+  END LOOP;
+END $$;
+
+-- Enable Realtime Broadcasting
+DO $$
+DECLARE
+  t TEXT;
+BEGIN
+  FOR t IN SELECT unnest(ARRAY['patients', 'appointments', 'escalations', 'care_team_users'])
+  LOOP
+    BEGIN
+      EXECUTE format('ALTER PUBLICATION supabase_realtime ADD TABLE %I;', t);
+    EXCEPTION
+      WHEN duplicate_object THEN NULL;
+      WHEN undefined_object THEN NULL;
+    END;
+  END LOOP;
+END $$;
+
+-- Predefined Test Data
+INSERT INTO care_team_users (crt_id, name, age, phone, email, pin, role)
+VALUES ('CRT10001', 'Meenakshi Gowda', 32, '+91 98451 00001', 'meenakshi@curalink.health', '123456', 'Lead ASHA Field Coordinator')
+ON CONFLICT (crt_id) DO NOTHING;
+
+INSERT INTO patients (id, uhid, name, age, gender, phone, language, device_type, chronic_conditions, literacy, address, pin, guardian_name, guardian_phone, guardian_consent)
+VALUES
+  ('pt-ramesh-001', 'PAT10001', 'Ramesh Gowda', 58, 'Male', '+91 98801 12345', 'Kannada', 'FEATURE_PHONE', ARRAY['Type 2 Diabetes Mellitus', 'Diabetic Neuropathy'], false, 'Near Maramma Temple, Ramanagara District, Karnataka', '123456', 'Suresh Gowda (Son)', '+91 98801 54321', true),
+  ('pt-savitha-002', 'PAT10002', 'Savitha Devi', 62, 'Female', '+91 94481 67890', 'Kannada', 'FEATURE_PHONE', ARRAY['Essential Hypertension Stage II'], false, 'House #42, Doddaballapura Rural, Karnataka', '123456', 'Anitha Devi (Daughter)', '+91 94481 99887', true),
+  ('pt-anand-003', 'PAT10003', 'Anand Kumar', 45, 'Male', '+91 98450 23456', 'English', 'SMARTPHONE', ARRAY['Pre-Diabetes / Metabolic Syndrome', 'Dyslipidemia'], true, 'Indiranagar 100ft Road, Bengaluru, Karnataka', '123456', NULL, NULL, false)
+ON CONFLICT (id) DO UPDATE SET uhid = EXCLUDED.uhid, name = EXCLUDED.name, literacy = EXCLUDED.literacy;
+
+INSERT INTO appointments (id, patient_id, doctor_id, token_number, reason_for_visit, appointment_time, booking_channel, status)
+VALUES
+  ('apt-001', 'pt-ramesh-001', 'DOC84920', 'TOKEN-01', 'Diabetes Follow-up & High Fasting Blood Sugar (192 mg/dL)', 'Today • 09:30 AM', 'CARE_TEAM_FIELD', 'PENDING'),
+  ('apt-002', 'pt-savitha-002', 'DOC84920', 'TOKEN-02', 'BP Spike (164/98 mmHg) & Morning Dizziness', 'Today • 10:00 AM', 'CARE_TEAM_FIELD', 'PENDING')
+ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status;
+
+INSERT INTO escalations (patient_id, patient_name, patient_phone, category, priority, target, notes, status, escalated_by)
+VALUES
+  ('PAT10001', 'Ramesh Gowda', '+91 98801 12345', 'ABNORMAL_VITALS', 'CRITICAL', 'Dr. Suresh Sharma, MD', 'Severe systolic spike (185/110 mmHg) recorded during field visit. Blurred vision reported.', 'PENDING', 'Meenakshi (ASHA Lead)')
+ON CONFLICT DO NOTHING;`;
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-slate-900 pb-28 overflow-x-hidden selection:bg-[#1D64F2] selection:text-white">
