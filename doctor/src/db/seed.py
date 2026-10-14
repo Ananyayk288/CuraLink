@@ -72,7 +72,7 @@ def seed_data(db_path: str = DB_FILE, reset: bool = True):
         id, prescription_id, medicine_name, dosage, frequency,
         duration_days, no_of_days, meal_relation, instructions, color_sticker, symbol, dispense_status, dispensed_at
     ) VALUES (?, ?, 'Metformin Hydrochloride', '500mg', '1-0-1 (Twice Daily)',
-              30, 30, 'After Food', 'Take with warm water after food', 'PINK', 'CIRCLE', 'DISPENSED', ?)
+              30, 30, 'After Food', 'Take with warm water after food', 'RED', 'CIRCLE', 'DISPENSED', ?)
     """, (med1_id, rx1_id, one_month_ago))
 
     # Diagnostic orders for Ramesh Gowda
@@ -131,7 +131,7 @@ def seed_data(db_path: str = DB_FILE, reset: bool = True):
         id, prescription_id, medicine_name, dosage, frequency,
         duration_days, no_of_days, meal_relation, instructions, color_sticker, symbol, dispense_status, dispensed_at
     ) VALUES (?, ?, 'Amlodipine Besylate', '5mg', '1-0-0 (Morning)',
-              30, 30, 'After Food', 'Take in the morning with water', 'BLUE', 'TRIANGLE', 'DISPENSED', ?)
+              30, 30, 'After Food', 'Take in the morning with water', 'RED', 'CIRCLE', 'DISPENSED', ?)
     """, (med2_id, rx2_id, two_days_ago))
 
     # Diagnostic orders for Savitha Devi
@@ -184,7 +184,7 @@ def seed_data(db_path: str = DB_FILE, reset: bool = True):
         id, prescription_id, medicine_name, dosage, frequency,
         duration_days, no_of_days, meal_relation, instructions, color_sticker, symbol, dispense_status, dispensed_at
     ) VALUES (?, ?, 'Glucophage (Brand)', '500mg', '1-0-1 (Twice Daily)',
-              30, 30, 'After Food', 'Take with meals', 'YELLOW', 'STAR', 'PENDING', NULL)
+              30, 30, 'After Food', 'Take with meals', 'BLUE', 'TRIANGLE', 'PENDING', NULL)
     """, (med3_id, rx3_id))
 
     cursor.execute("""
@@ -262,7 +262,7 @@ def seed_data(db_path: str = DB_FILE, reset: bool = True):
         ai_extracted_summary, priority, status, created_at
     ) VALUES (?, ?, ?, 'AI_CALL_EXTRACT',
               'Patient reported gastric discomfort after morning dose',
-              'ಧ್ವನಿ ಕರೆ: "ಡಾಕ್ಟರ್ ಸಾಹೇಬ್ರೇ, ಗುಲಾಬಿ ಬಣ್ಣದ ಮಾತ್ರೆ ತಗೊಂಡ್ಮೇಲೆ ಹೊಟ್ಟೆ ಉರೀತಿದೆ."',
+              'ಧ್ವನಿ ಕರೆ: "ಡಾಕ್ಟರ್ ಸಾಹೇಬ್ರೇ, ಕೆಂಪು ಬಣ್ಣದ ಮಾತ್ರೆ ತಗೊಂಡ್ಮೇಲೆ ಹೊಟ್ಟೆ ಉರೀತಿದೆ."',
               'Symptom: Gastric burning / acidity. Urgency: HIGH. Candidate Action: Add supportive antacid (Pantoprazole 40mg OD) or adjust dose timing.',
               'HIGH', 'PROPOSED', ?)
     """, (str(uuid.uuid4()), pt1_id, rx1_id, now))

@@ -65,7 +65,7 @@ class TestDoctorPortal(unittest.TestCase):
                 "dosage": "500mg",
                 "frequency": "1-0-1 (After Food)",
                 "duration_days": 30,
-                "color_sticker": "PINK",
+                "color_sticker": "RED",
                 "symbol": "CIRCLE"
             }
         ]
@@ -110,7 +110,7 @@ class TestDoctorPortal(unittest.TestCase):
                 "dosage": "1000mg",  # Dose escalated
                 "frequency": "1-0-1 (After Food)",
                 "duration_days": 30,
-                "color_sticker": "PINK",
+                "color_sticker": "RED",
                 "symbol": "CIRCLE"
             }
         ]
@@ -245,7 +245,7 @@ class TestDoctorPortal(unittest.TestCase):
                     "no_of_days": 30,
                     "frequency": "1-0-1 (Twice Daily)",
                     "meal_relation": "After Food",
-                    "color_sticker": "PINK",
+                    "color_sticker": "RED",
                     "symbol": "CIRCLE"
                 },
                 {

@@ -2,7 +2,7 @@ import { DoseSlot } from "../enums/dose-slot.enum";
 
 export interface SlotConfig {
   slot: DoseSlot;
-  colorName: string; // "Red", "Yellow", "Blue"
+  colorName: string; // "Red", "Green", "Blue"
   hex: string;
   label: string;     // e.g. "Day (Morning)"
   period: string;    // "Morning", "Afternoon", "Night"
@@ -20,11 +20,11 @@ export const DOSE_SLOT_CONFIG: Record<DoseSlot, SlotConfig> = {
   },
   [DoseSlot.AFTERNOON]: {
     slot: DoseSlot.AFTERNOON,
-    colorName: "Yellow",
-    hex: "#EAB308",
+    colorName: "Green",
+    hex: "#10B981",
     label: "Afternoon",
     period: "Afternoon",
-    badgeClasses: "bg-amber-400 text-amber-950 border-amber-500",
+    badgeClasses: "bg-emerald-500 text-white border-emerald-600",
   },
   [DoseSlot.NIGHT]: {
     slot: DoseSlot.NIGHT,
@@ -58,7 +58,7 @@ export function formatDoseSlotName(slot: DoseSlot): string {
 export interface PhysicalStickerItem {
   id: string;
   type: "SLOT" | "MINI";
-  colorName: string; // "Red", "Yellow", "Blue", or "Before Food"
+  colorName: string; // "Red", "Green", "Blue", or "Before Food"
   hex?: string;
   label: string;
   text: string;

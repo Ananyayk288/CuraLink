@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS prescription_medicines (
     no_of_days INT,
     meal_relation VARCHAR(50) NOT NULL DEFAULT 'After Food',
     instructions TEXT,
-    color_sticker VARCHAR(20) CHECK (color_sticker IN ('GREEN', 'BLUE', 'YELLOW', 'RED', 'PURPLE', 'ORANGE', 'PINK')),
+    color_sticker VARCHAR(20) CHECK (color_sticker IN ('RED', 'GREEN', 'BLUE', 'YELLOW', 'PURPLE', 'ORANGE', 'PINK')),
     symbol VARCHAR(20),
     dispense_status VARCHAR(20) DEFAULT 'PENDING' CHECK (dispense_status IN ('PENDING', 'DISPENSED', 'SUBSTITUTED')),
     dispensed_at TIMESTAMPTZ

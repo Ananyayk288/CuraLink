@@ -293,8 +293,8 @@ def sync_prescription_bundle_to_supabase(rx_data: Dict[str, Any],
                 "no_of_days": int(m.get("no_of_days") or m.get("duration_days") or 30),
                 "meal_relation": m.get("meal_relation", "After Food"),
                 "instructions": m.get("instructions"),
-                "color_sticker": m.get("color_sticker", "GREEN"),
-                "symbol": m.get("symbol", "SQUARE"),
+                "color_sticker": m.get("color_sticker", "RED"),
+                "symbol": m.get("symbol", "TABLET"),
                 "dispense_status": "PENDING"
             })
         results["prescription_medicines"] = post_to_supabase("prescription_medicines", med_payloads)

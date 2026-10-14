@@ -105,9 +105,9 @@ The endpoint returns an array of active trigger objects. Note how each trigger d
       "no_of_days": 30,
       "frequency": "1-0-1 (Twice Daily)",
       "meal_relation": "After Food",
-      "color_sticker": "PINK",
+      "color_sticker": "RED",
       "symbol": "CIRCLE",
-      "voice_prompt_hint": "Packet with PINK Sticker (CIRCLE)"
+      "voice_prompt_hint": "Packet with RED Sticker (Morning / Red Circle)"
     }
   ],
   "diagnostic_orders": [
@@ -185,25 +185,25 @@ Scheduled by your worker **24 to 48 hours prior to `follow_up_date`**:
 Your voice synthesis engine (ElevenLabs, Google Cloud TTS, or Azure Speech) **must branch based on literacy status**:
 
 ### A. For Low-Literacy / Rural Patients (`literacy_status == "ILLITERATE"`)
-1. **Never read complex chemical drug names.** Refer strictly to the **physical color sticker** and **shape symbol** (e.g., *Pink Circle*, *Blue Triangle*, *Yellow Star*).
+1. **Never read complex chemical drug names.** Refer strictly to the **physical color sticker** and **timing code**: **Red** (Morning), **Green** (Afternoon), **Blue** (Night).
 2. Use simple vernacular instructions with meal relations (*"ಖಾಲಿ ಹೊಟ್ಟೆಯಲ್ಲಿ"* for before food, *"ಊಟದ ನಂತರ"* for after food).
 3. If diagnostic tests are ordered, clearly state the test name and fasting requirement (*"ಖಾಲಿ ಹೊಟ್ಟೆಯಲ್ಲಿ ಲ್ಯಾಬ್‌ಗೆ ಭೇಟಿ ನೀಡಿ"*).
 
 #### Full Kannada Voice Script (Immediate Call):
 > *"ನಮಸ್ಕಾರ ರಮೇಶ್ ಗೌಡ ಅವರೇ, ನಾನು ಆರೋಗ್ಯವಾಣಿ ಕ್ಲಿನಿಕ್‌ನಿಂದ ಕರೆ ಮಾಡುತ್ತಿದ್ದೇನೆ.  
-> ಡಾ. ಸುರೇಶ್ ಶರ್ಮಾ ಅವರು ಸೂಚಿಸಿದ **ಗುಲಾಬಿ ಬಣ್ಣದ (PINK CIRCLE)** ಮಾತ್ರೆ ಮೆಟ್‌ಫಾರ್ಮಿನ್ ಅನ್ನು ಊಟದ ನಂತರ ತೆಗೆದುಕೊಳ್ಳಿ.  
+> ಡಾ. ಸುರೇಶ್ ಶರ್ಮಾ ಅವರು ಸೂಚಿಸಿದ **ಕೆಂಪು ಬಣ್ಣದ (RED / ಬೆಳಗಿನ)** ಮಾತ್ರೆ ಮೆಟ್‌ಫಾರ್ಮಿನ್ ಅನ್ನು ಊಟದ ನಂತರ ತೆಗೆದುಕೊಳ್ಳಿ.  
 > ಹಾಗೂ ಅವರು ನಿಮಗೆ **HbA1c ರಕ್ತ ಪರೀಕ್ಷೆ** ಮತ್ತು **ಎದೆಯ ಎಕ್ಸ್-ರೇ** ಮಾಡಿಸಿಕೊಳ್ಳಲು ಸೂಚಿಸಿದ್ದಾರೆ. ದಯವಿಟ್ಟು ನಾಳೆ ಬೆಳಿಗ್ಗೆ ಖಾಲಿ ಹೊಟ್ಟೆಯಲ್ಲಿ ಪರೀಕ್ಷಾ ಕೇಂದ್ರಕ್ಕೆ ಭೇಟಿ ನೀಡಿ.  
 > ಮಾತ್ರೆ ತೆಗೆದುಕೊಂಡಿದ್ದರೆ **1** ಒತ್ತಿ. ಸಹಾಯ ಬೇಕಿದ್ದರೆ **2** ಒತ್ತಿ."*
 
 #### Full Hindi Voice Script (Immediate Call):
 > *"नमस्ते रमेश गौड़ा जी, मैं आरोग्यवाणी क्लिनिक से बोल रहा हूँ।  
-> डॉ. सुरेश शर्मा द्वारा बताई गई **गुलाबी (PINK) स्टिकर** वाली दवाई खाना खाने के बाद लें।  
+> डॉ. सुरेश शर्मा द्वारा बताई गई **लाल (RED / सुबह) स्टिकर** वाली दवाई खाना खाने के बाद लें।  
 > और उन्होंने आपके लिए **HbA1c ब्लड टेस्ट** और **चेस्ट एक्स-रे** जांच लिखी है। कृपया खाली पेट जांच केंद्र जाएं।  
 > दवाई ले ली है तो **1** दबाएं। मदद चाहिए तो **2** दबाएं।"*
 
 #### English Voice Script (Immediate Call):
 > *"Hello Ramesh Gowda, this is Arogyavani Clinic.  
-> Dr. Suresh Sharma has prescribed your medication (Packet with PINK Circle sticker) to be taken after food.  
+> Dr. Suresh Sharma has prescribed your medication (Packet with RED sticker for Morning) to be taken after food.  
 > The doctor has also ordered diagnostic investigations: HbA1c blood test and Chest X-Ray. Please complete these tests before your next review.  
 > Press 1 to confirm dosage. Press 2 if you need clinic assistance."*
 

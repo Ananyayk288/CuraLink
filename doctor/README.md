@@ -15,7 +15,7 @@ The **Doctor Portal** serves as the clinical authority in the Arogyavani ecosyst
    - **Tab 1: New Prescription & Medication Regimen ("Medical Thing")**:
      - Attending doctor attribution (`Dr. Suresh Sharma, MD`).
      - Diagnosis & Patient Symptoms notes with **strict word-limit enforcement** (max 300 words).
-     - **Pre-fed Medication Regimen Table** with autocomplete for 40+ common Indian medicines, No. of Days, How Many Times (frequency), Meal Relation (Before/After Food), and assigned physical Color Sticker code (Pink Circle, Blue Triangle, Yellow Star, Green Square, Purple Diamond).
+     - **Pre-fed Medication Regimen Table** with autocomplete for 40+ common Indian medicines, No. of Days, How Many Times (frequency), Meal Relation (Before/After Food), and assigned physical Color Sticker code (Morning: Red, Afternoon: Green, Night: Blue).
      - **AI Voice Reminder & SMS Trigger Toggle** (Supabase Realtime / Webhook activator).
      - Atomic submission: symptoms, notes, medicines, and doctor name are sealed together into the database.
    - **Tab 2: Prescription History (Read-Only)**:
@@ -89,7 +89,7 @@ hacksprint/
      - **Tab 3: Medication History (Read-Only)**
 3. **Inspect Read-Only History Tabs (Tabs 2 & 3)**:
    - Click **`Tab 2: Prescription History`**: Show past Revision v1 with Doctor Name (`Dr. Suresh Sharma, MD`), date, symptoms, and diagnosis.
-   - Click **`Tab 3: Medication History`**: Show the chronological log of Metformin 500mg, 30 days, Pink Sticker, prescribed by Dr. Suresh Sharma.
+   - Click **`Tab 3: Medication History`**: Show the chronological log of Metformin 500mg, 30 days, Red Sticker, prescribed by Dr. Suresh Sharma.
 4. **Build New Prescription with Pre-fed Medication Regimen Table (Tab 1)**:
    - Switch back to **Tab 1**.
    - Type in the Symptoms box and show the live word counter enforcing the **300-word limit**.

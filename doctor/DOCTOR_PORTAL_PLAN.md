@@ -396,8 +396,8 @@ EXECUTE FUNCTION check_prescription_immutability();
   - Click on any revision to view exact medication snapshot, timestamps, and doctor notes.
 - **Tab 2 — Adherence Feed with Honest Status Language**:
   - Displays scheduled doses paired with physical stickers:
-    - 🟣 Metformin 500mg → `Pink Sticker (Circle)`
-    - 🔵 Amlodipine 5mg → `Blue Sticker (Triangle)`
+    - 🔴 Metformin 500mg → `Red Sticker (Morning)`
+    - 🔴 Amlodipine 5mg → `Red Sticker (Morning)`
   - Real-time log entries:
     - ✅ *"Patient-reported confirmation via DTMF 1 (08:02 AM)"*
     - ⚠️ *"No response received on attempt 1 (08:00 AM) — 15-min retry queued"*
@@ -486,7 +486,7 @@ For a hackathon demonstration where live telecom trunks may have latency or carr
 
 - **Outbound Voice Generation**:
   - Literate prompt: *"Hello Suresh. This is your healthcare reminder for Metformin 500mg. Press 1 to confirm."*
-  - Low-literacy prompt: *"Namaste Suresh. This is your health reminder. Please take the packet with the Pink Sticker (Circle). Press 1 or say 'I took it'. Press 2 for help."*
+  - Low-literacy prompt: *"Namaste Suresh. This is your health reminder. Please take the packet with the Red Sticker (Morning). Press 1 or say 'I took it'. Press 2 for help."*
 - **Call-to-Task Pipeline**:
   - Audio input transcribes to text via faster-whisper or Gemini API.
   - Prompt sent to LLM:
@@ -547,7 +547,7 @@ Follow this exact sequence during the hackathon judging presentation:
 | **1. Registration** | Register "Ramesh Gowda", select **Illiterate**, **Feature Phone**, and **Kannada**. | Literacy badge `Low Literacy • Feature Phone • Kannada` appears on chart. | Literacy-aware healthcare access. |
 | **2. Prescribe & Lock** | Prescribe Metformin 500mg, click **Commit & Lock**. | Prescription status locks to `COMMITTED`. | Clinical intent captured. |
 | **3. Immutability Proof** | Click `[Test DB Delete]` or execute API `DELETE /prescriptions/{id}`. | Database throws trigger error: `Committed prescription is immutable`. | Legal immutability & audit integrity. |
-| **4. Pharmacy Bridge** | Open Pharmacy portal tab; show Metformin assigned **Pink Sticker**. | Pharmacy view hides diagnosis notes; only shows medicine & sticker. | Least-privilege patient privacy. |
-| **5. Voice Adherence** | Trigger reminder call simulator; hear Kannada voice prompt referring to **Pink Sticker**. Press `1`. | Doctor timeline instantly updates: `Patient-reported confirmation via DTMF 1`. | Closed-loop adherence tracking. |
+| **4. Pharmacy Bridge** | Open Pharmacy portal tab; show Metformin assigned **Red Sticker**. | Pharmacy view hides diagnosis notes; only shows medicine & sticker. | Least-privilege patient privacy. |
+| **5. Voice Adherence** | Trigger reminder call simulator; hear Kannada voice prompt referring to **Red Sticker**. Press `1`. | Doctor timeline instantly updates: `Patient-reported confirmation via DTMF 1`. | Closed-loop adherence tracking. |
 | **6. AI Call-to-Task** | Simulate patient call: *"Doctor, hotte uri aagthide"*. | Triage desk surfaces: `Acidity detected (High)`. Doctor clicks `Revise` to add Pantoprazole $\rightarrow$ creates **Revision v2**. | Safe human-in-the-loop AI. |
 | **7. Dual Escalation** | Simulate 3 consecutive unanswered calls for high-risk patient "Savitha Devi". | Flashing red alert simultaneously appears on Doctor and Hospital screens. | Closing gaps between appointments and actual care. |

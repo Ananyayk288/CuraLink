@@ -44,10 +44,12 @@ class PrescriptionStatus(str, Enum):
 
 
 class ColorSticker(str, Enum):
-    PINK = "PINK"
-    BLUE = "BLUE"
-    YELLOW = "YELLOW"
+    RED = "RED"
     GREEN = "GREEN"
+    BLUE = "BLUE"
+    # Legacy compatibility
+    PINK = "PINK"
+    YELLOW = "YELLOW"
     PURPLE = "PURPLE"
 
 

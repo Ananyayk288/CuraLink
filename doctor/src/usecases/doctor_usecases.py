@@ -297,13 +297,11 @@ class DoctorUseCases:
             ) VALUES (?, ?, ?, 1, 'DRAFT', ?, ?, ?, ?)
             """, (rx_id, patient_id, doctor_id, diagnosis_notes, clinical_instructions, follow_up_date, created_at))
 
-        # Color Sticker palette assignment
+        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Night)
         sticker_palette = [
-            ("PINK", "CIRCLE"),
-            ("BLUE", "TRIANGLE"),
-            ("YELLOW", "STAR"),
-            ("GREEN", "SQUARE"),
-            ("PURPLE", "DIAMOND")
+            ("RED", "CIRCLE"),       # Morning
+            ("GREEN", "SQUARE"),     # Afternoon
+            ("BLUE", "TRIANGLE")     # Night
         ]
 
         for i, m in enumerate(medicines):
@@ -401,12 +399,11 @@ class DoctorUseCases:
             parent_prescription_id, new_revision_num, notes, instr, f_up, committed_at, created_at
         ))
 
+        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Night)
         sticker_palette = [
-            ("PINK", "CIRCLE"),
-            ("BLUE", "TRIANGLE"),
-            ("YELLOW", "STAR"),
-            ("GREEN", "SQUARE"),
-            ("PURPLE", "DIAMOND")
+            ("RED", "CIRCLE"),       # Morning
+            ("GREEN", "SQUARE"),     # Afternoon
+            ("BLUE", "TRIANGLE")     # Night
         ]
 
         for i, m in enumerate(medicines):
@@ -824,7 +821,7 @@ class DoctorUseCases:
                 "frequency": m["frequency"],
                 "meal_relation": m["meal_relation"] or "After Food",
                 "instructions": m["instructions"],
-                "color_sticker": m["color_sticker"] or "PINK",
+                "color_sticker": m["color_sticker"] or "RED",
                 "symbol": m["symbol"] or "CIRCLE",
                 "dispense_status": m["dispense_status"],
                 "prescribed_by": doc_display,
@@ -938,13 +935,11 @@ class DoctorUseCases:
             committed_at, now
         ))
 
-        # 2. Insert Medication Regimen Line Items (if prescribed)
+        # Universal Tablet Color Code: Red (Morning), Green (Afternoon), Blue (Night)
         sticker_palette = [
-            ("PINK", "CIRCLE"),
-            ("BLUE", "TRIANGLE"),
-            ("YELLOW", "STAR"),
-            ("GREEN", "SQUARE"),
-            ("PURPLE", "DIAMOND")
+            ("RED", "CIRCLE"),       # Morning
+            ("GREEN", "SQUARE"),     # Afternoon
+            ("BLUE", "TRIANGLE")     # Night
         ]
 
         if rx_type in ("NORMAL", "COMPREHENSIVE"):

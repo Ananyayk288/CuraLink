@@ -141,9 +141,6 @@ npm run dev:pharmacy -> http://localhost:3003
 | | Sign & Submit Prescription | Click "Sign & Submit" | Prescription commits to Supabase. Appointment automatically marks `COMPLETED`. |
 | **3. Pharmacy** | Sign in as pharmacist | `http://localhost:3003` | `rajiv.pharmacy@curalink.health` / `pharmacy123` (or click Quick Login). |
 | | Patient Lookup | Search Bar / Scanner | Enter patient UHID: `PAT54321` (or scan barcode). |
-| | Visual Sticker Guide | Active Prescription Screen | Illiterate patient warning triggers: **"Requires Visual Sticker Guidance"**. Morning (Yellow) and Night (Blue) sticker tags are displayed! |
-| | Confirm Stickers & Dispense | Dispensing Desk | Click "Confirm Sticker" on each medicine line, check batch stock, and click **"Dispense All Medicines"**. |
-| | Dispense Receipt & Labels | Confirmation Screen | Receipt `RCP-YYYYMMDD-XXXX` is generated, inventory decremented, and sticker labels ready for printing! |
-| | Visual Sticker Guide | Active Prescription Screen | Illiterate patient warning triggers: **"Requires Visual Sticker Guidance"**. Morning (Yellow) and Night (Blue) sticker tags are displayed! |
+| | Visual Sticker Guide | Active Prescription Screen | Illiterate patient warning triggers: **"Requires Visual Sticker Guidance"**. Morning (Red), Afternoon (Green), and Night (Blue) sticker tags are displayed! |
 | | Confirm Stickers & Dispense | Dispensing Desk | Click "Confirm Sticker" on each medicine line, check batch stock, and click **"Dispense All Medicines"**. |
 | | Dispense Receipt & Labels | Confirmation Screen | Receipt `RCP-YYYYMMDD-XXXX` is generated, inventory decremented, and sticker labels ready for printing! |

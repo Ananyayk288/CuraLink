@@ -26,10 +26,11 @@
               800: '#166534',
               900: '#14532d',
             },
-            stickerPink: '#ec4899',
-            stickerBlue: '#2563eb',
-            stickerYellow: '#eab308',
+            stickerRed: '#ef4444',
             stickerGreen: '#10b981',
+            stickerBlue: '#3b82f6',
+            stickerPink: '#ec4899',
+            stickerYellow: '#eab308',
             stickerPurple: '#8b5cf6',
           }
         }
@@ -666,17 +667,17 @@
       "no_of_days": 30,
       "frequency": "1-0-1 (Twice Daily)",
       "meal_relation": "After Food",
-      "color_sticker": "PINK",
+      "color_sticker": "RED",
       "symbol": "CIRCLE",
-      "voice_prompt_hint": "Packet with PINK Sticker (CIRCLE)"
+      "voice_prompt_hint": "Packet with RED Sticker (Morning / Red Circle)"
     }
   ]
 }</pre>
 
         <p class="font-bold text-slate-900 font-sans text-sm mt-3">🎙️ Voice Prompt Construction Rules:</p>
         <ul class="list-disc pl-5 space-y-1 font-sans text-xs">
-          <li><strong>For Low-Literacy Patients:</strong> Voice MUST refer to the physical color sticker and symbol in patient's preferred language:
-            <br><em>"ನಮಸ್ಕಾರ ರಮೇಶ್ ಅವರೇ. ಗುಲಾಬಿ ಬಣ್ಣದ (PINK) ಸ್ಟಿಕ್ಕರ್ ಇರುವ ಮಾತ್ರೆ ತಗೊಳ್ಳಿ. ತೆಗೆದುಕೊಂಡಿದ್ದರೆ 1 ಒತ್ತಿ. ಸಹಾಯ ಬೇಕಿದ್ದರೆ 2 ಒತ್ತಿ."</em>
+          <li><strong>For Low-Literacy Patients:</strong> Voice MUST refer to the physical color sticker and timing code (Red for Morning, Green for Afternoon, Blue for Night) in patient's preferred language:
+            <br><em>"ನಮಸ್ಕಾರ ರಮೇಶ್ ಅವರೇ. ಕೆಂಪು ಬಣ್ಣದ (RED / ಬೆಳಗಿನ) ಸ್ಟಿಕ್ಕರ್ ಇರುವ ಮಾತ್ರೆ ತಗೊಳ್ಳಿ. ತೆಗೆದುಕೊಂಡಿದ್ದರೆ 1 ಒತ್ತಿ. ಸಹಾಯ ಬೇಕಿದ್ದರೆ 2 ಒತ್ತಿ."</em>
           </li>
           <li><strong>Keypad DTMF Webhook Callback:</strong> Post result back to <code>POST /api/v1/telephony/adherence-gather</code> with digits:
             <br><code>1 = Taken</code> • <code>2 = Help Requested</code> • <code>3 = Remind Later</code>

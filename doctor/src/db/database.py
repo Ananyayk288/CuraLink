@@ -97,8 +97,8 @@ def init_db(db_path: str = DB_FILE) -> None:
         no_of_days INTEGER,                -- Alias for days
         meal_relation TEXT NOT NULL DEFAULT 'After Food', -- Before Food | After Food | With Food | Empty Stomach
         instructions TEXT,
-        color_sticker TEXT,                -- PINK | BLUE | YELLOW | GREEN | PURPLE
-        symbol TEXT,                       -- CIRCLE | TRIANGLE | STAR | SQUARE | DIAMOND
+        color_sticker TEXT,                -- RED (Morning) | GREEN (Afternoon) | BLUE (Night)
+        symbol TEXT,                       -- CIRCLE | TRIANGLE | SQUARE | TABLET
         dispense_status TEXT NOT NULL DEFAULT 'PENDING', -- PENDING | DISPENSED | SUBSTITUTED
         dispensed_at TEXT,
         FOREIGN KEY (prescription_id) REFERENCES prescriptions(id) ON DELETE CASCADE

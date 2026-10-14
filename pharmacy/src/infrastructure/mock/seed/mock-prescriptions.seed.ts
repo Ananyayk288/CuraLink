@@ -104,7 +104,7 @@ export const SEED_PRESCRIPTIONS: DoctorPrescriptionRecord[] = [
         dosage: "500 mg",
         frequency: "Three times daily after food",
         duration: "7 days",
-        doseSlots: [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT], // Red + Yellow + Blue
+        doseSlots: [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT], // Red + Green + Blue
         beforeFood: false,
         quantityPrescribed: 21,
       },

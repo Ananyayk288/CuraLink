@@ -9,11 +9,11 @@ import {
 import { DoseSlot } from "@/modules/pharmacy/domain/enums/dose-slot.enum";
 
 describe("Sticker Slot Config", () => {
-  it("should have exact color mappings for Morning (Red), Afternoon (Yellow), and Night (Blue)", () => {
+  it("should have exact color mappings for Morning (Red), Afternoon (Green), and Night (Blue)", () => {
     expect(DOSE_SLOT_CONFIG[DoseSlot.MORNING].colorName).toBe("Red");
     expect(DOSE_SLOT_CONFIG[DoseSlot.MORNING].period).toBe("Morning");
 
-    expect(DOSE_SLOT_CONFIG[DoseSlot.AFTERNOON].colorName).toBe("Yellow");
+    expect(DOSE_SLOT_CONFIG[DoseSlot.AFTERNOON].colorName).toBe("Green");
     expect(DOSE_SLOT_CONFIG[DoseSlot.AFTERNOON].period).toBe("Afternoon");
 
     expect(DOSE_SLOT_CONFIG[DoseSlot.NIGHT].colorName).toBe("Blue");
@@ -27,7 +27,7 @@ describe("Sticker Slot Config", () => {
 
   it("should format dose slot names clearly", () => {
     expect(formatDoseSlotName(DoseSlot.MORNING)).toBe("Red (Morning)");
-    expect(formatDoseSlotName(DoseSlot.AFTERNOON)).toBe("Yellow (Afternoon)");
+    expect(formatDoseSlotName(DoseSlot.AFTERNOON)).toBe("Green (Afternoon)");
     expect(formatDoseSlotName(DoseSlot.NIGHT)).toBe("Blue (Night)");
   });
 
@@ -55,18 +55,18 @@ describe("Sticker Slot Config", () => {
       "Red (Morning) + Blue (Night) + Before Food"
     );
 
-    // Scenario 3: Medicine taken Three times daily before food -> 4 physical stickers (Red, Yellow, Blue, Before Food)
+    // Scenario 3: Medicine taken Three times daily before food -> 4 physical stickers (Red, Green, Blue, Before Food)
     const stickersTds = getPhysicalStickersForMedicine(
       [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT],
       true
     );
     expect(stickersTds).toHaveLength(4);
-    expect(stickersTds.map((s) => s.colorName)).toEqual(["Red", "Yellow", "Blue", "Before Food"]);
+    expect(stickersTds.map((s) => s.colorName)).toEqual(["Red", "Green", "Blue", "Before Food"]);
     expect(
       formatMedicineStickersSummary(
         [DoseSlot.MORNING, DoseSlot.AFTERNOON, DoseSlot.NIGHT],
         true
       )
-    ).toBe("Red (Morning) + Yellow (Afternoon) + Blue (Night) + Before Food");
+    ).toBe("Red (Morning) + Green (Afternoon) + Blue (Night) + Before Food");
   });
 });

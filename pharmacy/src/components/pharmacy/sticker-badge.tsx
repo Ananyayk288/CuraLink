@@ -40,7 +40,7 @@ export function StickerBadge({ slots = [], beforeFood = false, size = "md" }: St
             style={{
               backgroundColor: config.hex + "15",
               borderColor: config.hex,
-              color: config.hex === "#EAB308" ? "#854D0E" : config.hex,
+              color: config.hex === "#10B981" ? "#047857" : config.hex,
             }}
           >
             <span
